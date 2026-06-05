@@ -1,0 +1,14 @@
+# Force LF for shell scripts and python (cross-platform)
+*.sh             text eol=lf
+*.py             text eol=lf
+*.yml            text eol=lf
+*.yaml           text eol=lf
+*.md             text eol=lf
+*.json           text eol=lf
+*.txt            text eol=lf
+# PowerShell scripts: CRLF on Windows, LF on Linux is fine
+*.ps1            text eol=crlf
+# Binaries
+*.mp4            binary
+*.png            binary
+*.jpg            binary

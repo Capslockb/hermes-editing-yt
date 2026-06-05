@@ -1,0 +1,39 @@
+name: sora-agent-editor
+version: 0.1.0
+kind: standalone
+platforms: [linux, windows]
+description: |
+  Subtitle-driven auto video editor for the OCEANUS pipeline.
+  GPU Whisper (large-v3 on RTX 5060), ffmpeg + libx264 rendering, and an
+  FastMCP 3.0.2 server exposing 11 tools to any Hermes agent.
+python_requirements:
+  - requirements.txt
+provides_tools:
+  - server_info
+  - list_videos
+  - list_subtitles
+  - parse_srt_text
+  - build_segments_from_srt
+  - whisper_transcribe
+  - render_segments
+  - automark
+  - autocut
+  - autoedit
+  - gpu_transcribe
+requirements_env: []
+optional_env:
+  - name: OCEANUS_OUTPUT_DIR
+    prompt: "Default output root for autocut/autoedit renders (default: ~/sora-agent-editor-output)"
+    password: false
+  - name: OCEANUS_WHISPER_URL
+    prompt: "External Whisper HTTP endpoint (default: http://127.0.0.1:51746/transcribe). Leave blank to use the built-in GPU transcriber."
+    password: false
+  - name: OCEANUS_WHISPER_MODEL
+    prompt: "faster-whisper model (default: large-v3). Use 'tiny' for smoke tests."
+    password: false
+  - name: OCEANUS_WHISPER_DEVICE
+    prompt: "faster-whisper device (default: cuda). Use 'cpu' if no GPU."
+    password: false
+  - name: OCEANUS_WHISPER_COMPUTE
+    prompt: "faster-whisper compute_type (default: float16). float32 / int8 also valid."
+    password: false

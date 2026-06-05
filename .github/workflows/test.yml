@@ -1,0 +1,44 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    name: pytest (35 unit tests, no GPU)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install pytest
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install pytest
+      - name: install library (no GPU deps for CI)
+        run: |
+          # We don't install ctranslate2 / faster-whisper in CI because
+          # they're huge and the unit tests are pure-Python. The smoke
+          # test that needs them is gated to local development.
+          pip install -e ./plugin --no-deps
+      - name: run unit tests
+        run: |
+          pytest tests/test_oceanus_autoedit.py -v
+  installer-dry-run:
+    name: installer --help
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: installer --help
+        run: |
+          python3 installer/install.py --help
+      - name: shell wrapper syntax
+        run: |
+          bash -n installer/install.sh

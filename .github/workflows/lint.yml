@@ -1,0 +1,35 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-compile:
+    name: python compile check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: compile plugin/ + installer/ + scripts/
+        run: |
+          python3 -m py_compile plugin/oceanus_autoedit.py
+          python3 -m py_compile plugin/mcp_server.py
+          python3 -m py_compile plugin/__init__.py
+          python3 -m py_compile installer/install.py
+          python3 -m py_compile scripts/run_gpu_demo.py
+      - name: yaml lint
+        run: |
+          python3 -c "import yaml; yaml.safe_load(open('plugin/plugin.yaml').read())" \
+            || (sudo apt-get update && sudo apt-get install -y python3-yaml \
+                && python3 -c "import yaml; yaml.safe_load(open('plugin/plugin.yaml').read())")
+      - name: shell script syntax
+        run: |
+          bash -n installer/install.sh
+      - name: import smoke
+        run: |
+          cd plugin && python3 -c "import sys; sys.path.insert(0, '.'); import oceanus_autoedit; print('library imports OK,', len(oceanus_autoedit.__all__ if hasattr(oceanus_autoedit, '__all__') else dir(oceanus_autoedit)), 'symbols')"
