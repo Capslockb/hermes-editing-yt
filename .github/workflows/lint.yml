@@ -1,0 +1,36 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-compile:
+    name: python compile + yaml + shell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install pyyaml
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+      - name: compile plugin/ + installer/ + scripts/
+        run: |
+          python -m py_compile plugin/oceanus_autoedit.py
+          python -m py_compile plugin/mcp_server.py
+          python -m py_compile plugin/__init__.py
+          python -m py_compile installer/install.py
+          python -m py_compile scripts/run_gpu_demo.py
+      - name: yaml lint (plugin manifest)
+        run: |
+          python -c "import yaml; d = yaml.safe_load(open('plugin/plugin.yaml')); assert d['name'] == 'sora-agent-editor'; print('plugin.yaml valid, name=', d['name'])"
+      - name: shell script syntax
+        run: bash -n installer/install.sh
+      - name: import smoke (library only)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'plugin'); import oceanus_autoedit; public=[n for n in dir(oceanus_autoedit) if not n.startswith('_')]; print('library imports OK,', len(public), 'public symbols'); assert hasattr(oceanus_autoedit, 'parse_subtitles') and hasattr(oceanus_autoedit, 'run_pipeline'); print('core pipeline functions present')"

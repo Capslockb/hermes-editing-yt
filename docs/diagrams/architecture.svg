@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0e1a"/>
+      <stop offset="1" stop-color="#050816"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#915eff" stop-opacity="0.2"/>
+      <stop offset="0.5" stop-color="#915eff" stop-opacity="1"/>
+      <stop offset="1" stop-color="#00E0FF" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="cyanLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00E0FF" stop-opacity="0.2"/>
+      <stop offset="0.5" stop-color="#00E0FF" stop-opacity="1"/>
+      <stop offset="1" stop-color="#915eff" stop-opacity="0.2"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <rect width="1200" height="720" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="60" y="50" font-size="26" font-weight="700" fill="#ffffff">Veo Editor — Architecture</text>
+  <text x="60" y="76" font-size="14" fill="#7a7e94">How a Hermes agent invokes the OCEANUS pipeline over MCP stdio / StreamableHTTP</text>
+
+  <!-- Layers: y=120 (Hermes), y=270 (MCP/Plugin), y=420 (Whisper/ffmpeg), y=570 (storage) -->
+
+  <!-- Layer labels (left gutter) -->
+  <text x="22" y="155" font-size="11" font-weight="700" fill="#915eff" letter-spacing="2">HERMES LAYER</text>
+  <text x="22" y="305" font-size="11" font-weight="700" fill="#915eff" letter-spacing="2">MCP LAYER</text>
+  <text x="22" y="455" font-size="11" font-weight="700" fill="#00E0FF" letter-spacing="2">ENGINE LAYER</text>
+  <text x="22" y="605" font-size="11" font-weight="700" fill="#7a7e94" letter-spacing="2">I/O LAYER</text>
+
+  <!-- HERMES LAYER -->
+  <g>
+    <rect x="60" y="120" width="220" height="80" rx="12" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
+    <text x="80" y="148" font-size="14" font-weight="700" fill="#ffffff">Hermes Agent</text>
+    <text x="80" y="170" font-size="11" fill="#a0a4be">discord · telegram · cli · web</text>
+    <text x="80" y="186" font-size="11" fill="#7a7e94">natural-language call</text>
+
+    <rect x="320" y="120" width="220" height="80" rx="12" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
+    <text x="340" y="148" font-size="14" font-weight="700" fill="#ffffff">Tools / Prompts</text>
+    <text x="340" y="170" font-size="11" fill="#a0a4be">autoedit · autocut · automark</text>
+    <text x="340" y="186" font-size="11" fill="#7a7e94">user: "autoedit my new recording"</text>
+
+    <rect x="580" y="120" width="220" height="80" rx="12" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
+    <text x="600" y="148" font-size="14" font-weight="700" fill="#ffffff">MCP Client</text>
+    <text x="600" y="170" font-size="11" fill="#a0a4be">JSON-RPC 2.0</text>
+    <text x="600" y="186" font-size="11" fill="#7a7e94">stdio · StreamableHTTP</text>
+
+    <rect x="840" y="120" width="300" height="80" rx="12" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
+    <text x="860" y="148" font-size="14" font-weight="700" fill="#ffffff">OCEANUS MCP Server</text>
+    <text x="860" y="170" font-size="11" fill="#a0a4be">FastMCP 3.0.2 · 11 tools · registered as oceanus</text>
+    <text x="860" y="186" font-size="11" fill="#7a7e94">one tool per phase</text>
+  </g>
+
+  <!-- MCP LAYER -->
+  <g>
+    <rect x="60" y="270" width="260" height="80" rx="12" fill="#0f1530" stroke="#00E0FF" stroke-width="1.5"/>
+    <text x="80" y="298" font-size="14" font-weight="700" fill="#ffffff">Discovery</text>
+    <text x="80" y="320" font-size="11" fill="#a0a4be">server_info · list_videos · list_subtitles</text>
+
+    <rect x="340" y="270" width="260" height="80" rx="12" fill="#0f1530" stroke="#00E0FF" stroke-width="1.5"/>
+    <text x="360" y="298" font-size="14" font-weight="700" fill="#ffffff">Plan</text>
+    <text x="360" y="320" font-size="11" fill="#a0a4be">parse_srt_text · build_segments_from_srt</text>
+
+    <rect x="620" y="270" width="260" height="80" rx="12" fill="#0f1530" stroke="#00E0FF" stroke-width="1.5"/>
+    <text x="640" y="298" font-size="14" font-weight="700" fill="#ffffff">Transcribe</text>
+    <text x="640" y="320" font-size="11" fill="#a0a4be">gpu_transcribe · whisper_transcribe</text>
+
+    <rect x="900" y="270" width="240" height="80" rx="12" fill="#0f1530" stroke="#00E0FF" stroke-width="1.5"/>
+    <text x="920" y="298" font-size="14" font-weight="700" fill="#ffffff">Render</text>
+    <text x="920" y="320" font-size="11" fill="#a0a4be">render_segments · autoedit · autocut · automark</text>
+  </g>
+
+  <!-- ENGINE LAYER -->
+  <g>
+    <rect x="100" y="420" width="320" height="80" rx="12" fill="#0f1530" stroke="#FF00E0" stroke-width="1.5"/>
+    <text x="120" y="448" font-size="14" font-weight="700" fill="#ffffff">faster-whisper large-v3</text>
+    <text x="120" y="470" font-size="11" fill="#a0a4be">RTX 5060 · float16 · ~12× realtime</text>
+    <text x="120" y="486" font-size="11" fill="#7a7e94">178 cues / 47s on a 10:08 video</text>
+
+    <rect x="460" y="420" width="320" height="80" rx="12" fill="#0f1530" stroke="#FF00E0" stroke-width="1.5"/>
+    <text x="480" y="448" font-size="14" font-weight="700" fill="#ffffff">oceanus_autoedit (pure Python)</text>
+    <text x="480" y="470" font-size="11" fill="#a0a4be">build_segments · build_markers · parse_subtitles</text>
+    <text x="480" y="486" font-size="11" fill="#7a7e94">merge gaps ≤ 1.2s · drop dead air</text>
+
+    <rect x="820" y="420" width="320" height="80" rx="12" fill="#0f1530" stroke="#FF00E0" stroke-width="1.5"/>
+    <text x="840" y="448" font-size="14" font-weight="700" fill="#ffffff">ffmpeg + libx264</text>
+    <text x="840" y="470" font-size="11" fill="#a0a4be">CRF 18 · concat demuxer</text>
+    <text x="840" y="486" font-size="11" fill="#7a7e94">9:51 cut / 296 MB / 3:18 render</text>
+  </g>
+
+  <!-- I/O LAYER -->
+  <g>
+    <rect x="80" y="570" width="240" height="80" rx="12" fill="#0f1530" stroke="#7a7e94" stroke-width="1.5"/>
+    <text x="100" y="598" font-size="13" font-weight="700" fill="#ffffff">Input</text>
+    <text x="100" y="618" font-size="11" fill="#a0a4be">*.mp4 / *.mkv / *.mov</text>
+    <text x="100" y="634" font-size="11" fill="#a0a4be">*.srt / *.vtt</text>
+
+    <rect x="380" y="570" width="240" height="80" rx="12" fill="#0f1530" stroke="#7a7e94" stroke-width="1.5"/>
+    <text x="400" y="598" font-size="13" font-weight="700" fill="#ffffff">Working set</text>
+    <text x="400" y="618" font-size="11" fill="#a0a4be">segments.json · markers.json</text>
+    <text x="400" y="634" font-size="11" fill="#a0a4be">SRT cache · GPU mem</text>
+
+    <rect x="680" y="570" width="240" height="80" rx="12" fill="#0f1530" stroke="#7a7e94" stroke-width="1.5"/>
+    <text x="700" y="598" font-size="13" font-weight="700" fill="#ffffff">Output</text>
+    <text x="700" y="618" font-size="11" fill="#a0a4be">cut.mp4 · 9:51 · 296 MB</text>
+    <text x="700" y="634" font-size="11" fill="#a0a4be">CRF 18 · libx264 · AAC</text>
+
+    <rect x="980" y="570" width="160" height="80" rx="12" fill="#0f1530" stroke="#7a7e94" stroke-width="1.5"/>
+    <text x="1000" y="598" font-size="13" font-weight="700" fill="#ffffff">Logs</text>
+    <text x="1000" y="618" font-size="11" fill="#a0a4be">journalctl</text>
+    <text x="1000" y="634" font-size="11" fill="#a0a4be">unit tests</text>
+  </g>
+
+  <!-- Connecting lines (downward, gradient) -->
+  <g stroke-width="2" fill="none" filter="url(#glow)">
+    <path d="M 170 200 L 170 270" stroke="url(#line)"/>
+    <path d="M 430 200 L 430 270" stroke="url(#line)"/>
+    <path d="M 690 200 L 690 270" stroke="url(#line)"/>
+    <path d="M 990 200 L 990 270" stroke="url(#line)"/>
+
+    <path d="M 190 350 L 190 420" stroke="url(#cyanLine)"/>
+    <path d="M 470 350 L 470 420" stroke="url(#cyanLine)"/>
+    <path d="M 750 350 L 750 420" stroke="url(#cyanLine)"/>
+    <path d="M 1020 350 L 1020 420" stroke="url(#cyanLine)"/>
+
+    <path d="M 260 500 L 260 570" stroke="url(#line)"/>
+    <path d="M 620 500 L 620 570" stroke="url(#line)"/>
+    <path d="M 980 500 L 980 570" stroke="url(#line)"/>
+  </g>
+
+  <!-- Footer note -->
+  <text x="60" y="690" font-size="11" fill="#7a7e94">Each box is one component. Lines show request/data flow at runtime. Tool calls are JSON-RPC 2.0 over stdio or StreamableHTTP.</text>
+</svg>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 360" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0e1a"/>
+      <stop offset="1" stop-color="#050816"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#915eff" stop-opacity="0.0"/>
+      <stop offset="0.5" stop-color="#915eff" stop-opacity="1"/>
+      <stop offset="1" stop-color="#00E0FF" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="cyanLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00E0FF" stop-opacity="0.0"/>
+      <stop offset="0.5" stop-color="#00E0FF" stop-opacity="1"/>
+      <stop offset="1" stop-color="#915eff" stop-opacity="0.0"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <rect width="1400" height="360" fill="url(#bg)"/>
+
+  <text x="40" y="44" font-size="22" font-weight="700" fill="#ffffff">Pipeline — 10:08 raw → 9:51 cut</text>
+  <text x="40" y="66" font-size="12" fill="#7a7e94">subtitle-driven autocut. Speech in, dead air out, MP4 out.</text>
+
+  <!-- 5 stages: x= 40, 280, 540, 820, 1100 -->
+  <!-- Stage 1: raw.mp4 -->
+  <g>
+    <rect x="40" y="120" width="220" height="160" rx="14" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
+    <text x="60" y="148" font-size="11" font-weight="700" fill="#915eff" letter-spacing="2">STAGE 1</text>
+    <text x="60" y="178" font-size="16" font-weight="700" fill="#ffffff">raw.mp4</text>
+    <text x="60" y="200" font-size="11" fill="#a0a4be">10:08 duration</text>
+    <text x="60" y="218" font-size="11" fill="#a0a4be">h264 · 1920×1080</text>
+    <text x="60" y="236" font-size="11" fill="#a0a4be">970 MB</text>
+    <text x="60" y="262" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">$ ls *.mp4</text>
+  </g>
+
+  <!-- Stage 2: SRT / transcribe -->
+  <g>
+    <rect x="300" y="120" width="220" height="160" rx="14" fill="#0f1530" stroke="#00E0FF" stroke-width="1.5"/>
+    <text x="320" y="148" font-size="11" font-weight="700" fill="#00E0FF" letter-spacing="2">STAGE 2</text>
+    <text x="320" y="178" font-size="16" font-weight="700" fill="#ffffff">SRT</text>
+    <text x="320" y="200" font-size="11" fill="#a0a4be">178 cues</text>
+    <text x="320" y="218" font-size="11" fill="#a0a4be">47s · RTX 5060</text>
+    <text x="320" y="236" font-size="11" fill="#a0a4be">large-v3 · float16</text>
+    <text x="320" y="262" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">gpu_transcribe()</text>
+  </g>
+
+  <!-- Stage 3: segments -->
+  <g>
+    <rect x="560" y="120" width="220" height="160" rx="14" fill="#0f1530" stroke="#FF00E0" stroke-width="1.5"/>
+    <text x="580" y="148" font-size="11" font-weight="700" fill="#FF00E0" letter-spacing="2">STAGE 3</text>
+    <text x="580" y="178" font-size="16" font-weight="700" fill="#ffffff">segments.json</text>
+    <text x="580" y="200" font-size="11" fill="#a0a4be">2 keep · 11 drop</text>
+    <text x="580" y="218" font-size="11" fill="#a0a4be">gaps ≤ 1.2s merged</text>
+    <text x="580" y="236" font-size="11" fill="#a0a4be">markers: ! ? wow</text>
+    <text x="580" y="262" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">build_segments_from_srt()</text>
+  </g>
+
+  <!-- Stage 4: ffmpeg render -->
+  <g>
+    <rect x="820" y="120" width="220" height="160" rx="14" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
+    <text x="840" y="148" font-size="11" font-weight="700" fill="#915eff" letter-spacing="2">STAGE 4</text>
+    <text x="840" y="178" font-size="16" font-weight="700" fill="#ffffff">ffmpeg + libx264</text>
+    <text x="840" y="200" font-size="11" fill="#a0a4be">concat demuxer</text>
+    <text x="840" y="218" font-size="11" fill="#a0a4be">CRF 18 · AAC 192k</text>
+    <text x="840" y="236" font-size="11" fill="#a0a4be">3:18 render · 32 cores</text>
+    <text x="840" y="262" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">render_segments()</text>
+  </g>
+
+  <!-- Stage 5: cut.mp4 -->
+  <g>
+    <rect x="1080" y="120" width="220" height="160" rx="14" fill="#0f1530" stroke="#00E0FF" stroke-width="1.5"/>
+    <text x="1100" y="148" font-size="11" font-weight="700" fill="#00E0FF" letter-spacing="2">STAGE 5</text>
+    <text x="1100" y="178" font-size="16" font-weight="700" fill="#ffffff">cut.mp4</text>
+    <text x="1100" y="200" font-size="11" fill="#a0a4be">9:51 · 17s dead air dropped</text>
+    <text x="1100" y="218" font-size="11" fill="#a0a4be">296 MB</text>
+    <text x="1100" y="236" font-size="11" fill="#a0a4be">ready to ship</text>
+    <text x="1100" y="262" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">$ ls -lh cut.mp4</text>
+  </g>
+
+  <!-- Arrows between stages -->
+  <g stroke-width="2.5" fill="none" filter="url(#glow)">
+    <path d="M 260 200 L 300 200" stroke="url(#line)" marker-end="url(#a)"/>
+    <path d="M 520 200 L 560 200" stroke="url(#cyanLine)" marker-end="url(#b)"/>
+    <path d="M 780 200 L 820 200" stroke="url(#line)" marker-end="url(#a)"/>
+    <path d="M 1040 200 L 1080 200" stroke="url(#cyanLine)" marker-end="url(#b)"/>
+  </g>
+
+  <!-- Markers -->
+  <defs>
+    <marker id="a" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#915eff"/>
+    </marker>
+    <marker id="b" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#00E0FF"/>
+    </marker>
+  </defs>
+
+  <!-- Labels above arrows -->
+  <text x="265" y="190" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">.srt or .vtt</text>
+  <text x="525" y="190" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">parse · merge</text>
+  <text x="785" y="190" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">concat list</text>
+  <text x="1045" y="190" font-size="10" fill="#7a7e94" font-family="ui-monospace, monospace">encoded</text>
+
+  <!-- Total time -->
+  <text x="40" y="320" font-size="11" fill="#7a7e94">End-to-end: 47s transcribe + ~1s plan + 3:18 render = ~4:06 on RTX 5060. CPU-only fallback ~3× slower for tiny/base/small models.</text>
+</svg>

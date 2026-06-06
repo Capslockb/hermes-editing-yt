@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Output artifacts (these are huge — never commit)
+output/
+renders/
+*.mp4
+*.mkv
+*.mov
+*.wav
+*.mp3
+*.srt
+*.vtt
+*.csv
+*.json
+!plugin/*.json
+!plugin/**/*.json
+!tests/**/*.json
+!docs/**/*.json
+!scripts/**/*.json
+!site/package.json
+!site/package-lock.json
+!site/tsconfig.json
+*.plan.json
+*.plan.csv
+*.log
+
+# Local env / secrets
+.env
+.env.local
+*.secret
+*.key
+cookies.txt
+
+# Hugging Face cache (model weights — git-lfs would be the right home)
+*.bin
+*.safetensors
+.huggingface/
+
+# Node / JS (site/ is a Vite + React project)
+node_modules/
+*.tsbuildinfo
+dist/
+.vite/
+bun.lock
+
+# PyInstaller / build
+*.spec
+
+# Installer state
+.install_state
+.installed
+
+# TypeScript build cache
+*.tsbuildinfo

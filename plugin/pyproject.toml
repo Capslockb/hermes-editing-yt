@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veo-editor"
+version = "0.1.0"
+description = "Subtitle-driven auto video editor for the OCEANUS pipeline. Hermes MCP plugin."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Capslockb", email = "[email protected]"},
+]
+keywords = ["video", "editor", "whisper", "ffmpeg", "mcp", "hermes", "autocut", "subtitle"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "fastmcp>=3.0.2,<4",
+    "mcp>=1.26.0,<2",
+    "faster-whisper>=1.2.0,<2",
+    "ctranslate2>=4.7.0,<5",
+    "torch>=2.12.0",
+    "nvidia-cublas-cu12>=12.4.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/Capslockb/veo-editor"
+Repository = "https://github.com/Capslockb/veo-editor"
+Issues = "https://github.com/Capslockb/veo-editor/issues"
+
+[tool.setuptools]
+packages = ["plugin"]
+
+[tool.setuptools.package-data]
+plugin = ["plugin.yaml", "requirements.txt", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-ra"

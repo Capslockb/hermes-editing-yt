@@ -1,0 +1,11 @@
+# Site-specific gitignore additions
+
+# Site is a Node project — ignore its build artifacts and lock files
+site/dist/
+site/node_modules/
+site/.vite/
+site/bun.lock
+
+# But DO commit the site's package.json (so installs work) and the tailwind/vite configs
+!site/package.json
+!site/package-lock.json

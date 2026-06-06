@@ -1,0 +1,36 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    name: pytest (35 unit tests, no GPU)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install pytest
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+      - name: run unit tests (no install needed; tests already add plugin/ to sys.path)
+        run: |
+          pytest tests/test_oceanus_autoedit.py -v
+  installer-dry-run:
+    name: installer --help + shell syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: installer --help
+        run: python installer/install.py --help
+      - name: shell wrapper syntax
+        run: bash -n installer/install.sh

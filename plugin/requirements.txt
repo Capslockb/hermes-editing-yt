@@ -1,0 +1,13 @@
+# Runtime dependencies for veo-editor.
+# Pinned to known-working versions as of 2026-06.
+fastmcp>=3.0.2,<4
+mcp>=1.26.0,<2
+faster-whisper>=1.2.0,<2
+ctranslate2>=4.7.0,<5
+# torch is required for ctranslate2 to find CUDA on RTX 5060 (sm_120).
+# torch 2.12+ ships with cublas v13; ctranslate2 needs cublas v12, which
+# nvidia-cublas-cu12 provides. Both are listed here for clarity.
+torch>=2.12.0
+nvidia-cublas-cu12>=12.4.5
+# ffmpeg is required at runtime; installer verifies it's on PATH.
+# (Not a pip dep — separate system package.)
