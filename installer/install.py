@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SORA Agent Editor — Oneshot Installer
+Veo Editor — Oneshot Installer
 ======================================
 
 Walks the user through:
@@ -56,7 +56,7 @@ except ImportError:  # pragma: no cover
 REPO_NAME = "veo-editor"
 PLUGIN_NAME = "oceanus"          # what `hermes mcp add` will register
 PLUGIN_DIR_NAME = "oceanus-autoedit"  # dir under skills/ and plugins/
-PLUGIN_TITLE = "SORA agent editor"
+PLUGIN_TITLE = "Veo Editor"
 
 # Defaults — overridable via env / CLI
 DEFAULT_HERMES_HOME = Path(os.environ.get("HERMES_HOME") or Path.home() / "AppData" / "Local" / "hermes")

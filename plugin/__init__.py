@@ -1,4 +1,4 @@
-"""SORA agent editor — Hermes MCP plugin entry point.
+"""Veo Editor — Hermes MCP plugin entry point.
 
 The plugin is a thin wrapper that re-exports the library surface so that
 `import plugin` works for tests. The MCP server (mcp_server.py) is the

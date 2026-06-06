@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  SORA agent editor — Linux/macOS one-shot installer
+#  Veo Editor — Linux/macOS one-shot installer
 # ============================================================================
 #  Downloads the repo, runs the Python installer with --non-interactive.
 #
@@ -19,9 +19,9 @@ REPO_URL="https://github.com/Capslockb/veo-editor.git"
 REPO_NAME="veo-editor"
 BRANCH="main"
 INSTALL_DIR="${HOME}/code/${REPO_NAME}"
-# Override by exporting SORA_INSTALLER_ARGS before running this script.
-# Example:  SORA_INSTALLER_ARGS="--non-interactive --skip-deps" bash install.sh
-INSTALLER_ARGS="${SORA_INSTALLER_ARGS:---non-interactive}"
+# Override by exporting VEO_INSTALLER_ARGS before running this script.
+# Example:  VEO_INSTALLER_ARGS="--non-interactive --skip-deps" bash install.sh
+INSTALLER_ARGS="${VEO_INSTALLER_ARGS:---non-interactive}"
 
 # --- logging helpers --------------------------------------------------------
 ts() { date +"%H:%M:%S"; }
@@ -30,7 +30,7 @@ ok()     { printf "\033[1;32m[%s]\033[0m %s\n" "$(ts)" "$1"; }
 warn()   { printf "\033[1;33m[%s]\033[0m %s\n" "$(ts)" "$1"; }
 err()    { printf "\033[1;31m[%s]\033[0m %s\n" "$(ts)" "$1" >&2; }
 
-status "SORA agent editor — Linux/macOS one-shot installer"
+status "Veo Editor — Linux/macOS one-shot installer"
 status "Target: $INSTALL_DIR"
 
 # --- 1. pick a Python 3.10+ ------------------------------------------------

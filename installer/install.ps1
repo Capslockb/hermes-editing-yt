@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 # ============================================================================
-#  SORA agent editor — Windows one-shot installer
+#  Veo Editor — Windows one-shot installer
 # ============================================================================
 #  Downloads the repo, runs the Python installer with --non-interactive.
 #
@@ -23,16 +23,16 @@ $RepoUrl   = "https://github.com/Capslockb/veo-editor.git"
 $RepoName  = "veo-editor"
 $Branch    = "main"
 $InstallDir = Join-Path $env:USERPROFILE "code\$RepoName"
-# Override by setting $env:SORA_INSTALLER_ARGS before running this script.
-# Example:  $env:SORA_INSTALLER_ARGS = "--non-interactive --skip-deps"
-$InstallerArgs = if ($env:SORA_INSTALLER_ARGS) { $env:SORA_INSTALLER_ARGS } else { "--non-interactive" }
+# Override by setting $env:VEO_INSTALLER_ARGS before running this script.
+# Example:  $env:VEO_INSTALLER_ARGS = "--non-interactive --skip-deps"
+$InstallerArgs = if ($env:VEO_INSTALLER_ARGS) { $env:VEO_INSTALLER_ARGS } else { "--non-interactive" }
 
 function Write-Status($msg, $color = "Cyan") {
     Write-Host "[$($(Get-Date).ToString('HH:mm:ss'))] " -NoNewline -Color DarkGray
     Write-Host $msg -Color $color
 }
 
-Write-Status "SORA agent editor — Windows one-shot installer" "Green"
+Write-Status "Veo Editor — Windows one-shot installer" "Green"
 Write-Status "Target: $InstallDir"
 
 # --- 1. pick a Python -------------------------------------------------------
