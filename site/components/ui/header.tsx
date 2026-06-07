@@ -38,20 +38,20 @@ export default function Header() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-indigo-200/65 transition hover:text-indigo-500"
+                className="text-sm text-gray-200/90 transition hover:text-indigo-200"
               >
                 {link.label}
               </a>
             ))}
             <a
               href="https://github.com/Capslockb/hermes-editing-yt"
-              className="btn-sm relative bg-linear-to-b from-gray-700 to-gray-700 bg-[length:100%_100%] bg-[bottom] py-[5px] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%]"
+              className="btn-sm relative bg-gray-700 bg-linear-to-b from-gray-700 to-gray-700 bg-[length:100%_100%] bg-[bottom] py-[5px] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%]"
             >
               GitHub
             </a>
             <a
               href="#install"
-              className="btn-sm bg-linear-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] py-[5px] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%]"
+              className="btn-sm bg-indigo-500 bg-linear-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] py-[5px] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%]"
             >
               Install
             </a>
