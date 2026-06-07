@@ -7,6 +7,7 @@ const Workflows = dynamic(() => import("@/components/workflows"), { ssr: false }
 const Features = dynamic(() => import("@/components/features"), { ssr: false });
 const Showcase = dynamic(() => import("@/components/showcase"), { ssr: false });
 const TerminalDemo = dynamic(() => import("@/components/terminal-demo"), { ssr: false });
+const Community = dynamic(() => import("@/components/community"), { ssr: false });
 const Testimonials = dynamic(() => import("@/components/testimonials"), { ssr: false });
 const Cta = dynamic(() => import("@/components/cta"), { ssr: false });
 
@@ -18,6 +19,7 @@ export default function HomeClient() {
       <Features />
       <Showcase />
       <TerminalDemo />
+      <Community />
       <Testimonials />
       <Cta />
     </>
