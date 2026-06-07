@@ -1,3 +1,21 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
+
 export default function Testimonials() {
   return (
     <section>
@@ -14,9 +32,18 @@ export default function Testimonials() {
           </div>
 
           {/* Cards */}
-          <div className="mx-auto grid max-w-sm items-start gap-6 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3">
+          <motion.div
+            className="mx-auto grid max-w-sm items-start gap-6 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             {/* Card 1 — automark */}
-            <article className="relative rounded-2xl bg-linear-to-br from-gray-900/50 via-gray-800/25 to-gray-900/50 p-5 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+            <motion.article
+              className="relative rounded-2xl bg-linear-to-br from-gray-900/50 via-gray-800/25 to-gray-900/50 p-5 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]"
+              variants={cardVariants}
+            >
               <div className="mb-3">
                 <span className="btn-sm relative inline-block rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
                   <span className="bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text text-transparent">
@@ -29,13 +56,16 @@ export default function Testimonials() {
                 edit marks.
               </p>
               <pre className="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-indigo-200/80">
-                <code>{`hermes run --pipeline automark \\
+                <code>{`hermes run --pipeline automark \\\
   --input video.mp4`}</code>
               </pre>
-            </article>
+            </motion.article>
 
             {/* Card 2 — autocut */}
-            <article className="relative rounded-2xl bg-linear-to-br from-gray-900/50 via-gray-800/25 to-gray-900/50 p-5 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+            <motion.article
+              className="relative rounded-2xl bg-linear-to-br from-gray-900/50 via-gray-800/25 to-gray-900/50 p-5 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]"
+              variants={cardVariants}
+            >
               <div className="mb-3">
                 <span className="btn-sm relative inline-block rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
                   <span className="bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text text-transparent">
@@ -48,14 +78,17 @@ export default function Testimonials() {
                 cut video with no re-transcription.
               </p>
               <pre className="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-indigo-200/80">
-                <code>{`hermes run --pipeline autocut \\
-  --input video.mp4 \\
+                <code>{`hermes run --pipeline autocut \\\
+  --input video.mp4 \\\
   --srt subtitles.srt`}</code>
               </pre>
-            </article>
+            </motion.article>
 
             {/* Card 3 — autoedit */}
-            <article className="relative rounded-2xl bg-linear-to-br from-gray-900/50 via-gray-800/25 to-gray-900/50 p-5 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+            <motion.article
+              className="relative rounded-2xl bg-linear-to-br from-gray-900/50 via-gray-800/25 to-gray-900/50 p-5 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]"
+              variants={cardVariants}
+            >
               <div className="mb-3">
                 <span className="btn-sm relative inline-block rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
                   <span className="bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text text-transparent">
@@ -68,13 +101,13 @@ export default function Testimonials() {
                 One command, done.
               </p>
               <pre className="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-indigo-200/80">
-                <code>{`hermes run --pipeline autoedit \\
-  --input video.mp4 \\
-  --output edited.mp4 \\
+                <code>{`hermes run --pipeline autoedit \\\
+  --input video.mp4 \\\
+  --output edited.mp4 \\\
   --threshold 0.5`}</code>
               </pre>
-            </article>
-          </div>
+            </motion.article>
+          </motion.div>
         </div>
       </div>
     </section>

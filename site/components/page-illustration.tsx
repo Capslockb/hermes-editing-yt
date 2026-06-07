@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import Illustration from "@/public/images/page-illustration.svg";
 import BlurredShapeGray from "@/public/images/blurred-shape-gray.svg";
 import BlurredShape from "@/public/images/blurred-shape.svg";
@@ -10,9 +13,11 @@ export default function PageIllustration({
 }) {
   return (
     <>
-      <div
+      <motion.div
         className="pointer-events-none absolute left-1/2 top-0 -z-10 -translate-x-1/4"
         aria-hidden="true"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
         <Image
           className="max-w-none"
@@ -21,12 +26,19 @@ export default function PageIllustration({
           height={594}
           alt="Page illustration"
         />
-      </div>
+      </motion.div>
       {multiple && (
         <>
-          <div
+          <motion.div
             className="pointer-events-none absolute left-1/2 top-[400px] -z-10 -mt-20 -translate-x-full opacity-50"
             aria-hidden="true"
+            animate={{ y: [0, -10, 0] }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.5,
+            }}
           >
             <Image
               className="max-w-none"
@@ -35,10 +47,17 @@ export default function PageIllustration({
               height={668}
               alt="Blurred shape"
             />
-          </div>
-          <div
+          </motion.div>
+          <motion.div
             className="pointer-events-none absolute left-1/2 top-[440px] -z-10 -translate-x-1/3"
             aria-hidden="true"
+            animate={{ y: [0, -10, 0] }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
           >
             <Image
               className="max-w-none"
@@ -47,7 +66,7 @@ export default function PageIllustration({
               height={668}
               alt="Blurred shape"
             />
-          </div>
+          </motion.div>
         </>
       )}
     </>
