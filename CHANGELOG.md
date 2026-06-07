@@ -124,3 +124,34 @@ adheres to [Semantic Versioning](https://semver.org/).
   (`*.bin binary`) so they're tracked.
 
 [0.1.3]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.3
+
+## [0.1.4] — 2026-06-07
+
+### Removed
+- **Testimonials section.** The "Marcus / Elena / Priya" reviews were
+  fabricated. The product is at v0.1.x — no real users yet. Dropped
+  the `Feedbacks` component, the 3 user avatar JPGs, the
+  `TESTIMONIALS` constant, and the corresponding imports.
+
+### Added
+- **`HowItWorks` section.** Four numbered steps (drop recording,
+  transcribe, build segments, render) with copy-to-clipboard CLI
+  snippets and source links. Each snippet is the actual command the
+  user would paste into a Hermes chat.
+- **`Pipelines` section.** Three cards for `automark` (plan only) /
+  `autocut` (slice an SRT) / `autoedit` (full pipeline). Each card
+  has a copy-command button and a "View code" link. Adds a clear
+  decision point: pick a depth of automation.
+- **`Resources` section.** Four-card CTA grid linking to GitHub,
+  docs, releases, and issues. Hover-animated.
+- **`SidebarTOC`.** Floating right-rail Table of Contents that
+  tracks the active section via scroll position. Smooth
+  scroll-to-section on click. Hidden on mobile (`lg:flex`).
+- **Back-to-top button.** Slides in from below after 600px of
+  scroll. Framer Motion enter/exit.
+
+### Changed
+- Nav: added "How", "Pipelines", "Resources" links. Order is now
+  How → Features → Pipelines → Tools → Resources → Install → GitHub.
+
+[0.1.4]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.4
