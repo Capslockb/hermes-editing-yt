@@ -72,6 +72,23 @@
       background-position: 200% center;
     }
   }
+  /* fadeUp is registered as an --animate-* token so Tailwind keeps it
+     in the output. Referenced by the testimonials section via inline
+     style. */
+  --animate-fade-up: fadeUp 0.6s ease-out both;
+}
+
+/* The actual keyframe lives outside @theme because Tailwind only emits
+   @keyframes that are referenced by a design token in @theme. */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /*

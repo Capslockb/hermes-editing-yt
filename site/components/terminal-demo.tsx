@@ -188,20 +188,23 @@ export default function TerminalDemo() {
           </p>
         </div>
 
-        {/* Pipeline selector */}
+        {/* Pipeline selector — inactive buttons use a high-contrast color
+            (text-gray-200) so the label is always readable. Previously the
+            inactive state used text-indigo-200/65 on bg-gray-800/60, which
+            was effectively invisible against the dark hero background. */}
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           {pipelines.map((p) => (
             <button
               key={p.id}
               onClick={() => setActivePipeline(p.id)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
                 activePipeline === p.id
-                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
-                  : "bg-gray-800/60 text-indigo-200/65 hover:bg-gray-700/60 hover:text-white"
+                  ? "bg-indigo-600 text-white border-indigo-400 shadow-lg shadow-indigo-600/30"
+                  : "bg-gray-800/80 text-gray-200 border-gray-700 hover:bg-gray-700/80 hover:text-white hover:border-indigo-500/50"
               }`}
             >
               <span className="font-mono">{p.label}</span>
-              <span className="ml-1.5 opacity-60">— {p.desc}</span>
+              <span className="ml-1.5 opacity-70">— {p.desc}</span>
             </button>
           ))}
         </div>
