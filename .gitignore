@@ -84,3 +84,4 @@ bun.lock
 
 # TypeScript build cache
 *.tsbuildinfo
+screenshots/
