@@ -175,3 +175,57 @@ adheres to [Semantic Versioning](https://semver.org/).
     is the lowest-risk fix and gives a clean planet render.
 
 [0.1.5]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.5
+
+## [0.1.6] — 2026-06-07
+
+### Fixed
+- **Mobile copy button clipping** (how-it-works, pipelines,
+  resources): the absolute-positioned Copy/Code buttons overlapped
+  the command text on narrow viewports. Now on mobile (<sm) the
+  buttons sit BELOW the code block as a full-width row. On sm+ the
+  original overlay layout is preserved.
+- **Mobile 3D model position**: the laptop was rendering at the
+  very bottom of the portrait hero, half-clipped by h-screen.
+  New mobile-specific camera + position: `camera: [0, 0, 8] fov 35`
+  (front-on, wider FOV), `position: [0, -1, -1]` scale `0.6`.
+  Desktop unchanged.
+
+### Added
+- **3D model auto-rotation on center viewport**: new
+  `useInCenterViewport` hook uses IntersectionObserver to track
+  when each canvas is within the central 25% of the viewport.
+  Models rotate faster (0.6 rad/s) when centered, slow (0.15)
+  when out of view.
+- **Mobile gyro for 3D models**: new `useDeviceOrientation`
+  hook reads DeviceOrientationEvent beta/gamma. iOS 13+
+  permission is requested on first user interaction. Adds a
+  small rotation offset (±0.3 rad) on top of the idle spin
+  when permission is granted.
+- **Feature card glow + smooth viewport fade**: each ProjectCard
+  in works.tsx now has a violet+cyan box-shadow glow on hover
+  and uses framer-motion `whileInView` with
+  `viewport={{ once: false }}` so text re-fades every entry/exit.
+  Section title also has a `whileHover` lift.
+- **Background grain + vignette**: `.bg-grain` (SVG feTurbulence
+  data URL, 6% opacity, mix-blend-mode: overlay) and `.bg-vignette`
+  (radial gradient darkening corners) in index.css. Mounted in
+  app.tsx as fixed, pointer-events: none, z-0.
+
+### Removed
+- Killed the last `oceanus` reference in user-facing data: the
+  `HOW_IT_WORKS` step 1 example now reads "Use hermes-editing-yt
+  → server_info" (was "Use oceanus → server_info").
+
+### Verified
+- Playwright mobile audit (iPhone 12 Pro, 390×844): 0px doc
+  overflow, 0 page errors, all buttons visible and tappable.
+- Desktop screenshot: 3D model still visible at original
+  perspective angle.
+- Bundle: `deviceorientation`, `requestPermission`, `inCenter`,
+  `bg-grain`, `bg-vignette`, `feTurbulence`,
+  `IntersectionObserver`, `whileInView`, `whileHover` all
+  present.
+- 35/35 pytest still pass.
+- python -m py_compile: all 7 modules clean.
+
+[0.1.6]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.6
