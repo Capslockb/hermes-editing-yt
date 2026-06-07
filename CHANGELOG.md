@@ -155,3 +155,23 @@ adheres to [Semantic Versioning](https://semver.org/).
   How → Features → Pipelines → Tools → Resources → Install → GitHub.
 
 [0.1.4]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.4
+
+## [0.1.5] — 2026-06-07
+
+### Fixed
+- **Planet showed "black clouds".** The planet GLB's `Clouds` material
+  has a baseColorTexture that's a 1024×1024 RGB PNG (no alpha
+  channel) — white cloud shapes painted on a black background. With
+  the default OPAQUE alpha mode, the black background rendered as
+  a black sphere with white splotches, occluding the planet body
+  underneath.
+  - **Fix**: traverse the loaded GLB scene in `Earth` (earth.tsx),
+    find any mesh whose material is named "Clouds", set
+    `mesh.visible = false`. The planet body underneath is correct
+    on its own.
+  - Earlier considered setting `transparent: true` + `alphaTest` on
+    the material, but without a baked alpha channel in the source
+    PNG, every alpha-based approach looks wrong. Hiding the layer
+    is the lowest-risk fix and gives a clean planet render.
+
+[0.1.5]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.5

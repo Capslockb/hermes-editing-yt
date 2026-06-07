@@ -1,5 +1,5 @@
 name: hermes-editing-yt
-version: 0.1.4
+version: 0.1.5
 kind: standalone
 platforms: [linux, windows]
 description: |
