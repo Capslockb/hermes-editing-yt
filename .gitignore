@@ -62,6 +62,9 @@ cookies.txt
 
 # Hugging Face cache (model weights — git-lfs would be the right home)
 *.bin
+# Override: the 3D model buffers in the website's public/ are needed by
+# the prebuild glb-packer; they must be in git even though they're .bin.
+!site/public/**/scene.bin
 *.safetensors
 .huggingface/
 
