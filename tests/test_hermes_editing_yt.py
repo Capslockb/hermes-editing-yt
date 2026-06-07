@@ -1,8 +1,8 @@
 """
-Unit tests for the oceanus_autoedit library. Pure functions only — no ffmpeg,
+Unit tests for the hermes_editing_yt library. Pure functions only — no ffmpeg,
 no filesystem, no network. Use pytest.
 
-    python -m pytest tests/test_oceanus_autoedit.py -v
+    python -m pytest tests/test_hermes_editing_yt.py -v
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ LIB_DIR = Path(__file__).resolve().parent.parent / "plugin"
 if str(LIB_DIR) not in sys.path:
     sys.path.insert(0, str(LIB_DIR))
 
-import oceanus_autoedit as lib  # noqa: E402
+import hermes_editing_yt as lib  # noqa: E402
 
 
 # --------------------------------------------------------------------------- #
@@ -125,11 +125,11 @@ class TestParseSrt:
         assert cues[0].text == "Hello world."
 
     def test_empty_raises(self):
-        with pytest.raises(lib.OceanusError):
+        with pytest.raises(lib.EditingYtError):
             lib.parse_srt("")
 
     def test_garbage_raises(self):
-        with pytest.raises(lib.OceanusError):
+        with pytest.raises(lib.EditingYtError):
             lib.parse_srt("this is not a subtitle file at all\n\nfoo bar\n")
 
     def test_unicode_text_preserved(self):
@@ -283,11 +283,11 @@ class TestHelpers:
         assert r.elapsed_seconds == 0.5
 
     def test_transcribe_with_faster_whisper_missing_file(self):
-        # The lib raises OceanusError for either: (a) the WAV doesn't exist,
+        # The lib raises EditingYtError for either: (a) the WAV doesn't exist,
         # or (b) faster-whisper isn't installed in the current env. We
         # accept either error so this test runs in CI (no faster-whisper)
         # and locally (faster-whisper installed, just no WAV).
-        with pytest.raises(lib.OceanusError) as exc_info:
+        with pytest.raises(lib.EditingYtError) as exc_info:
             lib.transcribe_with_faster_whisper(Path("Z:/no/such/file.wav"))
         msg = str(exc_info.value).lower()
         assert (

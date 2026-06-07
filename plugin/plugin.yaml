@@ -1,9 +1,9 @@
-name: veo-editor
-version: 0.1.0
+name: hermes-editing-yt
+version: 0.1.1
 kind: standalone
 platforms: [linux, windows]
 description: |
-  Subtitle-driven auto video editor for the OCEANUS pipeline.
+  Subtitle-driven auto video editor for the Hermes Editing pipeline.
   GPU Whisper (large-v3 on RTX 5060), ffmpeg + libx264 rendering, and an
   FastMCP 3.0.2 server exposing 11 tools to any Hermes agent.
 python_requirements:
@@ -22,18 +22,21 @@ provides_tools:
   - gpu_transcribe
 requirements_env: []
 optional_env:
-  - name: OCEANUS_OUTPUT_DIR
-    prompt: "Default output root for autocut/autoedit renders (default: ~/veo-editor-output)"
+  - name: HERMES_EDITING_YT_OUTPUT_DIR
+    prompt: "Default output root for autocut/autoedit renders (default: ~/hermes-editing-yt-output)"
     password: false
-  - name: OCEANUS_WHISPER_URL
+  - name: HERMES_EDITING_YT_WHISPER_URL
     prompt: "External Whisper HTTP endpoint (default: http://127.0.0.1:51746/transcribe). Leave blank to use the built-in GPU transcriber."
     password: false
-  - name: OCEANUS_WHISPER_MODEL
+  - name: HERMES_EDITING_YT_WHISPER_MODEL
     prompt: "faster-whisper model (default: large-v3). Use 'tiny' for smoke tests."
     password: false
-  - name: OCEANUS_WHISPER_DEVICE
+  - name: HERMES_EDITING_YT_WHISPER_DEVICE
     prompt: "faster-whisper device (default: cuda). Use 'cpu' if no GPU."
     password: false
-  - name: OCEANUS_WHISPER_COMPUTE
+  - name: HERMES_EDITING_YT_MERGE_GAP
+    prompt: "Seconds — drop gaps longer than this between speech cues (default: 1.20). 2.5–3.0 = more aggressive cut (~8 min from 10). 0.6–1.0 = light touch."
+    password: false
+  - name: HERMES_EDITING_YT_WHISPER_COMPUTE
     prompt: "faster-whisper compute_type (default: float16). float32 / int8 also valid."
     password: false

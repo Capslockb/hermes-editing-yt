@@ -1,26 +1,26 @@
 #!/usr/bin/env pwsh
 # ============================================================================
-#  Veo Editor — Windows one-shot installer
+#  hermes-editing-yt — Windows one-shot installer
 # ============================================================================
 #  Downloads the repo, runs the Python installer with --non-interactive.
 #
 #  Usage (PowerShell 5+):
-#    iwr -useb https://raw.githubusercontent.com/Capslockb/veo-editor/main/installer/install.ps1 | iex
+#    iwr -useb https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.ps1 | iex
 #
 #  Or save first:
 #    Invoke-WebRequest -Uri .../install.ps1 -OutFile install.ps1
 #    .\install.ps1
 #
 #  Override defaults:
-#    $env:OCEANUS_OUTPUT_DIR = "D:\renders"
-#    $env:OCEANUS_WHISPER_URL = "http://127.0.0.1:51746/transcribe"
+#    $env:HERMES_EDITING_YT_OUTPUT_DIR = "D:\renders"
+#    $env:HERMES_EDITING_YT_WHISPER_URL = "http://127.0.0.1:51746/transcribe"
 #    .\install.ps1
 # ============================================================================
 
 $ErrorActionPreference = "Stop"
 
-$RepoUrl   = "https://github.com/Capslockb/veo-editor.git"
-$RepoName  = "veo-editor"
+$RepoUrl   = "https://github.com/Capslockb/hermes-editing-yt.git"
+$RepoName  = "hermes-editing-yt"
 $Branch    = "main"
 $InstallDir = Join-Path $env:USERPROFILE "code\$RepoName"
 # Override by setting $env:VEO_INSTALLER_ARGS before running this script.
@@ -32,7 +32,7 @@ function Write-Status($msg, $color = "Cyan") {
     Write-Host $msg -Color $color
 }
 
-Write-Status "Veo Editor — Windows one-shot installer" "Green"
+Write-Status "hermes-editing-yt — Windows one-shot installer" "Green"
 Write-Status "Target: $InstallDir"
 
 # --- 1. pick a Python -------------------------------------------------------
@@ -112,4 +112,4 @@ if ($rc -ne 0) {
     exit $rc
 }
 
-Write-Status "Done. Try:  hermes mcp test oceanus" "Green"
+Write-Status "Done. Try:  hermes mcp test hermes-editing-yt" "Green"

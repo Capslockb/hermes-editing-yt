@@ -1,4 +1,4 @@
-# Runtime dependencies for veo-editor.
+# Runtime dependencies for hermes-editing-yt.
 # Pinned to known-working versions as of 2026-06.
 fastmcp>=3.0.2,<4
 mcp>=1.26.0,<2

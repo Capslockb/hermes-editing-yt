@@ -46,7 +46,7 @@ export const About = () => {
         {/* Title */}
         <motion.div variants={textVariant()}>
           <p className={styles.sectionSubText}>Overview</p>
-          <h2 className={styles.sectionHeadText}>What is Veo Editor?</h2>
+          <h2 className={styles.sectionHeadText}>What is hermes-editing-yt?</h2>
         </motion.div>
 
         {/* Body */}
@@ -54,7 +54,7 @@ export const About = () => {
           variants={fadeIn(undefined, undefined, 0.1, 1)}
           className="empty-4 text-secondary text-[17px] max-w-3xl leading-[30px]"
         >
-          Veo Editor is an open-source, subtitle-driven auto video editor that
+          hermes-editing-yt is an open-source, subtitle-driven auto video editor that
           runs entirely on your local GPU. Parse SRT/ass subtitle files, cut
           video at sentence boundaries, and render with ffmpeg — all without
           touching a timeline. Built as a Hermes MCP plugin (11 tools on

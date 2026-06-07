@@ -49,9 +49,9 @@ const Banner = ({ hide, setHide }: BannerProps) => {
             <span className="sr-only">Light bulb</span>
           </span>
           <span>
-            ⚡ Veo Editor — subtitle-driven auto video editor.{" "}
+            ⚡ hermes-editing-yt — subtitle-driven auto video editor.{" "}
             <Link
-              to="https://github.com/Capslockb/veo-editor"
+              to="https://github.com/Capslockb/hermes-editing-yt"
               target="_blank"
               rel="noreferrer noopener"
               className="inline font-medium text-blue-600 underline underline-offset-2 decoration-600 hover:no-underline"

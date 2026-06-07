@@ -61,7 +61,7 @@ export const NAV_LINKS = [
   {
     id: "source-code",
     title: "GitHub",
-    link: "https://github.com/Capslockb/veo-editor",
+    link: "https://github.com/Capslockb/hermes-editing-yt",
   },
 ] as const;
 
@@ -126,7 +126,7 @@ export const EXPERIENCES = [
     iconBg: "#383E56",
     date: "March 2025",
     points: [
-      "First public release of Veo Editor with subtitle-driven auto-editing pipeline.",
+      "First public release of hermes-editing-yt with subtitle-driven auto-editing pipeline.",
       "Automark + Autocut modes: parse SRT/ass subtitles and slice video at sentence boundaries.",
       "Hermes MCP integration with 11 tools for programmatic video editing.",
       "Local ffmpeg + libx264 rendering — no cloud dependency.",
@@ -153,9 +153,9 @@ export const EXPERIENCES = [
     date: "June 2025",
     points: [
       "Refactored to FastMCP 3.0.2 with SSE and stdio transport support.",
-      "Added oceanus_autoedit.py — full auto-edit pipeline composing all tools.",
+      "Added hermes_editing_yt.py — full auto-edit pipeline composing all tools.",
       "Context-aware tool chaining: transcribe → automark → autocut → encode.",
-      "Plugin now lives at plugin/oceanus_autoedit.py with 11 MCP tools.",
+      "Plugin now lives at plugin/hermes_editing_yt.py with 11 MCP tools.",
     ],
   },
   {
@@ -177,7 +177,7 @@ export const EXPERIENCES = [
 export const TESTIMONIALS = [
   {
     testimonial:
-      "Veo Editor transformed my workflow. I can now cut a 2-hour interview into highlight clips in under 5 minutes by just editing the subtitle file. The GPU transcription is insanely fast on my RTX card.",
+      "hermes-editing-yt transformed my workflow. I can now cut a 2-hour interview into highlight clips in under 5 minutes by just editing the subtitle file. The GPU transcription is insanely fast on my RTX card.",
     name: "Marcus",
     designation: "Video Editor",
     company: "Freelance",
@@ -185,7 +185,7 @@ export const TESTIMONIALS = [
   },
   {
     testimonial:
-      "The MCP server integration is brilliant. I wired Veo Editor into my Hermes agent workflow and it handles automated batch processing of incoming footage. The 11 tools give me everything I need for programmatic editing.",
+      "The MCP server integration is brilliant. I wired hermes-editing-yt into my Hermes agent workflow and it handles automated batch processing of incoming footage. The 11 tools give me everything I need for programmatic editing.",
     name: "Elena",
     designation: "MCP Developer",
     company: "Agent Studio",
@@ -222,7 +222,7 @@ export const PROJECTS = [
       },
     ],
     image: feature1,
-    source_code_link: "https://github.com/Capslockb/veo-editor/blob/main/plugin/oceanus_autoedit.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/hermes_editing_yt.py",
     live_site_link: "",
   },
   {
@@ -244,7 +244,7 @@ export const PROJECTS = [
       },
     ],
     image: feature2,
-    source_code_link: "https://github.com/Capslockb/veo-editor/blob/main/plugin/tools/transcribe_tool.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/tools/transcribe_tool.py",
     live_site_link: "",
   },
   {
@@ -266,7 +266,7 @@ export const PROJECTS = [
       },
     ],
     image: feature3,
-    source_code_link: "https://github.com/Capslockb/veo-editor/blob/main/plugin/server.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/server.py",
     live_site_link: "",
   },
   {
@@ -288,13 +288,13 @@ export const PROJECTS = [
       },
     ],
     image: feature4,
-    source_code_link: "https://github.com/Capslockb/veo-editor/blob/main/plugin/oceanus_autoedit.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/hermes_editing_yt.py",
     live_site_link: "",
   },
   {
     name: "One-Line Installer",
     description:
-      "Install Veo Editor with a single command — no npm, no manual setup. PowerShell for Windows, bash for Linux/macOS. Interactive TUI for install, update, uninstall, and system health checks.",
+      "Install hermes-editing-yt with a single command — no npm, no manual setup. PowerShell for Windows, bash for Linux/macOS. Interactive TUI for install, update, uninstall, and system health checks.",
     tags: [
       {
         name: "installer",
@@ -310,7 +310,7 @@ export const PROJECTS = [
       },
     ],
     image: feature5,
-    source_code_link: "https://github.com/Capslockb/veo-editor/blob/main/installer/install.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/installer/install.py",
     live_site_link: "",
   },
   {
@@ -332,7 +332,7 @@ export const PROJECTS = [
       },
     ],
     image: gpuRender,
-    source_code_link: "https://github.com/Capslockb/veo-editor",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt",
     live_site_link: "",
   },
 ] as const;
@@ -341,21 +341,21 @@ export const SOCIALS = [
   {
     name: "GitHub",
     icon: github,
-    link: "https://github.com/Capslockb/veo-editor",
+    link: "https://github.com/Capslockb/hermes-editing-yt",
   },
   {
     name: "Discord",
     icon: youtube,
-    link: "https://github.com/Capslockb/veo-editor",
+    link: "https://github.com/Capslockb/hermes-editing-yt",
   },
   {
     name: "YouTube",
     icon: youtube,
-    link: "https://github.com/Capslockb/veo-editor",
+    link: "https://github.com/Capslockb/hermes-editing-yt",
   },
   {
     name: "Twitter",
     icon: twitter,
-    link: "https://github.com/Capslockb/veo-editor",
+    link: "https://github.com/Capslockb/hermes-editing-yt",
   },
 ] as const;

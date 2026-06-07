@@ -51,7 +51,7 @@
 
     <rect x="840" y="120" width="300" height="80" rx="12" fill="#0f1530" stroke="#915eff" stroke-width="1.5"/>
     <text x="860" y="148" font-size="14" font-weight="700" fill="#ffffff">OCEANUS MCP Server</text>
-    <text x="860" y="170" font-size="11" fill="#a0a4be">FastMCP 3.0.2 · 11 tools · registered as oceanus</text>
+    <text x="860" y="170" font-size="11" fill="#a0a4be">FastMCP 3.0.2 · 11 tools · registered as hermes-editing-yt</text>
     <text x="860" y="186" font-size="11" fill="#7a7e94">one tool per phase</text>
   </g>
 
@@ -82,7 +82,7 @@
     <text x="120" y="486" font-size="11" fill="#7a7e94">178 cues / 47s on a 10:08 video</text>
 
     <rect x="460" y="420" width="320" height="80" rx="12" fill="#0f1530" stroke="#FF00E0" stroke-width="1.5"/>
-    <text x="480" y="448" font-size="14" font-weight="700" fill="#ffffff">oceanus_autoedit (pure Python)</text>
+    <text x="480" y="448" font-size="14" font-weight="700" fill="#ffffff">hermes_editing_yt (pure Python)</text>
     <text x="480" y="470" font-size="11" fill="#a0a4be">build_segments · build_markers · parse_subtitles</text>
     <text x="480" y="486" font-size="11" fill="#7a7e94">merge gaps ≤ 1.2s · drop dead air</text>
 

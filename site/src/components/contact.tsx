@@ -9,18 +9,18 @@ import { slideIn } from "../utils/motion";
 const INSTALL_COMMANDS = [
   {
     label: "Windows (PowerShell)",
-    code: `iwr -useb https://raw.githubusercontent.com/Capslockb/veo-editor/main/installer/install.ps1 | iex`,
+    code: `iwr -useb https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.ps1 | iex`,
     lang: "powershell",
   },
   {
     label: "Linux / macOS",
-    code: `curl -sSL https://raw.githubusercontent.com/Capslockb/veo-editor/main/installer/install.sh | bash`,
+    code: `curl -sSL https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.sh | bash`,
     lang: "bash",
   },
   {
     label: "TUI (Manual)",
-    code: `git clone https://github.com/Capslockb/veo-editor.git
-cd veo-editor
+    code: `git clone https://github.com/Capslockb/hermes-editing-yt.git
+cd hermes-editing-yt
 python installer/install.py`,
     lang: "bash",
   },
@@ -58,7 +58,7 @@ export const Contact = () => {
 
           {/* Description */}
           <p className="mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]">
-            Install Veo Editor with a single command — no npm, no manual
+            Install hermes-editing-yt with a single command — no npm, no manual
             setup. Choose your platform below.
           </p>
 
@@ -82,7 +82,7 @@ export const Contact = () => {
           {/* GitHub CTA */}
           <div className="mt-8">
             <a
-              href="https://github.com/Capslockb/veo-editor"
+              href="https://github.com/Capslockb/hermes-editing-yt"
               target="_blank"
               rel="noreferrer noopener"
               className="bg-[#915eff] hover:bg-[#7a3dff] py-4 px-10 outline-none w-fit text-white font-bold text-lg shadow-md shadow-primary rounded-xl inline-block transition"

@@ -5,7 +5,7 @@ End-to-end GPU autocut on Helgstr1.mp4.
 - Builds keep-segments + markers from the SRT
 - Renders the cut into an MP4
 
-Outputs to: G:\- OCEANUS\output\gpu_helgstr1_test\
+Outputs to: G:\- hermes-editing-ytoutput\gpu_helgstr1_test\
 """
 from __future__ import annotations
 
@@ -18,10 +18,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-import oceanus_autoedit as lib  # noqa: E402
+import hermes_editing_yt as lib  # noqa: E402
 
-VIDEO = Path(r"G:\- OCEANUS\Editing\New folder\Helgstr1.mp4")
-OUT = Path(r"G:\- OCEANUS\output\gpu_helgstr1_test")
+VIDEO = Path(r"G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4")
+OUT = Path(r"G:\- hermes-editing-ytoutput\gpu_helgstr1_test")
 
 
 def main() -> int:
@@ -30,7 +30,7 @@ def main() -> int:
         return 2
 
     OUT.mkdir(parents=True, exist_ok=True)
-    print(f"=== OCEANUS GPU autocut on Helgstr1 ===")
+    print(f"=== Hermes Editing YT GPU autocut on Helgstr1 ===")
     print(f"video:    {VIDEO} ({VIDEO.stat().st_size / 1024**3:.2f} GB)")
     print(f"output:   {OUT}")
     print(f"backend:  faster-whisper large-v3, cuda, float16")

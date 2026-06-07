@@ -1,18 +1,18 @@
 ---
-name: oceanus-autoedit
-description: "Use when driving the OCEANUS subtitle-driven auto video editor through MCP. Wraps the local Python pipeline (ffmpeg + Whisper + SRT parsing) as 11 tools (autoedit, autocut, automark, render_segments, parse_srt_text, build_segments_from_srt, whisper_transcribe, gpu_transcribe, list_videos, list_subtitles, server_info) so any MCP client (Hermes Agent, Claude Desktop, Cursor) can cut long gameplay/long-form video into highlight reels without touching ffmpeg flags."
+name: hermes-editing-yt
+description: "Use when driving the hermes-editing-yt subtitle-driven auto video editor through MCP. Wraps the local Python pipeline (ffmpeg + Whisper + SRT parsing) as 11 tools (autoedit, autocut, automark, render_segments, parse_srt_text, build_segments_from_srt, whisper_transcribe, gpu_transcribe, list_videos, list_subtitles, server_info) so any MCP client (Hermes Agent, Claude Desktop, Cursor) can cut long gameplay/long-form video into highlight reels without touching ffmpeg flags."
 version: 1.1.0
-author: Bernardo (OCEANUS project) + black-wave (Hermes Agent)
+author: Bernardo (hermes-editing-yt project) + black-wave (Hermes Agent)
 license: MIT
 metadata:
   hermes:
-    tags: [video, editing, ffmpeg, whisper, mcp, oceanus, autoedit, pipeline, subtitles, gpu]
+    tags: [video, editing, ffmpeg, whisper, mcp, hermes-editing-yt, autoedit, pipeline, subtitles, gpu]
     related_skills: [native-mcp, hermes-agent]
 ---
 
-# OCEANUS Autoedit MCP Plugin
+# hermes-editing-yt Autoedit MCP Plugin
 
-A standalone MCP server that wraps the OCEANUS auto video editor — the
+A standalone MCP server that wraps the hermes-editing-yt auto video editor — the
 pipeline originally built for the Helgstr1 / MOTNH 2 / Deerclops workflow on
 the G: SSD — into a clean tool surface that any MCP-speaking agent can
 call. Same ffmpeg + local-Whisper logic, no hardcoded paths, no interactive
@@ -20,7 +20,7 @@ prompts.
 
 ## Overview
 
-The OCEANUS pipeline is subtitle-driven: it takes a long `.mp4`, extracts
+The hermes-editing-yt pipeline is subtitle-driven: it takes a long `.mp4`, extracts
 audio, transcribes it via local GPU Whisper (or reuses an existing `.srt`),
 groups nearby subtitle cues into keep-segments, marks highlights from
 keywords / punctuation, then optionally renders the concatenated segments
@@ -88,7 +88,7 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
 
 ## Install (Hermes Agent)
 
-1. **Install Python deps** for the OCEANUS server itself (one-time, in
+1. **Install Python deps** for the hermes-editing-yt server itself (one-time, in
    the Python the MCP server will run under — e.g.
    `C:\Users\Bernardo\AppData\Local\Programs\Python\Python314\python.exe`):
    ```bash
@@ -106,8 +106,8 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
    cd "C:\Users\Bernardo\AppData\Local\hermes\hermes-agent"
    uv pip install --python ./venv/Scripts/python.exe mcp
    ```
-   Without this, `hermes mcp add oceanus` will fail with
-   *"MCP server 'oceanus' requires the 'mcp' Python SDK, but it is not
+   Without this, `hermes mcp add hermes-editing-yt` will fail with
+   *"MCP server 'hermes-editing-yt' requires the 'mcp' Python SDK, but it is not
    installed"*. See `references/windows-gpu-whisper-setup.md` for the
    full cuBLAS + Hermes venv install recipe.
 
@@ -115,9 +115,9 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
    right block in `~\AppData\Local\hermes\config.yaml` for you):
    ```bash
    cd "C:\Users\Bernardo\AppData\Local\hermes\hermes-agent"
-   echo "y" | ./venv/Scripts/hermes mcp add oceanus \
+   echo "y" | ./venv/Scripts/hermes mcp add hermes-editing-yt \
      --command "C:\\Users\\Bernardo\\AppData\\Local\\Programs\\Python\\Python314\\python.exe" \
-     --args "G:\\- OCEANUS\\tools\\video_workflow\\mcp_server.py"
+     --args "G:\\- hermes-editing-yt\tools\\video_workflow\\mcp_server.py"
    ```
    The MCP server has 11 tools; the prompt asks you to enable all of
    them — accept the default.
@@ -129,21 +129,21 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
 
 5. **Verify**:
    ```bash
-   hermes mcp list                  # oceanus appears with "✓ enabled"
-   hermes mcp test oceanus          # 11 tools discovered
+   hermes mcp list                  # hermes-editing-yt appears with "✓ enabled"
+   hermes mcp test hermes-editing-yt          # 11 tools discovered
    ```
-   In chat, ask the agent: "Call `mcp_oceanus_server_info`" — you
+   In chat, ask the agent: "Call `mcp_hermes-editing-yt_server_info`" — you
    should see the 11-tool manifest including `gpu_transcribe`.
 
 6. **Optional env overrides** (set before `hermes` starts, or in
    `~\AppData\Local\hermes\.env`):
    ```bash
-   OCEANUS_WHISPER_URL=http://127.0.0.1:51746/transcribe
-   OCEANUS_OUTPUT_DIR=G:\- OCEANUS\output
-   OCEANUS_RAW_DIR=G:\- OCEANUS\Unedited (RAW)
-   OCEANUS_WHISPER_MODEL=large-v3
-   OCEANUS_WHISPER_DEVICE=cuda
-   OCEANUS_WHISPER_COMPUTE=float16
+   HERMES_EDITING_YT_WHISPER_URL=http://127.0.0.1:51746/transcribe
+   HERMES_EDITING_YT_OUTPUT_DIR=G:\- hermes-editing-ytoutput
+   HERMES_EDITING_YT_RAW_DIR=G:\- hermes-editing-ytUnedited (RAW)
+   HERMES_EDITING_YT_WHISPER_MODEL=large-v3
+   HERMES_EDITING_YT_WHISPER_DEVICE=cuda
+   HERMES_EDITING_YT_WHISPER_COMPUTE=float16
    ```
    These only affect `server_info` defaults — the MCP tool args take
    precedence when supplied.
@@ -153,11 +153,11 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
 ### 1. Preview a cut plan from an existing SRT (no ffmpeg)
 
 ```text
-User:  Use oceanus to preview a cut plan from
-       G:\- OCEANUS\Editing\New folder\Untitled - February 8, 2026 (1).srt
+User:  Use hermes-editing-yt to preview a cut plan from
+       G:\- hermes-editing-ytEditing\New folder\Untitled - February 8, 2026 (1).srt
        for a 10000s video.
 
-Agent: mcp_oceanus_build_segments_from_srt(
+Agent: mcp_hermes-editing-yt_build_segments_from_srt(
           text=<file_contents>,
           duration_seconds=10000)
        → JSON with segment_count, kept_duration_seconds, segments[], markers[]
@@ -166,12 +166,12 @@ Agent: mcp_oceanus_build_segments_from_srt(
 ### 2. Full autocut with existing SRT (no transcription needed)
 
 ```text
-User:  autocut Helgstr1.mp4 to G:\- OCEANUS\output\preview
+User:  autocut Helgstr1.mp4 to G:\- hermes-editing-ytoutput\preview
 
-Agent: mcp_oceanus_autocut(
-          video_path="G:\\- OCEANUS\\Editing\\New folder\\Helgstr1.mp4",
-          output_dir="G:\\- OCEANUS\\output\\preview",
-          srt_path="G:\\- OCEANUS\\Editing\\New folder\\Untitled - February 8, 2026 (1).srt")
+Agent: mcp_hermes-editing-yt_autocut(
+          video_path="G:\\- hermes-editing-yt\Editing\\New folder\\Helgstr1.mp4",
+          output_dir="G:\\- hermes-editing-yt\output\\preview",
+          srt_path="G:\\- hermes-editing-yt\Editing\\New folder\\Untitled - February 8, 2026 (1).srt")
        → JSON with rendered_video, segment_count, plan_path, …
 ```
 
@@ -184,9 +184,9 @@ Whisper process.
 ```text
 User:  autoedit Helgstr1.mp4 with GPU transcription
 
-Agent: mcp_oceanus_autoedit(
-          video_path="G:\\- OCEANUS\\Editing\\New folder\\Helgstr1.mp4",
-          output_dir="G:\\- OCEANUS\\output\\gpu_helgstr1",
+Agent: mcp_hermes_editing_yt(
+          video_path="G:\\- hermes-editing-yt\Editing\\New folder\\Helgstr1.mp4",
+          output_dir="G:\\- hermes-editing-yt\output\\gpu_helgstr1",
           whisper_model="large-v3",   # or "medium" / "small" for speed
           whisper_device="cuda",      # "cpu" to force fallback
           whisper_compute_type="float16")
@@ -200,9 +200,9 @@ The model is loaded **once per session** and cached, so repeat runs
 ```text
 User:  Transcribe Helgstr1.wav to an SRT
 
-Agent: mcp_oceanus_gpu_transcribe(
-          wav_path="G:\\- OCEANUS\\output\\some\\Helgstr1_whisper_input.wav",
-          output_srt_path="G:\\- OCEANUS\\output\\some\\Helgstr1.srt",
+Agent: mcp_hermes-editing-yt_gpu_transcribe(
+          wav_path="G:\\- hermes-editing-yt\output\\some\\Helgstr1_whisper_input.wav",
+          output_srt_path="G:\\- hermes-editing-yt\output\\some\\Helgstr1.srt",
           model="medium",            # faster than large-v3 for a quick pass
           language="en")             # skip auto-detect
 ```
@@ -212,7 +212,7 @@ Agent: mcp_oceanus_gpu_transcribe(
 Set `transcribe_backend="http"` and the `whisper_url` to your server:
 
 ```text
-mcp_oceanus_autoedit(
+mcp_hermes_editing_yt(
    video_path=...,
    output_dir=...,
    transcribe_backend="http",
@@ -224,17 +224,17 @@ mcp_oceanus_autoedit(
 The refactor is **backwards-compatible**. The original CLI still works:
 
 ```powershell
-python "G:\- OCEANUS\tools\video_workflow\auto_video_workflow.py" autoedit `
-  --video "G:\- OCEANUS\Editing\New folder\Helgstr1.mp4" `
-  --output-dir "G:\- OCEANUS\output\cli-run"
+python "G:\- hermes-editing-yttools\video_workflow\auto_video_workflow.py" autoedit `
+  --video "G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4" `
+  --output-dir "G:\- hermes-editing-ytoutput\cli-run"
 ```
 
 And the library can be imported directly:
 
 ```python
 import sys
-sys.path.insert(0, r"G:\- OCEANUS\tools\video_workflow")
-import oceanus_autoedit as lib
+sys.path.insert(0, r"G:\- hermes-editing-yttools\video_workflow")
+import hermes_editing_yt as lib
 
 result = lib.run_pipeline(
     mode="autocut",
@@ -248,21 +248,21 @@ print(result.rendered_video, len(result.keep_segments), "segments")
 ## Files in this plugin
 
 ```
-G:\- OCEANUS\tools\video_workflow\
+G:\- hermes-editing-yttools\video_workflow\
 ├── auto_video_workflow.py            # ORIGINAL CLI (preserved, untouched)
 ├── auto_video_workflow.legacy.bak.py # Pre-refactor safety copy
-├── oceanus_autoedit.py               # Refactored library + CLI entry
+├── hermes_editing_yt.py               # Refactored library + CLI entry
 ├── mcp_server.py                     # FastMCP 3.x server (this plugin)
 ├── README.md                         # Original README (preserved)
 ├── run_gpu_helgstr1.py               # end-to-end Helgstr1 smoke script
 ├── tests/
-│   ├── test_oceanus_autoedit.py      # 35 pytest cases, all pure functions
+│   ├── test_hermes_editing_yt.py      # 35 pytest cases, all pure functions
 │   └── test_mcp_server.py            # MCP smoke over stdio, 11 tools
 └── __pycache__/                      # bytecode
 ```
 
 The references/ folder lives next to `SKILL.md` in
-`~\AppData\Local\hermes\skills\media\oceanus-autoedit\references\`:
+`~\AppData\Local\hermes\skills\media\hermes-editing-yt\references\`:
 
 - `references/windows-gpu-whisper-setup.md` — cuBLAS 12 vs 13 fix,
   Hermes venv pip, nvidia-cublas-cu12 install, full error→fix table
@@ -273,7 +273,7 @@ The references/ folder lives next to `SKILL.md` in
 ## Common Pitfalls
 
 1. **"ffmpeg not available"** — install from gyan.dev / brew / apt, or
-   point `PATH` at an existing build. The original OCEANUS box already has
+   point `PATH` at an existing build. The original hermes-editing-yt box already has
    it at `C:\Users\Bernardo\AppData\Local\Microsoft\WinGet\Links\ffmpeg`.
    `server_info()` reports `ffmpeg_available` directly.
 
@@ -282,11 +282,11 @@ The references/ folder lives next to `SKILL.md` in
    `uv pip install --python <hermes-venv>/Scripts/python.exe mcp`. See
    `references/windows-gpu-whisper-setup.md` for why this is needed
    (Hermes's `mcp` client lives in its own venv, not the system Python
-   that the OCEANUS server itself uses).
+   that the hermes-editing-yt server itself uses).
 
 3. **No SRT and transcribe_backend="none"** — pass
    `transcribe_backend="faster-whisper"` (default) or `"http"`, OR
-   pre-supply an `srt_path`. The pipeline raises a clear OceanusError
+   pre-supply an `srt_path`. The pipeline raises a clear EditingYtError
    if it can't find an SRT and the backend can't produce one.
 
 4. **GPU transcription first call is slow** — `large-v3` is ~3 GB and
@@ -299,18 +299,18 @@ The references/ folder lives next to `SKILL.md` in
 5. **Whisper HTTP server unreachable (legacy path)** — when using
    `transcribe_backend="http"`, the `whisper_transcribe` tool returns a
    JSON `{"error": "Whisper server is not reachable..."}`. Either start
-   your Whisper server (the OCEANUS box uses port 51746) or just use
+   your Whisper server (the hermes-editing-yt box uses port 51746) or just use
    the GPU backend instead.
 
 6. **`autocut` takes a long time** — ffmpeg re-encodes each segment
    (`libx264 medium CRF 18`). A 1-hour source typically renders in
    5–15 min on a modern CPU. The MCP `timeout` must be ≥ 600 s for the
-   `oceanus` server entry.
+   `hermes-editing-yt` server entry.
 
 7. **CUDA float16 fails (no cuDNN / wrong driver / cuBLAS 12 missing)**
    — the GPU backend auto-falls-back to CPU float32 and returns the
    actual `device` / `compute_type` in the result JSON. If even CPU
-   fails, you get a clear `OceanusError`. On RTX 5060 + PyTorch
+   fails, you get a clear `EditingYtError`. On RTX 5060 + PyTorch
    2.12+cu130 specifically, you'll hit
    `cublas64_12.dll is not found or cannot be loaded` because torch
    ships v13 but ctranslate2 wants v12 — the library's
@@ -320,7 +320,7 @@ The references/ folder lives next to `SKILL.md` in
 
 8. **Output dir doesn't exist** — `run_pipeline` calls
    `mkdir(parents=True, exist_ok=True)`, so this is automatic. But the
-   *parent* must be writable — on the OCEANUS box, `G:\- OCEANUS\output`
+   *parent* must be writable — on the hermes-editing-yt box, `G:\- hermes-editing-ytoutput`
    is fine, but a sandboxed Hermes profile running under a different
    user might not have write access. Check ACLs.
 
@@ -345,20 +345,20 @@ The references/ folder lives next to `SKILL.md` in
 
 ## Verification Checklist
 
-- [ ] `python -c "import oceanus_autoedit, mcp_server"` works from
-      `G:\- OCEANUS\tools\video_workflow\`
-- [ ] `pytest tests/test_oceanus_autoedit.py` → 35 passed
+- [ ] `python -c "import hermes_editing_yt, mcp_server"` works from
+      `G:\- hermes-editing-yttools\video_workflow\`
+- [ ] `pytest tests/test_hermes_editing_yt.py` → 35 passed
 - [ ] `python mcp_server.py --help` shows `--http PORT` flag
-- [ ] `hermes mcp list` lists `oceanus` with "✓ enabled"
-- [ ] `hermes mcp test oceanus` shows "connected, 11 tools" (was 10
+- [ ] `hermes mcp list` lists `hermes-editing-yt` with "✓ enabled"
+- [ ] `hermes mcp test hermes-editing-yt` shows "connected, 11 tools" (was 10
       before `gpu_transcribe` was added)
-- [ ] In chat: "Use mcp_oceanus_server_info" returns the JSON snapshot
+- [ ] In chat: "Use mcp_hermes-editing-yt_server_info" returns the JSON snapshot
       including `transcription_backend: "faster-whisper"` and
       `ffmpeg_available: true`
-- [ ] In chat: "Use mcp_oceanus_list_videos on
-      G:\\- OCEANUS\\Editing\\New folder" returns the Helgstr1 files
-- [ ] In chat: "Use mcp_oceanus_gpu_transcribe on
-      G:\\- OCEANUS\\output\\gpu_helgstr1_test\\Helgstr1_whisper_input.wav
+- [ ] In chat: "Use mcp_hermes-editing-yt_list_videos on
+      G:\\- hermes-editing-yt\Editing\\New folder" returns the Helgstr1 files
+- [ ] In chat: "Use mcp_hermes-editing-yt_gpu_transcribe on
+      G:\\- hermes-editing-yt\output\\gpu_helgstr1_test\\Helgstr1_whisper_input.wav
       with model=large-v3" — should return a `transcription` block
       with `device=cuda, compute_type=float16, language=en`
 - [ ] `pytest tests/ -v` still passes after a clean re-run
@@ -367,7 +367,7 @@ The references/ folder lives next to `SKILL.md` in
 
 ```bash
 unset PYTHONPATH    # the broken hermes venv pydantic leaks in sometimes
-cd "G:\- OCEANUS\tools\video_workflow"
+cd "G:\- hermes-editing-yttools\video_workflow"
 python -m pytest tests/ -v
 ```
 
@@ -379,10 +379,10 @@ inside the smoke uses the `tiny` model + CPU to stay fast).
 
 ```bash
 # stdio (what Hermes uses)
-python "G:\- OCEANUS\tools\video_workflow\mcp_server.py"
+python "G:\- hermes-editing-yttools\video_workflow\mcp_server.py"
 
 # HTTP/StreamableHTTP for browser-based MCP clients
-python "G:\- OCEANUS\tools\video_workflow\mcp_server.py" --http 8765
+python "G:\- hermes-editing-yttools\video_workflow\mcp_server.py" --http 8765
 # → http://127.0.0.1:8765/mcp
 ```
 
@@ -390,14 +390,14 @@ python "G:\- OCEANUS\tools\video_workflow\mcp_server.py" --http 8765
 
 | Env var | Default | Used by |
 |---------|---------|---------|
-| `OCEANUS_WHISPER_URL`     | `http://127.0.0.1:51746/transcribe` | `whisper_transcribe` tool (HTTP backend) |
-| `OCEANUS_OUTPUT_DIR`      | `G:\- OCEANUS\output`                | `server_info` default_output_dir |
-| `OCEANUS_RAW_DIR`         | `G:\- OCEANUS\Unedited (RAW)`        | `server_info` default_raw_dir |
-| `OCEANUS_WHISPER_MODEL`   | `large-v3`                           | GPU backend default model |
-| `OCEANUS_WHISPER_DEVICE`  | `cuda`                               | GPU backend default device |
-| `OCEANUS_WHISPER_COMPUTE` | `float16`                            | GPU backend default compute type |
-| `OCEANUS_WHISPER_LANG`    | (auto-detect)                        | GPU backend default language code |
-| `OCEANUS_WHISPER_BEAM`    | `5`                                  | GPU backend default beam size |
+| `HERMES_EDITING_YT_WHISPER_URL`     | `http://127.0.0.1:51746/transcribe` | `whisper_transcribe` tool (HTTP backend) |
+| `HERMES_EDITING_YT_OUTPUT_DIR`      | `G:\- hermes-editing-ytoutput`                | `server_info` default_output_dir |
+| `HERMES_EDITING_YT_RAW_DIR`         | `G:\- hermes-editing-ytUnedited (RAW)`        | `server_info` default_raw_dir |
+| `HERMES_EDITING_YT_WHISPER_MODEL`   | `large-v3`                           | GPU backend default model |
+| `HERMES_EDITING_YT_WHISPER_DEVICE`  | `cuda`                               | GPU backend default device |
+| `HERMES_EDITING_YT_WHISPER_COMPUTE` | `float16`                            | GPU backend default compute type |
+| `HERMES_EDITING_YT_WHISPER_LANG`    | (auto-detect)                        | GPU backend default language code |
+| `HERMES_EDITING_YT_WHISPER_BEAM`    | `5`                                  | GPU backend default beam size |
 
 The MCP tool args (`video_path`, `output_dir`, `whisper_url`,
 `whisper_model`, …) always take precedence over the env defaults.
@@ -408,7 +408,7 @@ The MCP tool args (`video_path`, `output_dir`, `whisper_url`,
   (stdio/HTTP transport, tool naming, security model)
 - `hermes-agent` — `hermes mcp add/list/test` CLI
 - The original `auto_video_workflow.py` CLI (preserved for one-shots)
-- `tests/test_oceanus_autoedit.py` — 35 reference cases for the library
+- `tests/test_hermes_editing_yt.py` — 35 reference cases for the library
 - `tests/test_mcp_server.py` — full MCP smoke over stdio
 - `references/windows-gpu-whisper-setup.md` — cuBLAS 12 vs 13 fix,
   Hermes venv pip, nvidia-cublas-cu12 install, full error→fix table

@@ -21,7 +21,7 @@ jobs:
           pip install pyyaml
       - name: compile plugin/ + installer/ + scripts/
         run: |
-          python -m py_compile plugin/oceanus_autoedit.py
+          python -m py_compile plugin/hermes_editing_yt.py
           python -m py_compile plugin/mcp_server.py
           python -m py_compile plugin/__init__.py
           python -m py_compile installer/install.py
@@ -33,4 +33,4 @@ jobs:
         run: bash -n installer/install.sh
       - name: import smoke (library only)
         run: |
-          python -c "import sys; sys.path.insert(0, 'plugin'); import oceanus_autoedit; public=[n for n in dir(oceanus_autoedit) if not n.startswith('_')]; print('library imports OK,', len(public), 'public symbols'); assert hasattr(oceanus_autoedit, 'parse_subtitles') and hasattr(oceanus_autoedit, 'run_pipeline'); print('core pipeline functions present')"
+          python -c "import sys; sys.path.insert(0, 'plugin'); import hermes_editing_yt; public=[n for n in dir(hermes_editing_yt) if not n.startswith('_')]; print('library imports OK,', len(public), 'public symbols'); assert hasattr(hermes_editing_yt, 'parse_subtitles') and hasattr(hermes_editing_yt, 'run_pipeline'); print('core pipeline functions present')"

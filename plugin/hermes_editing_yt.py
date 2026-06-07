@@ -1,5 +1,5 @@
 """
-oceanus_autoedit — subtitle-driven auto video editor (library + CLI).
+hermes_editing_yt — subtitle-driven auto video editor (library + CLI).
 
 Refactored from the original `auto_video_workflow.py` so the same logic is
 exposed as:
@@ -10,8 +10,8 @@ exposed as:
   * A FastMCP server surface    (see `mcp_server.py`)
 
 Defaults are now config-driven (env vars / keyword args) instead of the
-hardcoded `G:\\- OCEANUS` paths. The CLI still defaults to the original
-OCEANUS layout so existing scripts keep working.
+hardcoded `G:\\- hermes-editing-yt` paths. The CLI still defaults to the original
+hermes-editing-yt layout so existing scripts keep working.
 """
 from __future__ import annotations
 
@@ -38,9 +38,9 @@ from typing import Any, Iterable, List, Optional, Sequence
 # Configuration                                                               #
 # --------------------------------------------------------------------------- #
 
-WHISPER_URL: str = os.environ.get("OCEANUS_WHISPER_URL", "http://127.0.0.1:51746/transcribe")
-DEFAULT_OUTPUT: Path = Path(os.environ.get("OCEANUS_OUTPUT_DIR", r"G:\- OCEANUS\output"))
-DEFAULT_RAW_FOLDER: Path = Path(os.environ.get("OCEANUS_RAW_DIR", r"G:\- OCEANUS\Unedited (RAW)"))
+WHISPER_URL: str = os.environ.get("HERMES_EDITING_YT_WHISPER_URL", "http://127.0.0.1:51746/transcribe")
+DEFAULT_OUTPUT: Path = Path(os.environ.get("HERMES_EDITING_YT_OUTPUT_DIR", r"G:\- hermes-editing-yt\output"))
+DEFAULT_RAW_FOLDER: Path = Path(os.environ.get("HERMES_EDITING_YT_RAW_DIR", r"G:\- hermes-editing-yt\Unedited (RAW)"))
 
 VIDEO_EXTENSIONS = {".mp4", ".mkv", ".mov", ".avi", ".m4v", ".webm"}
 SRT_EXTENSIONS = {".srt", ".vtt"}
@@ -48,7 +48,7 @@ SRT_EXTENSIONS = {".srt", ".vtt"}
 # Segmentation knobs (configurable per-call for the MCP tool)
 LEAD_IN_SECONDS: float = 0.30
 TAIL_OUT_SECONDS: float = 0.45
-MERGE_GAP_SECONDS: float = 1.20
+MERGE_GAP_SECONDS: float = float(os.environ.get("HERMES_EDITING_YT_MERGE_GAP", "1.20"))
 MIN_SEGMENT_SECONDS: float = 0.85
 
 # Render knobs
@@ -109,11 +109,11 @@ class PipelineConfig:
     # Transcription backend: "faster-whisper" (local GPU) or "http" (legacy Whisper server).
     transcribe_backend: str = "faster-whisper"
     # faster-whisper model args
-    whisper_model: str = os.environ.get("OCEANUS_WHISPER_MODEL", "large-v3")
-    whisper_device: str = os.environ.get("OCEANUS_WHISPER_DEVICE", "cuda")
-    whisper_compute_type: str = os.environ.get("OCEANUS_WHISPER_COMPUTE", "float16")
-    whisper_language: Optional[str] = os.environ.get("OCEANUS_WHISPER_LANG") or None
-    whisper_beam_size: int = int(os.environ.get("OCEANUS_WHISPER_BEAM", "5"))
+    whisper_model: str = os.environ.get("HERMES_EDITING_YT_WHISPER_MODEL", "large-v3")
+    whisper_device: str = os.environ.get("HERMES_EDITING_YT_WHISPER_DEVICE", "cuda")
+    whisper_compute_type: str = os.environ.get("HERMES_EDITING_YT_WHISPER_COMPUTE", "float16")
+    whisper_language: Optional[str] = os.environ.get("HERMES_EDITING_YT_WHISPER_LANG") or None
+    whisper_beam_size: int = int(os.environ.get("HERMES_EDITING_YT_WHISPER_BEAM", "5"))
 
 
 @dataclass
@@ -138,7 +138,7 @@ class PipelineResult:
 # Errors                                                                      #
 # --------------------------------------------------------------------------- #
 
-class OceanusError(RuntimeError):
+class EditingYtError(RuntimeError):
     """Raised for any user-facing pipeline failure (clean message, no traceback)."""
 
 
@@ -212,7 +212,7 @@ def require_ffmpeg() -> None:
     for binary in ("ffmpeg", "ffprobe"):
         result = run_cmd([binary, "-version"])
         if result.returncode != 0:
-            raise OceanusError(f"Required binary not available: {binary}")
+            raise EditingYtError(f"Required binary not available: {binary}")
 
 
 def parse_timecode(value: str) -> float:
@@ -299,7 +299,7 @@ def parse_subtitles(text: str) -> List[Cue]:
             index = len(cues) + 1
         cues.append(Cue(index=index, start=start, end=end, text=cue_text))
     if not cues:
-        raise OceanusError("No subtitle cues could be parsed from the input.")
+        raise EditingYtError("No subtitle cues could be parsed from the input.")
     return cues
 
 
@@ -378,11 +378,11 @@ def get_duration(video_path: Path) -> float:
         "-of", "default=noprint_wrappers=1:nokey=1", str(video_path),
     ])
     if result.returncode != 0:
-        raise OceanusError(result.stderr.strip() or f"Unable to read video duration: {video_path}")
+        raise EditingYtError(result.stderr.strip() or f"Unable to read video duration: {video_path}")
     try:
         return float(result.stdout.strip())
     except ValueError as exc:
-        raise OceanusError(f"ffprobe returned non-numeric duration: {result.stdout!r}") from exc
+        raise EditingYtError(f"ffprobe returned non-numeric duration: {result.stdout!r}") from exc
 
 
 def extract_audio(video_path: Path, output_dir: Path, stem: str) -> tuple[Path, Path]:
@@ -396,14 +396,14 @@ def extract_audio(video_path: Path, output_dir: Path, stem: str) -> tuple[Path, 
             "-vn", "-ac", "2", "-ar", "44100", str(mp3_path),
         ])
         if result.returncode != 0:
-            raise OceanusError(result.stderr.strip() or "Audio extraction failed.")
+            raise EditingYtError(result.stderr.strip() or "Audio extraction failed.")
     if not wav_path.exists():
         result = run_cmd([
             "ffmpeg", "-y", "-i", str(video_path),
             "-vn", "-ac", "1", "-ar", "16000", str(wav_path),
         ])
         if result.returncode != 0:
-            raise OceanusError(result.stderr.strip() or "Whisper WAV extraction failed.")
+            raise EditingYtError(result.stderr.strip() or "Whisper WAV extraction failed.")
     return mp3_path, wav_path
 
 
@@ -416,8 +416,8 @@ def render_autocut(
 ) -> Path:
     """Render only the keep-segments, concatenated into `output_path`."""
     if not segments:
-        raise OceanusError("No keep segments were generated, nothing to render.")
-    with tempfile.TemporaryDirectory(prefix="oceanus_segments_") as temp_dir:
+        raise EditingYtError("No keep segments were generated, nothing to render.")
+    with tempfile.TemporaryDirectory(prefix="hermes_editing_yt_segments_") as temp_dir:
         temp_root = Path(temp_dir)
         segment_paths: List[Path] = []
         for idx, segment in enumerate(segments, start=1):
@@ -435,7 +435,7 @@ def render_autocut(
                 str(segment_path),
             ])
             if result.returncode != 0:
-                raise OceanusError(result.stderr.strip() or f"Failed to render segment {idx}.")
+                raise EditingYtError(result.stderr.strip() or f"Failed to render segment {idx}.")
             segment_paths.append(segment_path)
 
         concat_file = temp_root / "concat.txt"
@@ -448,7 +448,7 @@ def render_autocut(
             "-i", str(concat_file), "-c", "copy", str(output_path),
         ])
         if result.returncode != 0:
-            raise OceanusError(result.stderr.strip() or "Final concat render failed.")
+            raise EditingYtError(result.stderr.strip() or "Final concat render failed.")
     return output_path
 
 
@@ -457,7 +457,7 @@ def render_autocut(
 # --------------------------------------------------------------------------- #
 
 def _encode_multipart(file_path: Path, field_name: str = "file", format_name: str = "srt") -> tuple[bytes, str]:
-    boundary = f"----OceanusBoundary{uuid.uuid4().hex}"
+    boundary = f"----EditingYtBoundary{uuid.uuid4().hex}"
     mime_type = mimetypes.guess_type(file_path.name)[0] or "application/octet-stream"
     with file_path.open("rb") as handle:
         payload = handle.read()
@@ -508,7 +508,7 @@ def transcribe_with_faster_whisper(
     level (`_FW_MODEL_CACHE`) so repeated pipeline runs don't pay the
     model-load tax each time.
 
-    Raises OceanusError on missing dependency, unreadable audio, or
+    Raises EditingYtError on missing dependency, unreadable audio, or
     transcription failure.
     """
     import time as _time
@@ -522,7 +522,7 @@ def transcribe_with_faster_whisper(
     try:
         from faster_whisper import WhisperModel
     except ImportError as exc:
-        raise OceanusError(
+        raise EditingYtError(
             "faster-whisper is not installed. Run: pip install faster-whisper"
         ) from exc
 
@@ -533,7 +533,7 @@ def transcribe_with_faster_whisper(
 
     wav_path = wav_path.expanduser().resolve()
     if not wav_path.exists():
-        raise OceanusError(f"WAV not found: {wav_path}")
+        raise EditingYtError(f"WAV not found: {wav_path}")
 
     cache_key = (model, device, compute_type)
     t0 = _time.perf_counter()
@@ -548,12 +548,12 @@ def transcribe_with_faster_whisper(
                     device = "cpu"
                     compute_type = "float32"
                 except Exception as exc2:
-                    raise OceanusError(
+                    raise EditingYtError(
                         f"faster-whisper load failed on {device}/{compute_type} "
                         f"({exc}) and CPU fallback also failed ({exc2})"
                     ) from exc2
             else:
-                raise OceanusError(f"faster-whisper load failed: {exc}") from exc
+                raise EditingYtError(f"faster-whisper load failed: {exc}") from exc
         _FW_MODEL_CACHE["key"] = cache_key
         _FW_MODEL_CACHE["model"] = model_obj
     model_obj = _FW_MODEL_CACHE["model"]
@@ -569,7 +569,7 @@ def transcribe_with_faster_whisper(
         # Materialize generator → list (we need segment_count + SRT bytes).
         segments = list(segments_iter)
     except Exception as exc:
-        raise OceanusError(f"faster-whisper transcription failed: {exc}") from exc
+        raise EditingYtError(f"faster-whisper transcription failed: {exc}") from exc
 
     # Build SRT in memory. faster-whisper segments are 0-indexed, with
     # `.start`, `.end` (float seconds), `.text` (str), `.words` (optional).
@@ -613,14 +613,14 @@ def transcribe_to_srt(
             payload = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="ignore")
-        raise OceanusError(f"Whisper server request failed: {detail or exc.reason}") from exc
+        raise EditingYtError(f"Whisper server request failed: {detail or exc.reason}") from exc
     except urllib.error.URLError as exc:
-        raise OceanusError(
+        raise EditingYtError(
             "Whisper server is not reachable. Start it or pass an existing --srt."
         ) from exc
     text = payload.get("text", "").strip() if isinstance(payload, dict) else ""
     if not text:
-        raise OceanusError("Whisper server returned an empty transcript.")
+        raise EditingYtError("Whisper server returned an empty transcript.")
     srt_path.parent.mkdir(parents=True, exist_ok=True)
     srt_path.write_text(text + "\n", encoding="utf-8")
     return srt_path
@@ -714,12 +714,12 @@ def run_pipeline(
                                      will not attempt to transcribe.
     """
     if mode not in {"automark", "autocut", "autoedit"}:
-        raise OceanusError(f"Unknown mode: {mode!r} (use automark/autocut/autoedit)")
+        raise EditingYtError(f"Unknown mode: {mode!r} (use automark/autocut/autoedit)")
     video_path = video_path.resolve()
     if not video_path.exists():
-        raise OceanusError(f"Video not found: {video_path}")
+        raise EditingYtError(f"Video not found: {video_path}")
     if not is_video(video_path):
-        raise OceanusError(f"Unsupported video type: {video_path.suffix}")
+        raise EditingYtError(f"Unsupported video type: {video_path.suffix}")
     output_dir = output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -747,7 +747,7 @@ def run_pipeline(
         elif config.transcribe_backend == "http":
             chosen_srt = transcribe_to_srt(whisper_wav, chosen_srt, url=whisper_url)
         else:  # "none" or any other value → surface clear error
-            raise OceanusError(
+            raise EditingYtError(
                 f"No SRT found at {chosen_srt} and transcribe_backend="
                 f"{config.transcribe_backend!r} cannot produce one. "
                 f"Pass srt_path=... or set transcribe_backend='faster-whisper'/'http'."
@@ -854,7 +854,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     mode = _ask_mode(args.mode)
     video_path = Path(args.video).resolve() if args.video else _ask_path("Exact source video file")
     if not is_video(video_path):
-        raise OceanusError(f"Unsupported video type: {video_path.suffix}")
+        raise EditingYtError(f"Unsupported video type: {video_path.suffix}")
     raw_folder_default = video_path.parent
     confirmed_raw = Path(args.raw_folder).resolve() if args.raw_folder else _ask_path(
         "Confirm raw footage folder", default=raw_folder_default,
@@ -892,6 +892,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Cancelled by user.")
         raise SystemExit(130)
-    except OceanusError as exc:
+    except EditingYtError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         raise SystemExit(1)

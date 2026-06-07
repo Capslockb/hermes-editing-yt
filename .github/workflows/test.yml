@@ -21,7 +21,7 @@ jobs:
           pip install pytest
       - name: run unit tests (no install needed; tests already add plugin/ to sys.path)
         run: |
-          pytest tests/test_oceanus_autoedit.py -v
+          pytest tests/test_hermes_editing_yt.py -v
   installer-dry-run:
     name: installer --help + shell syntax
     runs-on: ubuntu-latest

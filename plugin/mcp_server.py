@@ -1,7 +1,7 @@
 """
-oceanus_autoedit MCP server (FastMCP 3.x, stdio transport).
+hermes_editing_yt MCP server (FastMCP 3.x, stdio transport).
 
-Exposes the OCEANUS autoedit pipeline as a small, focused tool surface so
+Exposes the hermes-editing-yt autoedit pipeline as a small, focused tool surface so
 any MCP client (Hermes Agent, Claude Desktop, Cursor, mcporter, …) can drive
 it without touching ffmpeg or the local Whisper server.
 
@@ -40,7 +40,7 @@ _THIS_DIR = Path(__file__).resolve().parent
 if str(_THIS_DIR) not in sys.path:
     sys.path.insert(0, str(_THIS_DIR))
 
-import oceanus_autoedit as lib  # noqa: E402
+import hermes_editing_yt as lib  # noqa: E402
 
 try:
     from fastmcp import FastMCP
@@ -49,14 +49,14 @@ except ImportError as exc:  # pragma: no cover
     raise SystemExit(2) from exc
 
 
-SERVER_NAME = "oceanus-autoedit"
+SERVER_NAME = "hermes-editing-yt"
 SERVER_VERSION = "1.0.0"
 SERVER_INSTRUCTIONS = (
-    "OCEANUS autoedit — subtitle-driven video editor. Use list_videos/list_subtitles "
+    "hermes-editing-yt autoedit — subtitle-driven video editor. Use list_videos/list_subtitles "
     "to discover inputs, parse_srt_text/build_segments_from_srt to preview cuts, "
     "and autoedit/autocut/automark to run the full ffmpeg+Whisper pipeline. "
     "All paths are absolute. The default output root is configurable via the "
-    "OCEANUS_OUTPUT_DIR env var. Whisper URL via OCEANUS_WHISPER_URL."
+    "HERMES_EDITING_YT_OUTPUT_DIR env var. Whisper URL via HERMES_EDITING_YT_WHISPER_URL."
 )
 
 mcp = FastMCP(name=SERVER_NAME, instructions=SERVER_INSTRUCTIONS)
@@ -199,7 +199,7 @@ def parse_srt_text(text: str) -> str:
                 for c in cues
             ],
         })
-    except lib.OceanusError as exc:
+    except lib.EditingYtError as exc:
         return _to_json({"error": str(exc), "count": 0, "cues": []})
 
 
@@ -236,7 +236,7 @@ def build_segments_from_srt(
             "segments": _segment_dicts(segments),
             "markers": _marker_dicts(markers),
         })
-    except lib.OceanusError as exc:
+    except lib.EditingYtError as exc:
         return _to_json({"error": str(exc)})
 
 
@@ -248,7 +248,7 @@ def build_segments_from_srt(
 def whisper_transcribe(wav_path: str, output_srt_path: str, url: Optional[str] = None) -> str:
     """POST a 16kHz mono WAV to the local Whisper server and save the SRT.
 
-    `url` defaults to OCEANUS_WHISPER_URL or http://127.0.0.1:51746/transcribe.
+    `url` defaults to HERMES_EDITING_YT_WHISPER_URL or http://127.0.0.1:51746/transcribe.
     Returns JSON: {srt_path, byte_count, server_url}.
     """
     try:
@@ -263,7 +263,7 @@ def whisper_transcribe(wav_path: str, output_srt_path: str, url: Optional[str] =
             "byte_count": written.stat().st_size,
             "server_url": used_url,
         })
-    except lib.OceanusError as exc:
+    except lib.EditingYtError as exc:
         return _to_json({"error": str(exc)})
 
 
@@ -311,7 +311,7 @@ def render_segments(
             "size_mb": round(written.stat().st_size / 1024 / 1024, 2),
             "segment_count": len(segments),
         })
-    except lib.OceanusError as exc:
+    except lib.EditingYtError as exc:
         return _to_json({"error": str(exc)})
     except (KeyError, TypeError, ValueError) as exc:
         return _to_json({"error": f"invalid_segments_json: {exc}"})
@@ -367,7 +367,7 @@ def _run_pipeline_tool(
             whisper_url=whisper_url or lib.WHISPER_URL,
         )
         return _to_json(_result_summary(result))
-    except lib.OceanusError as exc:
+    except lib.EditingYtError as exc:
         return _to_json({"error": str(exc), "mode": mode})
 
 
@@ -502,7 +502,7 @@ def gpu_transcribe(
             "language": result.language,
             "elapsed_seconds": result.elapsed_seconds,
         })
-    except lib.OceanusError as exc:
+    except lib.EditingYtError as exc:
         return _to_json({"error": str(exc)})
 
 
@@ -514,7 +514,7 @@ def server_info() -> str:
     try:
         lib.require_ffmpeg()
         ffmpeg_ok = ffprobe_ok = True
-    except lib.OceanusError:
+    except lib.EditingYtError:
         pass
     return _to_json({
         "server": SERVER_NAME,
@@ -542,9 +542,9 @@ def server_info() -> str:
             "audio_bitrate": lib.RENDER_AUDIO_BITRATE,
         },
         "env_overrides": {
-            "OCEANUS_WHISPER_URL": os.environ.get("OCEANUS_WHISPER_URL"),
-            "OCEANUS_OUTPUT_DIR": os.environ.get("OCEANUS_OUTPUT_DIR"),
-            "OCEANUS_RAW_DIR": os.environ.get("OCEANUS_RAW_DIR"),
+            "HERMES_EDITING_YT_WHISPER_URL": os.environ.get("HERMES_EDITING_YT_WHISPER_URL"),
+            "HERMES_EDITING_YT_OUTPUT_DIR": os.environ.get("HERMES_EDITING_YT_OUTPUT_DIR"),
+            "HERMES_EDITING_YT_RAW_DIR": os.environ.get("HERMES_EDITING_YT_RAW_DIR"),
         },
     })
 
@@ -554,7 +554,7 @@ def server_info() -> str:
 # --------------------------------------------------------------------------- #
 
 def _parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="OCEANUS autoedit MCP server")
+    parser = argparse.ArgumentParser(description="hermes-editing-yt autoedit MCP server")
     parser.add_argument(
         "--http", type=int, default=None, metavar="PORT",
         help="Run as HTTP/StreamableHTTP server on PORT (default: stdio)",

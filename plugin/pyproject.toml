@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "veo-editor"
-version = "0.1.0"
-description = "Subtitle-driven auto video editor for the OCEANUS pipeline. Hermes MCP plugin."
+name = "hermes-editing-yt"
+version = "0.1.1"
+description = "Subtitle-driven auto video editor for the Hermes Editing pipeline. Hermes MCP plugin."
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
@@ -36,9 +36,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Capslockb/veo-editor"
-Repository = "https://github.com/Capslockb/veo-editor"
-Issues = "https://github.com/Capslockb/veo-editor/issues"
+Homepage = "https://github.com/Capslockb/hermes-editing-yt"
+Repository = "https://github.com/Capslockb/hermes-editing-yt"
+Issues = "https://github.com/Capslockb/hermes-editing-yt/issues"
 
 [tool.setuptools]
 packages = ["plugin"]

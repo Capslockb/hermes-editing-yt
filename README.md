@@ -1,8 +1,8 @@
 <div align="center">
 
-# Veo Editor
+# hermes-editing-yt
 
-### Subtitle-driven auto video editor for the OCEANUS pipeline.
+### Subtitle-driven auto video editor for the Hermes Editing pipeline.
 
 **One MCP call. Local GPU. Free forever. No API keys.**
 
@@ -12,25 +12,29 @@
 [![CUDA sm_120](https://img.shields.io/badge/CUDA-RTX_5060-76b900?style=for-the-badge&logo=nvidia&logoColor=white)](https://developer.nvidia.com)
 [![Hermes](https://img.shields.io/badge/Hermes-MCP-915eff?style=for-the-badge)](https://hermes-agent.nousresearch.com)
 
-[**Website**](https://capslockb.github.io/veo-editor) · [**Install**](#-install) · [**The 11 MCP tools**](#-the-11-mcp-tools) · [**Architecture**](#-architecture) · [**Changelog**](CHANGELOG.md)
+[**Website**](https://capslockb.github.io/hermes-editing-yt) · [**Install**](#-install) · [**The 11 MCP tools**](#-the-11-mcp-tools) · [**Architecture**](#-architecture) · [**Changelog**](CHANGELOG.md)
 
 </div>
 
 ---
 
-## Why Veo Editor
+## Why hermes-editing-yt
 
-Recording a 10-minute video and shipping a 9:52 cut should not take an editor. Veo Editor reads your SRT (or transcribes one with the local GPU), finds the spoken segments, drops the dead air, and renders a CRF-18 MP4 — all in a single MCP call from any Hermes agent.
+Drop the dead air, keep the takes. hermes-editing-yt reads your SRT (or transcribes one with the local GPU), finds the spoken segments, drops gaps longer than 1.2s, and renders a CRF-18 MP4 — all in a single MCP call from any Hermes agent.
+
+On a typical 10-minute recording you can expect **5–15% shorter** output (the bigger the pauses, the more it cuts). Tunable via `HERMES_EDITING_YT_MERGE_GAP`; the default preserves natural breath beats.
 
 ```
-  raw.mp4 (10:08)  ──►  SRT (or local GPU large-v3)  ──►  segments  ──►  ffmpeg+libx264
-                       (178 cues / 47s on RTX 5060)     (2 keep)        (3:18 render)
-                                                                            │
-                                                                            ▼
-                                                       cut.mp4 (9:51, 296 MB, CRF 18)
+  raw.mp4 (10:00)  ──►  SRT (or local GPU large-v3)  ──►  segments  ──►  ffmpeg+libx264
+                       (~150–200 cues / 40–60s on RTX 5060)               (3–5 min render)
+                                                                                │
+                                                                                ▼
+                                                       cut.mp4 (≈8:30–9:30, CRF 18, AAC 192k)
 ```
 
-![Veo Editor — pipeline](docs/diagrams/pipeline.svg)
+> The "9:51" figure from earlier releases came from a recording with almost no silence (gameplay commentary, 17s of dead air total). A real spoken-word vlog with 30–60s of pauses will land closer to 8:00–8:30. Adjust `HERMES_EDITING_YT_MERGE_GAP` for more or less aggressive trimming.
+
+![hermes-editing-yt — pipeline](docs/diagrams/pipeline.svg)
 
 ---
 
@@ -42,7 +46,7 @@ Recording a 10-minute video and shipping a 9:52 cut should not take an editor. V
 | **Subtitle-driven cut** | Loads an SRT (or transcribes one), finds speech segments, merges gaps ≤1.2s, drops everything else. |
 | **Highlight markers** | Auto-tags "boss", "spawn", "rare", "wait", "wow", "let's go", `!`/`?` lines as suggestion markers. |
 | **3 modes** | `automark` (markers + plan only, no render) · `autocut` (render, no markers) · `autoedit` (both). |
-| **FastMCP 3.0.2 server** | 11 tools over stdio + StreamableHTTP. Registers as `oceanus` in Hermes. |
+| **FastMCP 3.0.2 server** | 11 tools over stdio + StreamableHTTP. Registers as `hermes-editing-yt` in Hermes. |
 | **Oneshot installer** | `curl ... \| bash` (Linux/macOS) or `iwr ... \| iex` (Windows). TUI prompts, unit-test gate, auto-register. |
 | **No API keys** | Local GPU. Optional HTTP Whisper endpoint if you already run one. |
 
@@ -50,17 +54,17 @@ Recording a 10-minute video and shipping a 9:52 cut should not take an editor. V
 
 ## 🏗 Architecture
 
-Veo Editor runs as a **FastMCP plugin** inside the Hermes agent swarm. The agent invokes one of 11 tools over JSON-RPC 2.0 (stdio or StreamableHTTP). The plugin orchestrates Whisper, ffmpeg, and a pure-Python cut planner.
+hermes-editing-yt runs as a **FastMCP plugin** inside the Hermes agent swarm. The agent invokes one of 11 tools over JSON-RPC 2.0 (stdio or StreamableHTTP). The plugin orchestrates Whisper, ffmpeg, and a pure-Python cut planner.
 
-![Veo Editor — architecture](docs/diagrams/architecture.svg)
+![hermes-editing-yt — architecture](docs/diagrams/architecture.svg)
 
 Read the full design in [`docs/architecture.md`](docs/architecture.md).
 
 ### The 11 MCP tools
 
-The plugin registers as `oceanus` in Hermes and exposes 11 tools grouped by phase:
+The plugin registers as `hermes-editing-yt` in Hermes and exposes 11 tools grouped by phase:
 
-![Veo Editor — MCP tools grouped by phase](docs/diagrams/mcp-tools.svg)
+![hermes-editing-yt — MCP tools grouped by phase](docs/diagrams/mcp-tools.svg)
 
 | Phase | Tools |
 |---|---|
@@ -79,7 +83,7 @@ Drop-in visuals for readme banners, social cards, and docs:
 |---|---|
 | ![GPU render — RTX 5060](docs/media/gpu-render.png) | ![3D pipeline diagram](docs/media/pipeline-3d.png) |
 | **GPU render** — RTX 5060 with cublas v12 shim | **3D pipeline** — raw → SRT → segments → render |
-| ![Hero workstation](docs/media/hero-workstation.png) | ![Veo Editor logo](docs/media/logo-icon.png) |
+| ![Hero workstation](docs/media/hero-workstation.png) | ![hermes-editing-yt logo](docs/media/logo-icon.png) |
 | **Hero workstation** — 3D isometric editing suite | **App icon** — obsidian V with cyan glow |
 
 All four are generated for this release under MIT.
@@ -90,25 +94,25 @@ All four are generated for this release under MIT.
 
 ### One-shot (Windows)
 ```powershell
-iwr -useb https://raw.githubusercontent.com/Capslockb/veo-editor/main/installer/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.ps1 | iex
 ```
 
 ### One-shot (Linux / macOS)
 ```bash
-curl -sSL https://raw.githubusercontent.com/Capslockb/veo-editor/main/installer/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.sh | bash
 ```
 
 ### TUI installer (interactive)
 ```bash
-git clone https://github.com/Capslockb/veo-editor.git
-cd veo-editor
+git clone https://github.com/Capslockb/hermes-editing-yt.git
+cd hermes-editing-yt
 python installer/install.py
 ```
 
 ### Non-interactive (CI / scripted)
 ```bash
-git clone https://github.com/Capslockb/veo-editor.git
-cd veo-editor
+git clone https://github.com/Capslockb/hermes-editing-yt.git
+cd hermes-editing-yt
 python installer/install.py --non-interactive
 ```
 
@@ -134,18 +138,18 @@ The installer checks for all of these and tells you what's missing.
 
 ### From any Hermes chat
 ```
-Use the oceanus MCP tools to autocut
-G:\- OCEANUS\Editing\New folder\Helgstr1.mp4
-with output to G:\- OCEANUS\output\my-first-cut
+Use the hermes-editing-yt MCP tools to autocut
+G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4
+with output to G:\- hermes-editing-ytoutput\my-first-cut
 ```
 
 ### From a script
 ```python
 import subprocess, json
 result = subprocess.run(
-    ["hermes", "mcp", "call", "oceanus", "autoedit",
-     "--video_path", r"G:\- OCEANUS\Editing\New folder\Helgstr1.mp4",
-     "--output_dir", r"G:\- OCEANUS\output\my-first-cut"],
+    ["hermes", "mcp", "call", "hermes-editing-yt", "autoedit",
+     "--video_path", r"G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4",
+     "--output_dir", r"G:\- hermes-editing-ytoutput\my-first-cut"],
     capture_output=True, text=True
 )
 print(json.loads(result.stdout))
@@ -173,11 +177,11 @@ print(f"kept {result.kept_duration_seconds:.1f}s of {result.duration_seconds:.1f
 
 | Var | Default | Notes |
 |---|---|---|
-| `OCEANUS_OUTPUT_DIR` | `~/veo-editor-output` | Where autocut/autoedit writes |
-| `OCEANUS_WHISPER_URL` | _(empty)_ | External Whisper endpoint. Empty = local GPU |
-| `OCEANUS_WHISPER_MODEL` | `large-v3` | `tiny` / `base` / `small` / `medium` / `large-v3` |
-| `OCEANUS_WHISPER_DEVICE` | `cuda` | `cpu` if no GPU |
-| `OCEANUS_WHISPER_COMPUTE` | `float16` | `float32` / `int8` |
+| `HERMES_EDITING_YT_OUTPUT_DIR` | `~/hermes-editing-yt-output` | Where autocut/autoedit writes |
+| `HERMES_EDITING_YT_WHISPER_URL` | _(empty)_ | External Whisper endpoint. Empty = local GPU |
+| `HERMES_EDITING_YT_WHISPER_MODEL` | `large-v3` | `tiny` / `base` / `small` / `medium` / `large-v3` |
+| `HERMES_EDITING_YT_WHISPER_DEVICE` | `cuda` | `cpu` if no GPU |
+| `HERMES_EDITING_YT_WHISPER_COMPUTE` | `float16` | `float32` / `int8` |
 
 ---
 
@@ -195,9 +199,9 @@ python scripts/run_gpu_demo.py         # full GPU autocut on the bundled demo vi
 ## 📁 Repo layout
 
 ```
-veo-editor/
+hermes-editing-yt/
 ├── plugin/                     # the library + MCP server (installable)
-│   ├── oceanus_autoedit.py     # pure-Python pipeline (no GUI)
+│   ├── hermes_editing_yt.py     # pure-Python pipeline (no GUI)
 │   ├── mcp_server.py           # FastMCP 3.0.2 server, 11 tools
 │   ├── plugin.yaml             # Hermes plugin manifest
 │   ├── requirements.txt        # pip deps
@@ -206,12 +210,12 @@ veo-editor/
 │   ├── install.py              # rich TUI installer (--non-interactive / --uninstall)
 │   ├── install.sh              # bash curl-pipe-bash entry
 │   └── install.ps1             # PowerShell iwr|iex entry
-├── skills/oceanus-autoedit/    # Hermes skill doc
+├── skills/hermes-editing-yt/    # Hermes skill doc
 │   └── SKILL.md
 ├── site/                       # the website (React + Three.js, GitHub Pages)
 │   ├── src/                    # components, constants, 3D canvas
 │   ├── public/                 # static assets, og-image
-│   └── vite.config.ts          # base: /veo-editor/
+│   └── vite.config.ts          # base: /hermes-editing-yt/
 ├── tests/                      # 35 unit tests + 11-tool MCP smoke
 ├── scripts/
 │   └── run_gpu_demo.py         # end-to-end demo runner
@@ -230,7 +234,7 @@ veo-editor/
 
 ## 🌐 Website
 
-The site is a 3D React + Three.js app, customized for Veo Editor from the
+The site is a 3D React + Three.js app, customized for hermes-editing-yt from the
 MIT-licensed [sanidhyy/3d-portfolio](https://github.com/sanidhyy/3d-portfolio) template.
 
 ```bash
@@ -240,7 +244,7 @@ npm run dev          # preview at http://127.0.0.1:5173
 npm run build        # static site → site/dist/
 ```
 
-Deployed automatically to **https://capslockb.github.io/veo-editor/** on every push to `main`.
+Deployed automatically to **https://capslockb.github.io/hermes-editing-yt/** on every push to `main`.
 
 ---
 

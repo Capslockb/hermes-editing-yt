@@ -15,7 +15,7 @@ const Footer = () => {
     >
       <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
         <p className="text-white text-md font-bold flex">
-          &copy; Veo Editor {new Date().getFullYear()}. MIT License.
+          &copy; hermes-editing-yt {new Date().getFullYear()}. MIT License.
         </p>
 
         {/* Nav Links (Desktop) */}

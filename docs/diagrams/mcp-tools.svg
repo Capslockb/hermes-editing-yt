@@ -10,7 +10,7 @@
   <rect width="1200" height="720" fill="url(#bg)"/>
 
   <text x="60" y="50" font-size="26" font-weight="700" fill="#ffffff">11 MCP Tools · grouped by phase</text>
-  <text x="60" y="76" font-size="14" fill="#7a7e94">All tools are JSON-RPC 2.0 over stdio or StreamableHTTP. The hermes gateway auto-discovers them when the plugin registers as <tspan font-family="ui-monospace, monospace" fill="#915eff">oceanus</tspan>.</text>
+  <text x="60" y="76" font-size="14" fill="#7a7e94">All tools are JSON-RPC 2.0 over stdio or StreamableHTTP. The hermes gateway auto-discovers them when the plugin registers as <tspan font-family="ui-monospace, monospace" fill="#915eff">hermes-editing-yt</tspan>.</text>
 
   <!-- 4 columns -->
 

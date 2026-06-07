@@ -31,12 +31,12 @@ ffmpeg is **not** a pip dependency — it must be on PATH.
 - Fedora: `sudo dnf install ffmpeg`
 - macOS: `brew install ffmpeg`
 
-`require_ffmpeg()` raises `OceanusError("ffmpeg is not on PATH...")`
+`require_ffmpeg()` raises `EditingYtError("ffmpeg is not on PATH...")`
 with a clear message.
 
 ## `Whisper server is not reachable` (HTTP backend)
 
-`whisper_transcribe` posts to `OCEANUS_WHISPER_URL`
+`whisper_transcribe` posts to `HERMES_EDITING_YT_WHISPER_URL`
 (default: `http://127.0.0.1:51746/transcribe`). If that endpoint is
 down, the tool returns an `error` JSON envelope — not a crash.
 
@@ -49,12 +49,12 @@ down, the tool returns an `error` JSON envelope — not a crash.
 
 ## `hermes` CLI not on PATH
 
-The installer tries to call `hermes mcp add oceanus` to register the
+The installer tries to call `hermes mcp add hermes-editing-yt` to register the
 plugin. If the CLI is missing, the install still completes — it just
 prints a warning. You can register manually:
 
 ```bash
-hermes mcp add oceanus \
+hermes mcp add hermes-editing-yt \
     --command "$(which python)" \
     --args "$(pwd)/plugin/mcp_server.py"
 ```
@@ -72,10 +72,10 @@ behind `tmp_path` from pytest, so the unit tests are platform-agnostic.
 The MCP smoke test does:
 
 ```python
-env={**os.environ, "OCEANUS_OUTPUT_DIR": str(tmp_path)}
+env={**os.environ, "HERMES_EDITING_YT_OUTPUT_DIR": str(tmp_path)}
 ```
 
-If you see path-related failures, check that `OCEANUS_OUTPUT_DIR`
+If you see path-related failures, check that `HERMES_EDITING_YT_OUTPUT_DIR`
 isn't being inherited from your shell and pointing at a Windows path.
 
 ## Render is much slower than expected

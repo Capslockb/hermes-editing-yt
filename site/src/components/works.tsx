@@ -105,7 +105,7 @@ export const Works = () => {
             variants={fadeIn("", "", 0.1, 1)}
             className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]"
           >
-            Veo Editor brings professional-grade subtitle-driven video editing
+            hermes-editing-yt brings professional-grade subtitle-driven video editing
             to your local machine. Each feature is designed to work together,
             powered by GPU-accelerated transcription and a flexible MCP tool
             interface. Click the GitHub icon to view the source code.

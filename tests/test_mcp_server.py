@@ -1,5 +1,5 @@
 """
-Smoke test the oceanus-autoedit MCP server via the official MCP client
+Smoke test the hermes-editing-yt MCP server via the official MCP client
 (`mcp.client.session.ClientSession`) over stdio. Verifies the server starts,
 lists all 10 tools, and that each one returns a structurally valid JSON
 string when called.
@@ -56,7 +56,7 @@ async def main() -> int:
         print(f"ERROR: server not found at {server_path}", file=sys.stderr)
         return 2
 
-    with tempfile.TemporaryDirectory(prefix="oceanus_mcp_smoke_") as tmp:
+    with tempfile.TemporaryDirectory(prefix="hermes_editing_yt_mcp_smoke_") as tmp:
         tmp_path = Path(tmp)
         srt_path = tmp_path / "fixture.srt"
         srt_path.write_text(SAMPLE_SRT, encoding="utf-8")
@@ -64,7 +64,7 @@ async def main() -> int:
         params = StdioServerParameters(
             command=sys.executable,
             args=[server_path],
-            env={**os.environ, "OCEANUS_OUTPUT_DIR": str(tmp_path)},
+            env={**os.environ, "HERMES_EDITING_YT_OUTPUT_DIR": str(tmp_path)},
         )
 
         async with stdio_client(params) as (read, write):
@@ -93,7 +93,7 @@ async def main() -> int:
                 # ---- server_info ----
                 info_raw = await session.call_tool("server_info", {})
                 info = json.loads(_text_of(info_raw))
-                assert info["server"] == "oceanus-autoedit", info
+                assert info["server"] == "hermes-editing-yt", info
                 print(f"[smoke] OK: server_info → version={info['version']} "
                       f"ffmpeg={info['ffmpeg_available']} whisper={info['whisper_url']}")
 
@@ -193,7 +193,7 @@ async def main() -> int:
                 #      already validate the real end-to-end path in
                 #      run_gpu_helgstr1.py. A bad WAV would hang the
                 #      decode. The standalone tool was unit-tested in
-                #      test_oceanus_autoedit.py.
+                #      test_hermes_editing_yt.py.
                 gt_schema = next((t for t in tools.tools if t.name == "gpu_transcribe"), None)
                 assert gt_schema is not None, "gpu_transcribe tool not registered"
                 # required kwargs

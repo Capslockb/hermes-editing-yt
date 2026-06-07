@@ -1,7 +1,7 @@
 # Visuals
 
 This directory contains release imagery generated for the **v0.1.0** announcement
-of Veo Editor. All images are MIT-licensed — the same license as the code. You
+of hermes-editing-yt. All images are MIT-licensed — the same license as the code. You
 may reuse them in derivative projects, social cards, blog posts, and docs as
 long as you keep the MIT notice in `LICENSE`.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Veo Editor — Oneshot Installer
+hermes-editing-yt — Oneshot Installer
 ======================================
 
 Walks the user through:
@@ -9,8 +9,8 @@ Walks the user through:
   2. Output dir + optional Whisper endpoint (or local GPU)
   3. pip install of the plugin's requirements
   4. Unit-test gate (35 tests must pass)
-  5. Hermes MCP registration (`hermes mcp add oceanus`)
-  6. Skill doc install to ~/AppData/Local/hermes/skills/media/oceanus-autoedit/
+  5. Hermes MCP registration (`hermes mcp add hermes-editing-yt`)
+  6. Skill doc install to ~/AppData/Local/hermes/skills/media/hermes-editing-yt/
   7. Final summary + the exact tool call to try next
 
 Uses only stdlib + rich (color/tables). No external CLI deps beyond
@@ -53,16 +53,16 @@ except ImportError:  # pragma: no cover
 # Configuration
 # ============================================================================
 
-REPO_NAME = "veo-editor"
-PLUGIN_NAME = "oceanus"          # what `hermes mcp add` will register
-PLUGIN_DIR_NAME = "oceanus-autoedit"  # dir under skills/ and plugins/
-PLUGIN_TITLE = "Veo Editor"
+REPO_NAME = "hermes-editing-yt"
+PLUGIN_NAME = "hermes-editing-yt"          # what `hermes mcp add` will register
+PLUGIN_DIR_NAME = "hermes-editing-yt"  # dir under skills/ and plugins/
+PLUGIN_TITLE = "hermes-editing-yt"
 
 # Defaults — overridable via env / CLI
 DEFAULT_HERMES_HOME = Path(os.environ.get("HERMES_HOME") or Path.home() / "AppData" / "Local" / "hermes")
 DEFAULT_PLUGIN_DEST = DEFAULT_HERMES_HOME / "plugins" / PLUGIN_DIR_NAME
 DEFAULT_SKILL_DEST = DEFAULT_HERMES_HOME / "skills" / "media" / PLUGIN_DIR_NAME
-DEFAULT_OUTPUT_DIR = Path.home() / "veo-editor-output"
+DEFAULT_OUTPUT_DIR = Path.home() / "hermes-editing-yt-output"
 
 REPO_DIR = Path(__file__).resolve().parent.parent
 PLUGIN_SRC = REPO_DIR / "plugin"
@@ -291,7 +291,7 @@ def step_detect(ui: UI) -> EnvReport:
                 "autocut/autoedit will fail until you install ffmpeg.")
     if not env.hermes_cli_ok:
         ui.warn("hermes CLI not on PATH. The plugin will be installed, but "
-                "`hermes mcp add oceanus` will fail. Run `pip install "
+                "`hermes mcp add hermes-editing-yt` will fail. Run `pip install "
                 "hermes-agent` first if you want MCP auto-registration.")
     if not env.hermes_home_ok:
         ui.warn(f"Hermes home not found at {env.hermes_home}. Plugin files "
@@ -304,10 +304,10 @@ def step_configure(ui: UI, non_interactive: bool) -> dict:
     cfg = {}
     if non_interactive:
         cfg["output_dir"] = DEFAULT_OUTPUT_DIR
-        cfg["whisper_url"] = os.environ.get("OCEANUS_WHISPER_URL", "")
-        cfg["whisper_model"] = os.environ.get("OCEANUS_WHISPER_MODEL", "large-v3")
-        cfg["whisper_device"] = os.environ.get("OCEANUS_WHISPER_DEVICE", "cuda")
-        cfg["whisper_compute"] = os.environ.get("OCEANUS_WHISPER_COMPUTE", "float16")
+        cfg["whisper_url"] = os.environ.get("HERMES_EDITING_YT_WHISPER_URL", "")
+        cfg["whisper_model"] = os.environ.get("HERMES_EDITING_YT_WHISPER_MODEL", "large-v3")
+        cfg["whisper_device"] = os.environ.get("HERMES_EDITING_YT_WHISPER_DEVICE", "cuda")
+        cfg["whisper_compute"] = os.environ.get("HERMES_EDITING_YT_WHISPER_COMPUTE", "float16")
         ui.info(f"Output dir: {cfg['output_dir']}")
         ui.info(f"Whisper model: {cfg['whisper_model']} on {cfg['whisper_device']} "
                 f"({cfg['whisper_compute']})")
@@ -318,7 +318,7 @@ def step_configure(ui: UI, non_interactive: bool) -> dict:
     cfg["output_dir"] = Path(out).expanduser()
     cfg["whisper_url"] = ui.ask(
         "External Whisper HTTP endpoint (blank = use built-in GPU transcriber)",
-        os.environ.get("OCEANUS_WHISPER_URL", ""))
+        os.environ.get("HERMES_EDITING_YT_WHISPER_URL", ""))
     if not cfg["whisper_url"]:
         cfg["whisper_model"] = ui.ask("Local faster-whisper model", "large-v3")
         cfg["whisper_device"] = ui.ask("Compute device (cuda / cpu)", "cuda")
@@ -348,7 +348,7 @@ def step_install_deps(ui: UI, non_interactive: bool) -> bool:
 
 def step_run_tests(ui: UI) -> bool:
     ui.step("4 / 7 — Run unit tests (gate)")
-    cmd = [sys.executable, "-m", "pytest", str(REPO_DIR / "tests" / "test_oceanus_autoedit.py"),
+    cmd = [sys.executable, "-m", "pytest", str(REPO_DIR / "tests" / "test_hermes_editing_yt.py"),
            "-q", "--tb=short"]
     ui.info(f"$ {' '.join(cmd)}")
     rc = subprocess.call(cmd)
@@ -395,7 +395,7 @@ def step_register_mcp(ui: UI, env: EnvReport, plugin_dest: Optional[Path],
     ui.step("7 / 7 — Register MCP server with Hermes")
     if not env.hermes_cli_ok:
         ui.warn("hermes CLI not on PATH. Skipping auto-register. "
-                "Run `hermes mcp add oceanus --command ... --args ...` manually.")
+                "Run `hermes mcp add hermes-editing-yt --command ... --args ...` manually.")
         return False
 
     if not plugin_dest:
@@ -434,7 +434,7 @@ def step_register_mcp(ui: UI, env: EnvReport, plugin_dest: Optional[Path],
     if rc != 0:
         ui.err("hermes mcp add failed. Re-run with --verbose to debug.")
         return False
-    ui.ok("MCP server registered as `oceanus`.")
+    ui.ok("MCP server registered as `hermes-editing-yt`.")
     return True
 
 
@@ -449,20 +449,20 @@ def step_summary(ui: UI, env: EnvReport, plugin_dest: Optional[Path],
         ("Whisper model", cfg.get("whisper_model", "n/a")),
         ("Whisper device", cfg.get("whisper_device", "n/a")),
         ("Whisper compute", cfg.get("whisper_compute", "n/a")),
-        ("MCP server", "registered as `oceanus`" if mcp_ok else "(not registered)"),
+        ("MCP server", "registered as `hermes-editing-yt`" if mcp_ok else "(not registered)"),
     ]
     ui.table("Result", rows)
     ui.info("Try this in any Hermes chat:")
     print()
-    print("  Use the oceanus MCP tools to autocut")
-    print("  G:\\- OCEANUS\\Editing\\New folder\\Helgstr1.mp4")
-    print("  with output to G:\\- OCEANUS\\output\\my-first-cut")
+    print("  Use the hermes-editing-yt MCP tools to autocut")
+    print("  G:\\- hermes-editing-yt\Editing\\New folder\\Helgstr1.mp4")
+    print("  with output to G:\\- hermes-editing-yt\output\\my-first-cut")
     print()
     ui.info("Or run the demo directly:")
     print(f"  {sys.executable} scripts/run_gpu_demo.py")
     print()
     ui.info("Verify the install:")
-    print("  hermes mcp test oceanus")
+    print("  hermes mcp test hermes-editing-yt")
     print()
     ui.info("Uninstall:")
     print("  python installer/install.py --uninstall")

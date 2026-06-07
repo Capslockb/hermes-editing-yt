@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  Veo Editor — Linux/macOS one-shot installer
+#  hermes-editing-yt — Linux/macOS one-shot installer
 # ============================================================================
 #  Downloads the repo, runs the Python installer with --non-interactive.
 #
 #  Usage:
-#    curl -sSL https://raw.githubusercontent.com/Capslockb/veo-editor/main/installer/install.sh | bash
+#    curl -sSL https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.sh | bash
 #
 #  Override defaults:
-#    OCEANUS_OUTPUT_DIR=/tmp/renders \
-#    OCEANUS_WHISPER_URL=http://127.0.0.1:51746/transcribe \
+#    HERMES_EDITING_YT_OUTPUT_DIR=/tmp/renders \
+#    HERMES_EDITING_YT_WHISPER_URL=http://127.0.0.1:51746/transcribe \
 #    bash install.sh
 # ============================================================================
 
 set -euo pipefail
 
-REPO_URL="https://github.com/Capslockb/veo-editor.git"
-REPO_NAME="veo-editor"
+REPO_URL="https://github.com/Capslockb/hermes-editing-yt.git"
+REPO_NAME="hermes-editing-yt"
 BRANCH="main"
 INSTALL_DIR="${HOME}/code/${REPO_NAME}"
 # Override by exporting VEO_INSTALLER_ARGS before running this script.
@@ -30,7 +30,7 @@ ok()     { printf "\033[1;32m[%s]\033[0m %s\n" "$(ts)" "$1"; }
 warn()   { printf "\033[1;33m[%s]\033[0m %s\n" "$(ts)" "$1"; }
 err()    { printf "\033[1;31m[%s]\033[0m %s\n" "$(ts)" "$1" >&2; }
 
-status "Veo Editor — Linux/macOS one-shot installer"
+status "hermes-editing-yt — Linux/macOS one-shot installer"
 status "Target: $INSTALL_DIR"
 
 # --- 1. pick a Python 3.10+ ------------------------------------------------
@@ -94,4 +94,4 @@ if [ "$RC" -ne 0 ]; then
     exit "$RC"
 fi
 
-ok "Done. Try:  hermes mcp test oceanus"
+ok "Done. Try:  hermes mcp test hermes-editing-yt"

@@ -3,15 +3,15 @@
 > Visual reference: see [`diagrams/architecture.svg`](diagrams/architecture.svg) and
 > [`diagrams/mcp-tools.svg`](diagrams/mcp-tools.svg) for the rendered diagrams.
 
-Veo Editor is a **two-layer** system:
+hermes-editing-yt is a **two-layer** system:
 
-1. **Library** (`plugin/oceanus_autoedit.py`) — pure-Python pipeline engine. No GUI, no I/O beyond files. Can be `import`-ed and used from any Python script.
+1. **Library** (`plugin/hermes_editing_yt.py`) — pure-Python pipeline engine. No GUI, no I/O beyond files. Can be `import`-ed and used from any Python script.
 2. **MCP server** (`plugin/mcp_server.py`) — a FastMCP 3.0.2 server that wraps the library and exposes 11 tools to any Hermes agent over stdio (or StreamableHTTP for browsers).
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  Hermes Agent (any chat)                                            │
-│  "Use oceanus.autoedit on Helgstr1.mp4"                            │
+│  "Use hermes-editing-yt.autoedit on Helgstr1.mp4"                            │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │ MCP stdio (JSON-RPC over pipes)
                                ▼
@@ -27,7 +27,7 @@ Veo Editor is a **two-layer** system:
                                │ in-process function calls
                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│  oceanus_autoedit.py  (the library)                                 │
+│  hermes_editing_yt.py  (the library)                                 │
 │                                                                     │
 │  parse_subtitles ─┐                                                  │
 │                   ├──► build_segments ──┬──► render_autocut (ffmpeg)│
