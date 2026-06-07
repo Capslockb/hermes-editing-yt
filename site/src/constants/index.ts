@@ -131,7 +131,7 @@ export const HOW_IT_WORKS = [
     title: "Drop a recording",
     summary:
       "Point hermes-editing-yt at a raw .mp4, .mkv, or .mov. The MCP server auto-discovers it under your video root.",
-    command: 'Use oceanus → server_info, then list_videos "~/Videos/raw"',
+    command: 'Use hermes-editing-yt → server_info, then list_videos "~/Videos/raw"',
     href: "https://github.com/Capslockb/hermes-editing-yt#-install",
   },
   {

@@ -12,7 +12,10 @@ type ProjectCardProps = (typeof PROJECTS)[number] & {
   index: number;
 };
 
-// Project Card
+// Feature card. Glows with a violet halo on hover, and the title +
+// description fade in/out as the card enters/leaves the center of
+// the viewport. The `viewport` prop on whileInView makes the
+// animation trigger when 30% of the card is visible.
 const ProjectCard = ({
   index,
   name,
@@ -22,14 +25,23 @@ const ProjectCard = ({
   source_code_link,
   live_site_link,
 }: ProjectCardProps) => (
-  <motion.div variants={fadeIn("up", "spring", index * 0.5, 0.75)}>
+  <motion.div
+    variants={fadeIn("up", "spring", index * 0.5, 0.75)}
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: false, amount: 0.3 }}
+    transition={{ duration: 0.6, delay: index * 0.1 }}
+  >
     <Tilt
       options={{
         max: 45,
         scale: 1,
         speed: 450,
       }}
-      className="bg-tertiary p-5 rounded-2xl sm:w-[360px] w-full"
+      className="bg-tertiary p-5 rounded-2xl sm:w-[360px] w-full relative
+                 shadow-[0_0_30px_-15px_rgba(145,94,255,0.4)]
+                 hover:shadow-[0_0_50px_-10px_rgba(145,94,255,0.6),0_0_80px_-20px_rgba(0,224,255,0.4)]
+                 transition-shadow duration-500"
     >
       <div className="relative w-full h-[230px]">
         {/* Work image */}
@@ -39,7 +51,7 @@ const ProjectCard = ({
           className="w-full h-full object-cover rounded-2xl"
         />
 
-        {/* Live Site */}
+        {/* Hover overlay: live site + github */}
         <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
           <div
             onClick={() => window.open(live_site_link, "_blank", "noreferrer")}
@@ -52,8 +64,6 @@ const ProjectCard = ({
               className="w-2/3 h-2/3 object-contain"
             />
           </div>
-
-          {/* Github */}
           <div
             onClick={() =>
               window.open(source_code_link, "_blank", "noreferrer")
@@ -70,20 +80,37 @@ const ProjectCard = ({
         </div>
       </div>
 
-      {/* Work Info */}
-      <div className="mt-5">
+      {/* Work info — fades in/out as the card crosses the viewport
+          center. motion.div with viewport={{ once: false }} re-fires
+          on every entry/exit transition. */}
+      <motion.div
+        className="mt-5"
+        initial={{ opacity: 0.6, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.4 }}
+        transition={{ duration: 0.5 }}
+      >
         <h3 className="text-white font-bold text-[24px]">{name}</h3>
         <p className="mt-2 text-secondary text-[14px]">{description}</p>
-      </div>
+      </motion.div>
 
-      {/* Work Tag */}
-      <div className="mt-4 flex flex-wrap gap-2">
+      {/* Tags — also fade in */}
+      <motion.div
+        className="mt-4 flex flex-wrap gap-2"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.4 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
         {tags.map((tag, tagIdx) => (
-          <p key={`Tag-${tagIdx}`} className={cn(tag.color, "text-[14px]")}>
+          <p
+            key={`Tag-${tagIdx}`}
+            className={cn(tag.color, "text-[14px]")}
+          >
             #{tag.name}
           </p>
         ))}
-      </div>
+      </motion.div>
     </Tilt>
   </motion.div>
 );
@@ -93,26 +120,36 @@ export const Works = () => {
   return (
     <SectionWrapper idName="features">
       <>
-        {/* Title */}
-        <motion.div variants={textVariant()}>
+        {/* Title — fades in when in viewport, lifts slightly on hover. */}
+        <motion.div
+          variants={textVariant()}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+          whileHover={{ y: -3, transition: { duration: 0.2 } }}
+          className="cursor-default"
+        >
           <p className={styles.sectionSubText}>Key Capabilities</p>
           <h2 className={styles.sectionHeadText}>Features.</h2>
         </motion.div>
 
-        {/* About */}
         <div className="w-full flex">
           <motion.p
             variants={fadeIn("", "", 0.1, 1)}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false, amount: 0.4 }}
+            transition={{ duration: 0.6 }}
             className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]"
           >
-            hermes-editing-yt brings professional-grade subtitle-driven video editing
-            to your local machine. Each feature is designed to work together,
-            powered by GPU-accelerated transcription and a flexible MCP tool
-            interface. Click the GitHub icon to view the source code.
+            hermes-editing-yt brings professional-grade subtitle-driven video
+            editing to your local machine. Each feature is designed to work
+            together, powered by GPU-accelerated transcription and a flexible
+            MCP tool interface. Click the GitHub icon to view the source code.
           </motion.p>
         </div>
 
-        {/* Project Card */}
         <div className="mt-20 flex flex-wrap gap-7">
           {PROJECTS.map((project, i) => (
             <ProjectCard key={`project-${i}`} index={i} {...project} />

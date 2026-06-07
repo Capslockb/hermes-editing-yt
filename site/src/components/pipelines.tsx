@@ -56,7 +56,7 @@ const PipelineCard = ({
           {command}
         </pre>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <button
           onClick={handleCopy}
           className="flex-1 bg-[#915eff] hover:bg-[#7a3dff] text-white text-[13px] font-semibold py-2 rounded-md transition"

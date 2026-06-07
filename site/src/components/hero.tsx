@@ -22,10 +22,10 @@ export const Hero = () => {
 
         {/* About Me */}
         <div>
-          <h1 className={cn(styles.heroHeadText, "text-white")}>
+          <h1 className={cn(styles.heroHeadText, "text-white text-[32px] xs:text-[40px] sm:text-[60px] lg:text-[80px]")}>
             <span className="text-[#915eff]">hermes-editing-yt</span>
           </h1>
-          <p className={cn(styles.heroSubText, "mt-2 text-white-100")}>
+          <p className={cn(styles.heroSubText, "mt-2 text-white-100 text-[14px] xs:text-[16px] sm:text-[26px] lg:text-[30px]")}>
             Subtitle-driven auto video editor. <br className="sm:block hidden" />
             Local GPU. Hermes MCP plugin.
           </p>

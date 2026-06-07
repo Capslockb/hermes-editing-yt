@@ -69,6 +69,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <PageErrorBoundary>
+        <div className="bg-grain" aria-hidden="true" />
+        <div className="bg-vignette" aria-hidden="true" />
         <Banner hide={hide} setHide={setHide} />
         <SidebarTOC />
         <div className="relative z-0 bg-primary">
