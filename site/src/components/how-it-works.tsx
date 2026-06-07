@@ -96,7 +96,7 @@ export const HowItWorks = () => {
 
       <motion.p
         variants={fadeIn("", "", 0.1, 1)}
-        className="mt-3 text-secondary text-[15px] sm:text-[17px] max-w-3xl leading-[26px] sm:leading-[30px]"
+        className="mt-3 text-secondary text-[15px] sm:text-[17px] max-w-3xl leading-[26px] sm:leading-[30px] text-center sm:text-left"
       >
         Four steps from a raw recording to a published cut. Each card has a
         copy-pasteable command — paste it into any Hermes chat to drive the
@@ -104,7 +104,7 @@ export const HowItWorks = () => {
         read the source.
       </motion.p>
 
-      <div className="mt-12 sm:mt-16 flex flex-col gap-6 max-w-4xl">
+      <div className="mt-12 sm:mt-16 flex flex-col gap-6 max-w-4xl mx-auto sm:mx-0">
         {HOW_IT_WORKS.map((step) => (
           <Step key={step.step} {...step} />
         ))}

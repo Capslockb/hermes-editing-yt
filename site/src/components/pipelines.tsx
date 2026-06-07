@@ -86,7 +86,7 @@ export const Pipelines = () => {
 
       <motion.p
         variants={fadeIn("", "", 0.1, 1)}
-        className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]"
+        className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px] text-center sm:text-left"
       >
         Pick the depth of automation. <code className="text-accent-cyan">automark</code>{" "}
         plans without rendering — useful for review.{" "}
@@ -94,7 +94,7 @@ export const Pipelines = () => {
         <code className="text-accent-cyan">autoedit</code> does the full pipeline.
       </motion.p>
 
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center sm:justify-items-stretch">
         {PIPELINES.map((p) => (
           <PipelineCard key={p.name} {...p} />
         ))}

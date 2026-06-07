@@ -52,7 +52,7 @@ export const About = () => {
         {/* Body */}
         <motion.p
           variants={fadeIn(undefined, undefined, 0.1, 1)}
-          className="empty-4 text-secondary text-[17px] max-w-3xl leading-[30px]"
+          className="empty-4 text-secondary text-[17px] max-w-3xl leading-[30px] text-center sm:text-left mx-auto sm:mx-0"
         >
           hermes-editing-yt is an open-source, subtitle-driven auto video editor that
           runs entirely on your local GPU. Parse SRT/ass subtitle files, cut
@@ -67,7 +67,7 @@ export const About = () => {
         </motion.p>
 
         {/* Service Card */}
-        <div className="mt-20 flex flex-wrap gap-10">
+        <div className="mt-20 flex flex-wrap gap-10 justify-center sm:justify-start">
           {SERVICES.map((service, i) => (
             <ServiceCard key={service.title} index={i} {...service} />
           ))}

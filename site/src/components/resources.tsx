@@ -48,13 +48,13 @@ export const Resources = () => {
 
       <motion.p
         variants={fadeIn("", "", 0.1, 1)}
-        className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]"
+        className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px] text-center sm:text-left"
       >
         Everything you need to read, run, fork, and file issues. All links
         open in a new tab.
       </motion.p>
 
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl">
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto sm:mx-0">
         {RESOURCES.map((r) => (
           <ResourceCard key={r.label} {...r} />
         ))}

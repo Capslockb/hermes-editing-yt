@@ -11,8 +11,8 @@ const Footer = () => {
         "w-full flex items-center py-8 bg-primary border-t border-t-secondary/5"
       )}
     >
-      <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
-        <p className="text-white text-md font-bold flex">
+      <div className="w-full flex flex-col sm:flex-row justify-between items-center max-w-7xl mx-auto gap-4 sm:gap-0">
+        <p className="text-white text-md font-bold text-center sm:text-left">
           &copy; hermes-editing-yt {new Date().getFullYear()}. MIT License.
         </p>
 

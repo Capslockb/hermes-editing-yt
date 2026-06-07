@@ -57,7 +57,7 @@ export const Contact = () => {
           <h3 className={styles.sectionHeadText}>Install.</h3>
 
           {/* Description */}
-          <p className="mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]">
+          <p className="mt-4 text-secondary text-[17px] max-w-3xl leading-[30px] text-center sm:text-left">
             Install hermes-editing-yt with a single command — no npm, no manual
             setup. Choose your platform below.
           </p>

@@ -141,7 +141,7 @@ export const Works = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: false, amount: 0.4 }}
             transition={{ duration: 0.6 }}
-            className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]"
+            className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px] text-center sm:text-left"
           >
             hermes-editing-yt brings professional-grade subtitle-driven video
             editing to your local machine. Each feature is designed to work
@@ -150,7 +150,7 @@ export const Works = () => {
           </motion.p>
         </div>
 
-        <div className="mt-20 flex flex-wrap gap-7">
+        <div className="mt-20 flex flex-wrap gap-7 justify-center sm:justify-start">
           {PROJECTS.map((project, i) => (
             <ProjectCard key={`project-${i}`} index={i} {...project} />
           ))}
