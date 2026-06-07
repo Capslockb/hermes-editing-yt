@@ -12,3 +12,5 @@
 *.mp4            binary
 *.png            binary
 *.jpg            binary
+*.bin            binary
+*.glb            binary
