@@ -4,9 +4,12 @@ import {
   About,
   Contact,
   Experience,
-  Feedbacks,
   Hero,
+  HowItWorks,
   Navbar,
+  Pipelines,
+  Resources,
+  SidebarTOC,
   Tech,
   Works,
   StarsCanvas,
@@ -67,16 +70,19 @@ const App = () => {
     <BrowserRouter>
       <PageErrorBoundary>
         <Banner hide={hide} setHide={setHide} />
+        <SidebarTOC />
         <div className="relative z-0 bg-primary">
           <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
             <Navbar hide={hide} />
             <Hero />
           </div>
+          <HowItWorks />
           <About />
           <Experience />
           <Tech />
           <Works />
-          <Feedbacks />
+          <Pipelines />
+          <Resources />
 
           {/* Contact */}
           <div className="relative z-0">

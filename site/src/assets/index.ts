@@ -35,10 +35,6 @@ import heroWorkstation from "./media/hero-workstation.png";
 import pipeline3d from "./media/pipeline-3d.png";
 import gpuRender from "./media/gpu-render.png";
 
-import user1 from "./testimonials/user1.jpg";
-import user2 from "./testimonials/user2.jpg";
-import user3 from "./testimonials/user3.jpg";
-
 import github from "./socials/github.svg";
 import linkedin from "./socials/linkedin.svg";
 import twitter from "./socials/twitter.svg";
@@ -75,9 +71,6 @@ export {
   heroWorkstation,
   pipeline3d,
   gpuRender,
-  user1,
-  user2,
-  user3,
   github,
   youtube,
   linkedin,

@@ -27,9 +27,6 @@ import {
   heroWorkstation,
   pipeline3d,
   gpuRender,
-  user1,
-  user2,
-  user3,
   youtube,
   linkedin,
   twitter,
@@ -39,18 +36,28 @@ import {
 // Navbar Links
 export const NAV_LINKS = [
   {
+    id: "how-it-works",
+    title: "How",
+    link: null,
+  },
+  {
     id: "features",
     title: "Features",
     link: null,
   },
   {
-    id: "pipeline",
-    title: "Pipeline",
+    id: "pipelines",
+    title: "Pipelines",
     link: null,
   },
   {
     id: "tech",
     title: "Tools",
+    link: null,
+  },
+  {
+    id: "resources",
+    title: "Resources",
     link: null,
   },
   {
@@ -117,6 +124,98 @@ export const TECHNOLOGIES = [
   },
 ] as const;
 
+// How it works — 4 numbered steps with copy-to-clipboard CLI snippets
+export const HOW_IT_WORKS = [
+  {
+    step: 1,
+    title: "Drop a recording",
+    summary:
+      "Point hermes-editing-yt at a raw .mp4, .mkv, or .mov. The MCP server auto-discovers it under your video root.",
+    command: 'Use oceanus → server_info, then list_videos "~/Videos/raw"',
+    href: "https://github.com/Capslockb/hermes-editing-yt#-install",
+  },
+  {
+    step: 2,
+    title: "Transcribe (or load SRT)",
+    summary:
+      "GPU Whisper large-v3 turns audio into word-level SRT cues in ~12× realtime on RTX 5060. Skip this step if you already have an SRT.",
+    command: 'gpu_transcribe --video_path recording.mp4 --model large-v3',
+    href: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/hermes_editing_yt.py",
+  },
+  {
+    step: 3,
+    title: "Build segments",
+    summary:
+      "Pure-Python planner merges gaps ≤ 1.2s, drops dead air, and tags highlights. No editor. No timeline. Edit the SRT and the cut follows.",
+    command: "build_segments_from_srt --merge_gap 1.2 --min_segment 0.85",
+    href: "https://github.com/Capslockb/hermes-editing-yt/blob/main/docs/architecture.md",
+  },
+  {
+    step: 4,
+    title: "Render the cut",
+    summary:
+      "ffmpeg + libx264 CRF 18 produces the final MP4. Original audio preserved. AAC 192k. Ready to upload.",
+    command: "autoedit --mode autoedit --output_dir ~/Videos/cuts",
+    href: "https://github.com/Capslockb/hermes-editing-yt/releases",
+  },
+] as const;
+
+// Pipelines — three modes, each a "click-to-try" card
+export const PIPELINES = [
+  {
+    name: "automark",
+    tagline: "Plan only — no render",
+    description:
+      "Analyze the SRT, build a segment + marker plan, save JSON + CSV. Review the cut before committing GPU time to a render.",
+    command: "automark --video_path clip.mp4 --output_dir ./plan",
+    href: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/mcp_server.py",
+  },
+  {
+    name: "autocut",
+    tagline: "Render only — no markers",
+    description:
+      "Take an existing SRT and slice the raw video at sentence boundaries. Drops dead air, keeps the take. No commentary markers.",
+    command: "autocut --video_path clip.mp4 --srt_path clip.srt",
+    href: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/hermes_editing_yt.py",
+  },
+  {
+    name: "autoedit",
+    tagline: "Full pipeline",
+    description:
+      "Transcribe + plan + render. The default one-shot mode. Sensible defaults for the 80% case; tunable via env vars for the 20%.",
+    command: "autoedit --video_path clip.mp4 --output_dir ./cut",
+    href: "https://github.com/Capslockb/hermes-editing-yt/blob/main/installer/install.py",
+  },
+] as const;
+
+// Resources — 4-card CTA grid
+export const RESOURCES = [
+  {
+    label: "GitHub",
+    sub: "Source, issues, PRs",
+    href: "https://github.com/Capslockb/hermes-editing-yt",
+    icon: github,
+  },
+  {
+    label: "Documentation",
+    sub: "Architecture + troubleshooting",
+    href: "https://github.com/Capslockb/hermes-editing-yt/blob/main/docs/architecture.md",
+    icon: web,
+  },
+  {
+    label: "Releases",
+    sub: "Versioned changelogs",
+    href: "https://github.com/Capslockb/hermes-editing-yt/releases",
+    icon: creator,
+  },
+  {
+    label: "Issues",
+    sub: "Bug reports + feature requests",
+    href: "https://github.com/Capslockb/hermes-editing-yt/issues",
+    icon: backend,
+  },
+] as const;
+
 // Experiences / Release Timeline
 export const EXPERIENCES = [
   {
@@ -173,34 +272,6 @@ export const EXPERIENCES = [
   },
 ] as const;
 
-// Testimonials
-export const TESTIMONIALS = [
-  {
-    testimonial:
-      "hermes-editing-yt transformed my workflow. I can now cut a 2-hour interview into highlight clips in under 5 minutes by just editing the subtitle file. The GPU transcription is insanely fast on my RTX card.",
-    name: "Marcus",
-    designation: "Video Editor",
-    company: "Freelance",
-    image: user1,
-  },
-  {
-    testimonial:
-      "The MCP server integration is brilliant. I wired hermes-editing-yt into my Hermes agent workflow and it handles automated batch processing of incoming footage. The 11 tools give me everything I need for programmatic editing.",
-    name: "Elena",
-    designation: "MCP Developer",
-    company: "Agent Studio",
-    image: user2,
-  },
-  {
-    testimonial:
-      "Finally an open-source video editor that respects privacy — everything runs locally on my own GPU. The oneshot installer had me up and running in under 2 minutes. No subscription, no cloud uploads, just pure local power.",
-    name: "Priya",
-    designation: "Content Creator",
-    company: "YouTube",
-    image: user3,
-  },
-] as const;
-
 // Features (replaces PROJECTS — 6 feature cards)
 export const PROJECTS = [
   {
@@ -244,7 +315,7 @@ export const PROJECTS = [
       },
     ],
     image: feature2,
-    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/tools/transcribe_tool.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/hermes_editing_yt.py",
     live_site_link: "",
   },
   {
@@ -266,7 +337,7 @@ export const PROJECTS = [
       },
     ],
     image: feature3,
-    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/server.py",
+    source_code_link: "https://github.com/Capslockb/hermes-editing-yt/blob/main/plugin/mcp_server.py",
     live_site_link: "",
   },
   {

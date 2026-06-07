@@ -10,9 +10,12 @@ import {
 } from "./canvas";
 import { Contact } from "./contact";
 import { Experience } from "./experience";
-import { Feedbacks } from "./feedbacks";
 import { Hero } from "./hero";
+import { HowItWorks } from "./how-it-works";
 import { Navbar } from "./navbar";
+import { Pipelines } from "./pipelines";
+import { Resources } from "./resources";
+import { SidebarTOC } from "./sidebar-toc";
 import { Tech } from "./tech";
 import { Works } from "./works";
 
@@ -23,9 +26,12 @@ export {
   Contact,
   EarthCanvas,
   Experience,
-  Feedbacks,
   Hero,
+  HowItWorks,
   Navbar,
+  Pipelines,
+  Resources,
+  SidebarTOC,
   StarsCanvas,
   Tech,
   Works,
