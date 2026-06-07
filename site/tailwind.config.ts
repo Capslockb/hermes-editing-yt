@@ -11,8 +11,8 @@ export default {
         "black-100": "#100d25",
         "black-200": "#090325",
         "white-100": "#f3f3f3",
-        "veo-cyan": "#00E0FF",
-        "veo-magenta": "#FF00E0",
+        "accent-cyan": "#00E0FF",
+        "accent-magenta": "#FF00E0",
       },
       boxShadow: {
         card: "0px 35px 120px -15px #211e35",

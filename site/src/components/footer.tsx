@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import { SOCIALS } from "../constants";
 import { styles } from "../styles";
 import { cn } from "../utils/lib";
@@ -36,9 +34,9 @@ const Footer = () => {
               key={social.name}
               className="text-secondary font-poppins font-medium cursor-pointer text-[16px] opacity-80 hover:opacity-100 transition"
             >
-              <Link to={social.link} target="_blank" rel="noreferrer noopener">
+              <a href={social.link} target="_blank" rel="noreferrer noopener">
                 <img src={social.icon} alt={social.name} className="h-6 w-6" />
-              </Link>
+              </a>
             </li>
           ))}
         </ul>

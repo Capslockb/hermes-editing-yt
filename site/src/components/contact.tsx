@@ -70,7 +70,7 @@ export const Contact = () => {
                   {cmd.label}
                 </p>
                 <div className="relative bg-tertiary rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-veo-cyan text-sm font-mono whitespace-pre-wrap">
+                  <pre className="text-accent-cyan text-sm font-mono whitespace-pre-wrap">
                     {cmd.code}
                   </pre>
                   <CopyButton text={cmd.code} />

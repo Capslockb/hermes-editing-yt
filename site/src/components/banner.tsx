@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import { close, bulb } from "../assets";
 
@@ -50,14 +49,14 @@ const Banner = ({ hide, setHide }: BannerProps) => {
           </span>
           <span>
             ⚡ hermes-editing-yt — subtitle-driven auto video editor.{" "}
-            <Link
-              to="https://github.com/Capslockb/hermes-editing-yt"
+            <a
+              href="https://github.com/Capslockb/hermes-editing-yt"
               target="_blank"
               rel="noreferrer noopener"
               className="inline font-medium text-blue-600 underline underline-offset-2 decoration-600 hover:no-underline"
             >
               View on GitHub
-            </Link>
+            </a>
             .
           </span>
         </p>
@@ -78,3 +77,4 @@ const Banner = ({ hide, setHide }: BannerProps) => {
 };
 
 export default Banner;
+

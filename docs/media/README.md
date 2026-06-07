@@ -9,7 +9,7 @@ long as you keep the MIT notice in `LICENSE`.
 
 | File | Use case | Size |
 |---|---|---|
-| `logo-icon.png` | App icon · favicon · 1:1 | ~1.1 MB |
+| `logo.png` | App icon · favicon · OG preview · 1:1 | ~1.1 MB |
 | `hero-workstation.png` | README hero · landing banner · 16:9 | ~1.8 MB |
 | `pipeline-3d.png` | README section · "how it works" social card · 16:9 | ~1.9 MB |
 | `gpu-render.png` | README gallery · blog post · 16:9 | ~1.9 MB |
@@ -21,14 +21,18 @@ canvas is the hero), but it links to them as the OpenGraph preview image.
 
 ## Generation provenance
 
-The four images were generated on **2026-06-06** with `gpt-image-2-medium` via
-the configured image backend. Prompts were:
+The four images were generated on **2026-06-06 / 2026-06-07** with
+`gpt-image-2-medium` via the configured image backend. Prompts were:
 
-1. `logo-icon.png` — *"Minimalist app icon for a video editor product, single
-   3D letter V shape made of polished obsidian black glass with subtle cyan
-   glow rim light, rounded square background with deep gradient from #0a0e1a
-   to #1a1f3a, premium tech product icon style like Google Vids or Linear, no
-   text, ultra clean, professional, square format"*
+1. `logo.png` (v0.1.1, "ed" monogram) — *"Minimalist 3D app icon: a
+   lowercase 'ed' monogram in polished obsidian black glass with subtle
+   cyan and magenta rim light glow, rounded square background with deep
+   gradient from #0a0e1a to #1a1f3a, ultra clean professional tech
+   product icon style, no other text, no logos, premium Google Vids /
+   Linear aesthetic"*
+
+   *Original v0.1.0 logo was an obsidian "V" — that glyph belonged to
+   the previous brand name (Veo) and is no longer in use.*
 
 2. `hero-workstation.png` — *"Minimalist 3D isometric hero illustration of a
    film editing workstation, dark navy background, glowing cyan and magenta

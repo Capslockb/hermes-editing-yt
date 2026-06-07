@@ -139,8 +139,8 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
    `~\AppData\Local\hermes\.env`):
    ```bash
    HERMES_EDITING_YT_WHISPER_URL=http://127.0.0.1:51746/transcribe
-   HERMES_EDITING_YT_OUTPUT_DIR=G:\- hermes-editing-ytoutput
-   HERMES_EDITING_YT_RAW_DIR=G:\- hermes-editing-ytUnedited (RAW)
+   HERMES_EDITING_YT_OUTPUT_DIR=G:\- hermes-editing-yt\output
+   HERMES_EDITING_YT_RAW_DIR=G:\- hermes-editing-yt\Unedited (RAW)
    HERMES_EDITING_YT_WHISPER_MODEL=large-v3
    HERMES_EDITING_YT_WHISPER_DEVICE=cuda
    HERMES_EDITING_YT_WHISPER_COMPUTE=float16
@@ -154,7 +154,7 @@ Transcription knobs (apply to `gpu_transcribe` AND `autoedit`/`autocut`/
 
 ```text
 User:  Use hermes-editing-yt to preview a cut plan from
-       G:\- hermes-editing-ytEditing\New folder\Untitled - February 8, 2026 (1).srt
+       G:\- hermes-editing-yt\Editing\New folder\Untitled - February 8, 2026 (1).srt
        for a 10000s video.
 
 Agent: mcp_hermes-editing-yt_build_segments_from_srt(
@@ -166,7 +166,7 @@ Agent: mcp_hermes-editing-yt_build_segments_from_srt(
 ### 2. Full autocut with existing SRT (no transcription needed)
 
 ```text
-User:  autocut Helgstr1.mp4 to G:\- hermes-editing-ytoutput\preview
+User:  autocut Helgstr1.mp4 to G:\- hermes-editing-yt\output\preview
 
 Agent: mcp_hermes-editing-yt_autocut(
           video_path="G:\\- hermes-editing-yt\Editing\\New folder\\Helgstr1.mp4",
@@ -225,8 +225,8 @@ The refactor is **backwards-compatible**. The original CLI still works:
 
 ```powershell
 python "G:\- hermes-editing-yttools\video_workflow\auto_video_workflow.py" autoedit `
-  --video "G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4" `
-  --output-dir "G:\- hermes-editing-ytoutput\cli-run"
+  --video "G:\- hermes-editing-yt\Editing\New folder\Helgstr1.mp4" `
+  --output-dir "G:\- hermes-editing-yt\output\cli-run"
 ```
 
 And the library can be imported directly:
@@ -320,7 +320,7 @@ The references/ folder lives next to `SKILL.md` in
 
 8. **Output dir doesn't exist** — `run_pipeline` calls
    `mkdir(parents=True, exist_ok=True)`, so this is automatic. But the
-   *parent* must be writable — on the hermes-editing-yt box, `G:\- hermes-editing-ytoutput`
+   *parent* must be writable — on the hermes-editing-yt box, `G:\- hermes-editing-yt\output`
    is fine, but a sandboxed Hermes profile running under a different
    user might not have write access. Check ACLs.
 
@@ -391,8 +391,8 @@ python "G:\- hermes-editing-yttools\video_workflow\mcp_server.py" --http 8765
 | Env var | Default | Used by |
 |---------|---------|---------|
 | `HERMES_EDITING_YT_WHISPER_URL`     | `http://127.0.0.1:51746/transcribe` | `whisper_transcribe` tool (HTTP backend) |
-| `HERMES_EDITING_YT_OUTPUT_DIR`      | `G:\- hermes-editing-ytoutput`                | `server_info` default_output_dir |
-| `HERMES_EDITING_YT_RAW_DIR`         | `G:\- hermes-editing-ytUnedited (RAW)`        | `server_info` default_raw_dir |
+| `HERMES_EDITING_YT_OUTPUT_DIR`      | `G:\- hermes-editing-yt\output`                | `server_info` default_output_dir |
+| `HERMES_EDITING_YT_RAW_DIR`         | `G:\- hermes-editing-yt\Unedited (RAW)`        | `server_info` default_raw_dir |
 | `HERMES_EDITING_YT_WHISPER_MODEL`   | `large-v3`                           | GPU backend default model |
 | `HERMES_EDITING_YT_WHISPER_DEVICE`  | `cuda`                               | GPU backend default device |
 | `HERMES_EDITING_YT_WHISPER_COMPUTE` | `float16`                            | GPU backend default compute type |

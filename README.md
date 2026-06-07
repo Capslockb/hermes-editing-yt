@@ -83,8 +83,8 @@ Drop-in visuals for readme banners, social cards, and docs:
 |---|---|
 | ![GPU render — RTX 5060](docs/media/gpu-render.png) | ![3D pipeline diagram](docs/media/pipeline-3d.png) |
 | **GPU render** — RTX 5060 with cublas v12 shim | **3D pipeline** — raw → SRT → segments → render |
-| ![Hero workstation](docs/media/hero-workstation.png) | ![hermes-editing-yt logo](docs/media/logo-icon.png) |
-| **Hero workstation** — 3D isometric editing suite | **App icon** — obsidian V with cyan glow |
+| ![Hero workstation](docs/media/hero-workstation.png) | ![hermes-editing-yt logo](docs/media/logo.png) |
+| **Hero workstation** — 3D isometric editing suite | **App icon** — ed-glyph mark on obsidian, cyan rim |
 
 All four are generated for this release under MIT.
 
@@ -139,8 +139,8 @@ The installer checks for all of these and tells you what's missing.
 ### From any Hermes chat
 ```
 Use the hermes-editing-yt MCP tools to autocut
-G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4
-with output to G:\- hermes-editing-ytoutput\my-first-cut
+G:\- hermes-editing-yt\Editing\New folder\Helgstr1.mp4
+with output to G:\- hermes-editing-yt\output\my-first-cut
 ```
 
 ### From a script
@@ -148,8 +148,8 @@ with output to G:\- hermes-editing-ytoutput\my-first-cut
 import subprocess, json
 result = subprocess.run(
     ["hermes", "mcp", "call", "hermes-editing-yt", "autoedit",
-     "--video_path", r"G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4",
-     "--output_dir", r"G:\- hermes-editing-ytoutput\my-first-cut"],
+     "--video_path", r"G:\- hermes-editing-yt\Editing\New folder\Helgstr1.mp4",
+     "--output_dir", r"G:\- hermes-editing-yt\output\my-first-cut"],
     capture_output=True, text=True
 )
 print(json.loads(result.stdout))

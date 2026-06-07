@@ -5,7 +5,7 @@ End-to-end GPU autocut on Helgstr1.mp4.
 - Builds keep-segments + markers from the SRT
 - Renders the cut into an MP4
 
-Outputs to: G:\- hermes-editing-ytoutput\gpu_helgstr1_test\
+Outputs to: G:\- hermes-editing-yt\output\gpu_helgstr1_test\
 """
 from __future__ import annotations
 
@@ -20,8 +20,8 @@ sys.path.insert(0, str(HERE))
 
 import hermes_editing_yt as lib  # noqa: E402
 
-VIDEO = Path(r"G:\- hermes-editing-ytEditing\New folder\Helgstr1.mp4")
-OUT = Path(r"G:\- hermes-editing-ytoutput\gpu_helgstr1_test")
+VIDEO = Path(r"G:\- hermes-editing-yt\Editing\New folder\Helgstr1.mp4")
+OUT = Path(r"G:\- hermes-editing-yt\output\gpu_helgstr1_test")
 
 
 def main() -> int:
