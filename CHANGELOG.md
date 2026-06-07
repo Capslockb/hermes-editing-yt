@@ -66,3 +66,34 @@ adheres to [Semantic Versioning](https://semver.org/).
   are untouched.
 
 [0.1.1]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.1
+
+## [0.1.2] — 2026-06-07
+
+### Fixed
+- **Site blank page**: after ~5 seconds the page turned grey blank.
+  Root cause was `react-router-dom`'s `<Link to="https://...">` in
+  the Banner and Footer components — `<Link>` doesn't accept external
+  URLs and throws at render time, unmounting the whole tree. Replaced
+  with plain `<a href>`.
+- **PageErrorBoundary added** at the app root so a single misbehaving
+  component can no longer wipe the whole page. If anything else throws
+  the user sees a styled fallback with the GitHub link, not grey.
+- **README Gallery** described the old "obsidian V with cyan glow"
+  icon (the old Veo brand). Replaced with an "ed" monogram and
+  regenerated the app icon at `docs/media/logo.png`.
+- **Corrupted Windows paths**: `G:\- hermes-editing-ytEditing\...`
+  was missing its separator slash in 7 places (README, scripts,
+  SKILL.md). Fixed.
+- **Navbar leak**: "Veo Editor" was still showing in the logo
+  text on the live site. Now says "hermes-editing-yt".
+- **Architecture / MCP-tools SVGs**: still had "Veo Editor" in the
+  architecture title and "OCEANUS" in two box labels. Replaced.
+- **Tailwind color names**: `veo-cyan` / `veo-magenta` → `accent-cyan` /
+  `accent-magenta` to match the no-leak brand.
+
+### Changed
+- App icon is now an "ed" monogram (obsidian glass, cyan + magenta
+  rim) instead of a "V" glyph. Mirrored to `site/public/og-image.png`
+  and `site/public/media/logo.png`.
+
+[0.1.2]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.2

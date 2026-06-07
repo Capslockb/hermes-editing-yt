@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hermes-editing-yt"
-version = "0.1.1"
+version = "0.1.2"
 description = "Subtitle-driven auto video editor for the Hermes Editing pipeline. Hermes MCP plugin."
 readme = "README.md"
 license = {file = "LICENSE"}
