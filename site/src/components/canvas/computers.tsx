@@ -4,11 +4,12 @@ import { Suspense, useEffect, useState } from "react";
 
 import CanvasLoader from "../loader";
 
-// Files in public/ are copied as-is to the site root. We need to
-// prefix the URL with the Vite base path so the GLTFLoader fetches
-// scene.bin from /hermes-editing-yt/desktop_pc/scene.bin on Pages,
-// not /desktop_pc/scene.bin (which 404s on subpath deploys).
-const computerUrl = `${import.meta.env.BASE_URL}desktop_pc/scene.gltf`;
+// Use the .glb (single-file binary glTF) instead of the .gltf + .bin
+// multi-file form. GitHub Pages does not serve .bin files, so the
+// multi-file form was 404'ing on the GLTFLoader buffer request.
+// .glb is a self-contained binary that's served as application/octet-
+// stream and Pages has no problem with it.
+const computerUrl = `${import.meta.env.BASE_URL}desktop_pc/scene.glb`;
 
 type ComputersProps = {
   isMobile: boolean;

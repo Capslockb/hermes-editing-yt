@@ -43,6 +43,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/pack-glb.cjs public/desktop_pc/scene.gltf public/desktop_pc/scene.glb; node scripts/pack-glb.cjs public/planet/scene.gltf public/planet/scene.glb",
     "build": "vite build",
     "preview": "vite preview",
     "check-types": "tsc --noEmit"
@@ -65,6 +66,9 @@
     "three-stdlib": "^2.36.1"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.4.0",
+    "@gltf-transform/extensions": "^4.4.0",
+    "@gltf-transform/functions": "^4.4.0",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "@types/react-vertical-timeline-component": "^3.3.6",

@@ -4,9 +4,9 @@ import { Suspense } from "react";
 
 import CanvasLoader from "../loader";
 
-// BASE_URL-aware URL for files in public/. See ComputersCanvas for
-// the same pattern.
-const earthUrl = `${import.meta.env.BASE_URL}planet/scene.gltf`;
+// Use the .glb (single-file binary glTF) instead of the .gltf + .bin
+// multi-file form. See ComputersCanvas for the rationale.
+const earthUrl = `${import.meta.env.BASE_URL}planet/scene.glb`;
 
 // Earth
 const Earth = () => {
