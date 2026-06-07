@@ -97,3 +97,30 @@ adheres to [Semantic Versioning](https://semver.org/).
   and `site/public/media/logo.png`.
 
 [0.1.2]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.2
+
+## [0.1.3] — 2026-06-07
+
+### Fixed
+- **3D model 404 on GitHub Pages**: the hero scene's `desktop_pc` and
+  `planet` models were multi-file glTF (a `.gltf` JSON, a `.bin` buffer,
+  and a `textures/` directory). GitHub Pages' CDN refused to serve
+  `.bin` files. The GLTFLoader fetched the `.gltf`, tried to fetch
+  `scene.bin` relative to the document root, got a 404, threw. The
+  PageErrorBoundary (added in v0.1.2) caught the throw and displayed
+  the styled fallback.
+  - **Fix**: pack each model into a single self-contained `.glb` file
+    (binary glTF, served as `model/gltf-binary`) using
+    `@gltf-transform/core`. Added `site/scripts/pack-glb.cjs` and a
+    `prebuild` npm script.
+  - **Also**: `useGLTF` was passed a relative path (`./desktop_pc/scene.gltf`),
+    which works on a domain-root deploy but breaks on the GitHub
+    Pages subpath `/hermes-editing-yt/`. Replaced with
+    `${import.meta.env.BASE_URL}desktop_pc/scene.glb` so the prefix
+    is correct on every deploy.
+- **CI build failed** because the `.bin` files needed by the prebuild
+  packer were gitignored (`*.bin` is the Hugging Face weights rule
+  in the root .gitignore). Added an override
+  (`!site/public/**/scene.bin`) and a `.gitattributes` line
+  (`*.bin binary`) so they're tracked.
+
+[0.1.3]: https://github.com/Capslockb/hermes-editing-yt/releases/tag/v0.1.3
