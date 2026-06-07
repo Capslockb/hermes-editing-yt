@@ -40,7 +40,7 @@ jobs:
         run: npm run build
 
       - name: Add .nojekyll
-        run: touch site/dist/.nojekyll
+        run: touch site/out/.nojekyll
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -48,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site/dist
+          path: site/out
 
   deploy:
     environment:
