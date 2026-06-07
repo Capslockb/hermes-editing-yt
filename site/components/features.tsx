@@ -161,15 +161,18 @@ export default function Features() {
                   show: { opacity: 1, y: 0 },
                 }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
+                className="text-center"
               >
-                <svg
-                  className="mb-3 fill-indigo-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                >
-                  {feature.svg}
-                </svg>
+                <div className="flex justify-center mb-3">
+                  <svg
+                    className="fill-indigo-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                  >
+                    {feature.svg}
+                  </svg>
+                </div>
                 <h3 className="mb-1 font-nacelle text-[1rem] font-semibold text-gray-200">
                   {feature.title}
                 </h3>

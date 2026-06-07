@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 const Hero = dynamic(() => import("@/components/hero-home"));
-const Workflows = dynamic(() => import("@/components/workflows"));
+const PipelineFlow = dynamic(() => import("@/components/pipeline-flow"));
 const Features = dynamic(() => import("@/components/features"));
 const Showcase = dynamic(() => import("@/components/showcase"));
 const TerminalDemo = dynamic(() => import("@/components/terminal-demo"));
@@ -15,7 +15,7 @@ export default function HomeClient() {
   return (
     <>
       <Hero />
-      <Workflows />
+      <PipelineFlow />
       <Features />
       <Showcase />
       <TerminalDemo />

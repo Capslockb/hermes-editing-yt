@@ -19,11 +19,16 @@ export default function Footer() {
           />
         </div>
         <div className="flex flex-col items-center py-8 text-center md:py-12">
-          <div className="mb-4">
-            <span className="font-nacelle text-lg font-semibold text-gray-200">
-              hermes-editing-yt
-            </span>
-          </div>
+        <div className="mb-4 flex items-center gap-2">
+          <img
+            src="/hermes-editing-yt/images/hermes-mark.svg"
+            alt="Hermes Agent"
+            className="w-5 h-5 text-indigo-400/60"
+          />
+          <span className="font-nacelle text-lg font-semibold text-gray-200">
+            hermes-editing-yt
+          </span>
+        </div>
           <div className="text-sm text-indigo-200/65">
             <p className="mb-1">
               MIT License &middot;{" "}
