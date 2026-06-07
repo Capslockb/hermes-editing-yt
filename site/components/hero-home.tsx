@@ -28,7 +28,15 @@ const itemVariants = {
 
 export default function HeroHome() {
   return (
-    <section>
+    <section className="relative">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0 bg-[url('/hermes-editing-yt/images/editing-desk.jpg')] bg-cover bg-center opacity-[0.08]"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-gray-950 via-gray-950/95 to-gray-950" />
+      </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Hero content */}
         <div className="py-12 md:py-20">
