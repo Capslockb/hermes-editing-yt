@@ -45,7 +45,10 @@ export default function Testimonials() {
               variants={cardVariants}
             >
               <div className="mb-3">
-                <span className="btn-sm relative inline-block rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+                <span className="btn-sm relative inline-flex items-center gap-1.5 rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+                  <svg className="w-3 h-3 text-emerald-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.5l3 3 7-7" />
+                  </svg>
                   <span className="bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text text-transparent">
                     automark
                   </span>
@@ -56,7 +59,7 @@ export default function Testimonials() {
                 edit marks.
               </p>
               <pre className="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-indigo-200/80">
-                <code>{`hermes run --pipeline automark \\\
+                <code>{`hermes run --pipeline automark \\
   --input video.mp4`}</code>
               </pre>
             </motion.article>
@@ -67,7 +70,12 @@ export default function Testimonials() {
               variants={cardVariants}
             >
               <div className="mb-3">
-                <span className="btn-sm relative inline-block rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+                <span className="btn-sm relative inline-flex items-center gap-1.5 rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+                  <svg className="w-3 h-3 text-cyan-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="4" cy="8" r="2.5" />
+                    <circle cx="12" cy="8" r="2.5" />
+                    <line x1="6.5" y1="8" x2="9.5" y2="8" />
+                  </svg>
                   <span className="bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text text-transparent">
                     autocut
                   </span>
@@ -78,8 +86,8 @@ export default function Testimonials() {
                 cut video with no re-transcription.
               </p>
               <pre className="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-indigo-200/80">
-                <code>{`hermes run --pipeline autocut \\\
-  --input video.mp4 \\\
+                <code>{`hermes run --pipeline autocut \\
+  --input video.mp4 \\
   --srt subtitles.srt`}</code>
               </pre>
             </motion.article>
@@ -90,20 +98,29 @@ export default function Testimonials() {
               variants={cardVariants}
             >
               <div className="mb-3">
-                <span className="btn-sm relative inline-block rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+                <span className="btn-sm relative inline-flex items-center gap-1.5 rounded-full bg-gray-800/40 px-2.5 py-0.5 text-xs font-normal before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_bottom,--theme(--color-gray-700/.15),--theme(--color-gray-700/.5))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+                  <svg className="w-3 h-3 text-indigo-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2 5h12M2 8h12M2 11h12" />
+                    <circle cx="4" cy="5" r="0.8" fill="currentColor" />
+                    <circle cx="8" cy="8" r="0.8" fill="currentColor" />
+                    <circle cx="12" cy="11" r="0.8" fill="currentColor" />
+                  </svg>
                   <span className="bg-linear-to-r from-indigo-500 to-indigo-200 bg-clip-text text-transparent">
                     autoedit
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-amber-400/80 font-medium">
+                    v1.0
                   </span>
                 </span>
               </div>
               <p className="mb-2 text-sm text-indigo-200/65">
-                Full pipeline. Transcribe, detect silence, render final cut.
-                One command, done.
+                v1.0 preview. Transcribe, detect silence, render. Expect rough
+                edges — early release.
               </p>
               <pre className="overflow-x-auto rounded-lg bg-gray-950 p-3 text-xs text-indigo-200/80">
-                <code>{`hermes run --pipeline autoedit \\\
-  --input video.mp4 \\\
-  --output edited.mp4 \\\
+                <code>{`hermes run --pipeline autoedit \\
+  --input video.mp4 \\
+  --output edited.mp4 \\
   --threshold 0.5`}</code>
               </pre>
             </motion.article>

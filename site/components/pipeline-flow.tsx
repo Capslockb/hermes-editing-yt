@@ -8,23 +8,192 @@ const STEPS = [
     label: "Transcribe",
     title: "GPU Whisper large-v3",
     desc: "Automatic transcription with near-perfect accuracy. Fast enough for iterative editing.",
-    img: "/hermes-editing-yt/images/editing-desk.jpg",
+    illust: "transcribe",
   },
   {
     num: "02",
     label: "Analyze",
     title: "Smart Silence Detection",
     desc: "Detects pauses and sentence boundaries. Mark what to keep, cut the rest.",
-    img: "/hermes-editing-yt/images/code-screen.jpg",
+    illust: "analyze",
   },
   {
     num: "03",
     label: "Render",
     title: "ffmpeg + libx264",
     desc: "Renders the final cut at sentence boundaries. SRT/ASS subtitle support built in.",
-    img: "/hermes-editing-yt/images/server-rack.jpg",
+    illust: "render",
   },
 ];
+
+function Illust({ name }: { name: string }) {
+  if (name === "transcribe") {
+    // Audio waveform with subtitle ribbon
+    return (
+      <svg
+        viewBox="0 0 200 150"
+        className="absolute inset-0 w-full h-full"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="wf" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#6366f1" stopOpacity="0.2" />
+          </linearGradient>
+        </defs>
+        {/* waveform bars */}
+        {Array.from({ length: 28 }).map((_, i) => {
+          const h = 10 + Math.abs(Math.sin(i * 0.7) * 60) + (i % 3) * 6;
+          return (
+            <rect
+              key={i}
+              x={10 + i * 6.5}
+              y={75 - h / 2}
+              width="3.5"
+              height={h}
+              rx="1.5"
+              fill="url(#wf)"
+            />
+          );
+        })}
+        {/* subtitle ribbon */}
+        <rect
+          x="20"
+          y="118"
+          width="160"
+          height="18"
+          rx="3"
+          fill="#0b1220"
+          stroke="#1f2937"
+          strokeWidth="0.5"
+        />
+        <rect x="28" y="124" width="48" height="3" rx="1.5" fill="#a5b4fc" />
+        <rect x="28" y="129" width="80" height="3" rx="1.5" fill="#6366f1" opacity="0.7" />
+      </svg>
+    );
+  }
+  if (name === "analyze") {
+    // Sentence with a cut/snip between two segments
+    return (
+      <svg
+        viewBox="0 0 200 150"
+        className="absolute inset-0 w-full h-full"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="snip" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#818cf8" />
+            <stop offset="100%" stopColor="#4f46e5" />
+          </linearGradient>
+        </defs>
+        {/* kept segment 1 */}
+        <rect x="20" y="50" width="55" height="8" rx="2" fill="#a5b4fc" />
+        <rect x="20" y="62" width="40" height="8" rx="2" fill="#a5b4fc" opacity="0.7" />
+        {/* gap indicator (silence) */}
+        <line
+          x1="85"
+          x2="115"
+          y1="60"
+          y2="60"
+          stroke="#475569"
+          strokeWidth="1"
+          strokeDasharray="3 3"
+        />
+        <text
+          x="100"
+          y="55"
+          textAnchor="middle"
+          fontSize="7"
+          fill="#64748b"
+          fontFamily="ui-monospace, monospace"
+        >
+          silence
+        </text>
+        {/* scissors / snip icon at the cut point */}
+        <g transform="translate(100 78)">
+          <circle cx="-4" cy="0" r="3" fill="none" stroke="url(#snip)" strokeWidth="1.2" />
+          <circle cx="4" cy="0" r="3" fill="none" stroke="url(#snip)" strokeWidth="1.2" />
+          <line x1="-4" y1="0" x2="4" y2="0" stroke="url(#snip)" strokeWidth="1.2" />
+        </g>
+        {/* kept segment 2 */}
+        <rect x="125" y="50" width="55" height="8" rx="2" fill="#a5b4fc" />
+        <rect x="140" y="62" width="40" height="8" rx="2" fill="#a5b4fc" opacity="0.7" />
+        {/* timeline ruler */}
+        <line x1="20" y1="110" x2="180" y2="110" stroke="#1f2937" strokeWidth="0.8" />
+        {/* keep bars (green) */}
+        <rect x="20" y="105" width="55" height="10" rx="2" fill="#22c55e" opacity="0.55" />
+        <rect x="85" y="105" width="30" height="10" rx="2" fill="#334155" opacity="0.6" />
+        <rect x="125" y="105" width="55" height="10" rx="2" fill="#22c55e" opacity="0.55" />
+      </svg>
+    );
+  }
+  // render — film strip / frame sequence
+  return (
+    <svg
+      viewBox="0 0 200 150"
+      className="absolute inset-0 w-full h-full"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="film" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#4f46e5" />
+          <stop offset="100%" stopColor="#312e81" />
+        </linearGradient>
+      </defs>
+      {/* film strip */}
+      <rect x="10" y="40" width="180" height="70" rx="4" fill="#0b1220" stroke="url(#film)" strokeWidth="1" />
+      {/* sprocket holes top */}
+      {Array.from({ length: 9 }).map((_, i) => (
+        <rect
+          key={`t${i}`}
+          x={16 + i * 20}
+          y={46}
+          width="12"
+          height="4"
+          rx="1"
+          fill="#1f2937"
+        />
+      ))}
+      {/* sprocket holes bottom */}
+      {Array.from({ length: 9 }).map((_, i) => (
+        <rect
+          key={`b${i}`}
+          x={16 + i * 20}
+          y={100}
+          width="12"
+          height="4"
+          rx="1"
+          fill="#1f2937"
+        />
+      ))}
+      {/* frames */}
+      {Array.from({ length: 3 }).map((_, i) => (
+        <g key={`f${i}`}>
+          <rect
+            x={26 + i * 56}
+            y={56}
+            width="48"
+            height="38"
+            rx="2"
+            fill="url(#film)"
+            opacity={0.4 + i * 0.2}
+          />
+          <path
+            d={`M${38 + i * 56} 75 L${48 + i * 56} 65 L${60 + i * 56} 75 L${48 + i * 56} 85 Z`}
+            fill="#a5b4fc"
+            opacity="0.9"
+          />
+        </g>
+      ))}
+      {/* playhead */}
+      <line x1="100" y1="38" x2="100" y2="112" stroke="#22d3ee" strokeWidth="1.2" />
+      <circle cx="100" cy="38" r="2" fill="#22d3ee" />
+    </svg>
+  );
+}
 
 export default function PipelineFlow() {
   return (
@@ -86,17 +255,14 @@ export default function PipelineFlow() {
                     )}
                   </div>
 
-                  {/* Image */}
+                  {/* Illustration */}
                   <motion.div
-                    className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-3 border border-gray-800/60"
+                    className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-3 border border-gray-800/60 bg-gray-950"
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                      style={{ backgroundImage: `url(${step.img})` }}
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-gray-950/90 via-gray-950/30 to-transparent" />
+                    <Illust name={step.illust} />
+                    <div className="absolute inset-0 bg-linear-to-t from-gray-950/80 via-gray-950/20 to-transparent" />
                     <div className="absolute bottom-3 left-3">
                       <span className="text-xs font-semibold text-indigo-300 bg-gray-950/60 px-2 py-0.5 rounded-full">
                         {step.label}
