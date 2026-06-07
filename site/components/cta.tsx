@@ -19,7 +19,7 @@ export default function Cta() {
           alt="Blurred shape"
         />
       </div>
-      <div className="max-w6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="bg-linear-to-r from-transparent via-gray-800/50 py-12 md:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <motion.h2
