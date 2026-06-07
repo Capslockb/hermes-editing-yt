@@ -1,6 +1,7 @@
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
+import * as THREE from "three";
 
 import CanvasLoader from "../loader";
 
@@ -8,13 +9,34 @@ import CanvasLoader from "../loader";
 // multi-file form. See ComputersCanvas for the rationale.
 const earthUrl = `${import.meta.env.BASE_URL}planet/scene.glb`;
 
-// Earth
+// The GLB contains a "Clouds" mesh layered on top of the "Planet"
+// mesh. The cloud material's baseColorTexture is a 1024x1024 RGB PNG
+// (no alpha channel) — the cloud shapes are white-ish on a black
+// background. With the default OPAQUE alpha mode this renders as a
+// black sphere with white splotches, occluding the planet body.
+//
+// Fix: traverse the loaded scene and remove any mesh whose material
+// is named "Clouds". The planet body underneath looks fine on its
+// own. (Earlier we tried setting transparent + alphaTest on the
+// material, but the source PNG's lack of alpha makes any alpha-based
+// fix look wrong without also baking an alpha channel.)
 const Earth = () => {
-  // import earth scene
-  const earth = useGLTF(earthUrl);
+  const gltf = useGLTF(earthUrl);
+  const scene = useMemo(() => {
+    const cloned = gltf.scene.clone(true);
+    cloned.traverse((obj) => {
+      const mesh = obj as THREE.Mesh;
+      if (!(mesh as THREE.Mesh).isMesh) return;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      if (mats.some((m) => m?.name === "Clouds")) {
+        mesh.visible = false;
+      }
+    });
+    return cloned;
+  }, [gltf]);
 
   return (
-    <primitive object={earth.scene} scale={2.5} position-y={0} rotation-y={0} />
+    <primitive object={scene} scale={2.5} position-y={0} rotation-y={0} />
   );
 };
 
