@@ -39,14 +39,6 @@ const Computers = ({ isMobile, inCenter, gyro }: ComputersProps) => {
   const lerpY = useLerp(baseRotY.current);
   const lerpX = useLerp(baseRotX.current);
 
-  // On mobile the canvas is portrait and tall, so position the model
-  // closer to the camera (less negative Y/Z) and slightly larger to
-  // keep it visually centered.
-  const modelPos: [number, number, number] = isMobile
-    ? [0, -1.5, -0.5]
-    : [0, -3.25, -1.5];
-  const modelScale = isMobile ? 0.55 : 0.75;
-
   useFrame((_, delta) => {
     if (!groupRef.current) return;
 
@@ -88,8 +80,8 @@ const Computers = ({ isMobile, inCenter, gyro }: ComputersProps) => {
       />
       <primitive
         object={computer.scene}
-        scale={modelScale}
-        position={modelPos}
+        scale={isMobile ? 0.6 : 0.75}
+        position={isMobile ? [0, -1, -1] : [0, -3.25, -1.5]}
         rotation={[0, 0, 0]}
       />
     </group>
@@ -120,7 +112,11 @@ const ComputersCanvas = () => {
       <Canvas
         frameloop="always"
         shadows
-        camera={{ position: [20, 3, 5], fov: 25 }}
+        camera={
+          isMobile
+            ? { position: [0, 0, 8], fov: 35 }
+            : { position: [20, 3, 5], fov: 25 }
+        }
         gl={{ preserveDrawingBuffer: true, alpha: true }}
       >
         <Suspense fallback={<CanvasLoader />}>
