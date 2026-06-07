@@ -4,14 +4,21 @@ import { Suspense, useEffect, useState } from "react";
 
 import CanvasLoader from "../loader";
 
+// Files in public/ are copied as-is to the site root. We need to
+// prefix the URL with the Vite base path so the GLTFLoader fetches
+// scene.bin from /hermes-editing-yt/desktop_pc/scene.bin on Pages,
+// not /desktop_pc/scene.bin (which 404s on subpath deploys).
+const computerUrl = `${import.meta.env.BASE_URL}desktop_pc/scene.gltf`;
+
 type ComputersProps = {
   isMobile: boolean;
 };
 
 // Computers
 const Computers = ({ isMobile }: ComputersProps) => {
-  // Import scene
-  const computer = useGLTF("./desktop_pc/scene.gltf");
+  // Import scene. Passing the resolved URL (not a relative path) makes
+  // GLTFLoader fetch scene.bin via the same prefix.
+  const computer = useGLTF(computerUrl);
 
   return (
     // Mesh

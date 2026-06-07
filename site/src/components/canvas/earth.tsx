@@ -4,10 +4,14 @@ import { Suspense } from "react";
 
 import CanvasLoader from "../loader";
 
+// BASE_URL-aware URL for files in public/. See ComputersCanvas for
+// the same pattern.
+const earthUrl = `${import.meta.env.BASE_URL}planet/scene.gltf`;
+
 // Earth
 const Earth = () => {
   // import earth scene
-  const earth = useGLTF("./planet/scene.gltf");
+  const earth = useGLTF(earthUrl);
 
   return (
     <primitive object={earth.scene} scale={2.5} position-y={0} rotation-y={0} />
