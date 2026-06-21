@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quickstart — hermes-editing-yt</title>
+<meta name="description" content="Clone, install, first MCP call, verify, and common pitfalls for hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="active" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link"></a></h1>
+<p>Five commands, two minutes — from clone to your first MCP call.</p>
+<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link"></a></h2>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link"></a></h3>
+<ul>
+<li>Python 3.10+</li>
+<li>ffmpeg + ffprobe on PATH</li>
+<li>Optional but recommended: CUDA-capable GPU (RTX 5060 verified) with cuBLAS 12 + cuDNN</li>
+<li><code>hermes-agent</code> CLI if you want automatic MCP registration</li>
+</ul>
+<h3 id="one-shot-installers">One-shot installers<a class="headerlink" href="#one-shot-installers" title="Permanent link"></a></h3>
+<p><strong>Windows (PowerShell):</strong></p>
+<pre><code class="language-powershell">iwr -useb https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.ps1 | iex
+</code></pre>
+<p><strong>Linux / macOS (bash):</strong></p>
+<pre><code class="language-bash">curl -sSL https://raw.githubusercontent.com/Capslockb/hermes-editing-yt/main/installer/install.sh | bash
+</code></pre>
+<h3 id="tui-install-from-a-local-clone">TUI install from a local clone<a class="headerlink" href="#tui-install-from-a-local-clone" title="Permanent link"></a></h3>
+<pre><code class="language-bash">git clone https://github.com/Capslockb/hermes-editing-yt.git
+cd hermes-editing-yt
+python3 -m pip install -r plugin/requirements.txt
+python3 installer/install.py
+</code></pre>
+<h3 id="non-interactive-ci-install">Non-interactive / CI install<a class="headerlink" href="#non-interactive-ci-install" title="Permanent link"></a></h3>
+<pre><code class="language-bash">git clone https://github.com/Capslockb/hermes-editing-yt.git
+cd hermes-editing-yt
+python3 -m pip install -r plugin/requirements.txt
+python3 installer/install.py --non-interactive
+</code></pre>
+<h2 id="first-session">First session<a class="headerlink" href="#first-session" title="Permanent link"></a></h2>
+<p>After install, the plugin is registered as <code>hermes-editing-yt</code> in Hermes. Open any Hermes chat and ask:</p>
+<pre><code class="language-text">Use the hermes-editing-yt MCP tools to autocut /path/to/video.mp4
+with output to /path/to/output/my-first-cut
+</code></pre>
+<p>If you already have an SRT next to the video, the pipeline will use it. If not, it will transcribe with the local GPU Whisper (default: <code>large-v3</code>, CUDA, float16).</p>
+<p>To preview cuts without rendering, use the pure helper:</p>
+<pre><code class="language-text">Use hermes-editing-yt build_segments_from_srt to preview cuts from
+&lt;srt_text&gt; for a video 600 seconds long
+</code></pre>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link"></a></h2>
+<p>Run the release checklist locally:</p>
+<pre><code class="language-bash"># Static syntax
+python3 -m py_compile plugin/*.py scripts/*.py
+
+# Unit tests
+python3 -m pytest tests/test_hermes_editing_yt.py -q
+
+# MCP server smoke (11 tools)
+python3 tests/test_mcp_server.py
+
+# Installer dry-run
+python3 installer/install.py --non-interactive --skip-deps
+
+# Hermes registration
+hermes mcp test hermes-editing-yt
+</code></pre>
+<p>You should see version <code>1.0.0</code>, <code>ffmpeg_available: true</code>, and all 11 tools listed.</p>
+<h2 id="common-pitfalls">Common pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Required binary not available: ffmpeg</code></td>
+<td>ffmpeg is not on PATH.</td>
+<td><code>winget install Gyan.FFmpeg</code> (Windows), <code>brew install ffmpeg</code> (macOS), <code>sudo apt install ffmpeg</code> (Debian/Ubuntu).</td>
+</tr>
+<tr>
+<td><code>Library cublas64_12.dll is not found</code></td>
+<td>PyTorch ships cublas v13 but ctranslate2 needs v12.</td>
+<td><code>pip install nvidia-cublas-cu12</code>.</td>
+</tr>
+<tr>
+<td><code>hermes mcp add</code> fails silently</td>
+<td>The CLI prompts "Enable all tools?" and EOF cancels it.</td>
+<td>In CI, pipe <code>y</code>: <code>echo "y" | hermes mcp add hermes-editing-yt --command ... --args ...</code>.</td>
+</tr>
+<tr>
+<td><code>Whisper server is not reachable</code></td>
+<td>You passed <code>transcribe_backend="http"</code> but no server is running.</td>
+<td>Use <code>transcribe_backend="faster-whisper"</code> for local GPU, or start your own Whisper server.</td>
+</tr>
+<tr>
+<td>Windows paths look broken in chat</td>
+<td>Hermes sometimes strips backslashes from chat paths.</td>
+<td>Wrap paths in double quotes or provide them as explicit tool arguments.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link"></a></h2>
+<ul>
+<li>Read the full pipeline design in <a href="architecture.md"><code>architecture.md</code></a>.</li>
+<li>Browse the 11 MCP tools in <a href="mcp-tools.md"><code>mcp-tools.md</code></a>.</li>
+<li>Tune defaults in <a href="env-vars.md"><code>env-vars.md</code></a>.</li>
+<li>If something fails, see <a href="troubleshooting.md"><code>troubleshooting.md</code></a>.</li>
+</ul>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#quickstart">Quickstart</a><ul>
+<li><a href="#install">Install</a><ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#one-shot-installers">One-shot installers</a></li>
+<li><a href="#tui-install-from-a-local-clone">TUI install from a local clone</a></li>
+<li><a href="#non-interactive-ci-install">Non-interactive / CI install</a></li>
+</ul>
+</li>
+<li><a href="#first-session">First session</a></li>
+<li><a href="#verify">Verify</a></li>
+<li><a href="#common-pitfalls">Common pitfalls</a></li>
+<li><a href="#next">Next</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

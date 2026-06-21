@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP tools — hermes-editing-yt</title>
+<meta name="description" content="Reference for the 11 MCP tools exposed by hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="active" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="mcp-tools-reference">MCP tools reference<a class="headerlink" href="#mcp-tools-reference" title="Permanent link"></a></h1>
+<p>The hermes-editing-yt MCP server registers <strong>11 tools</strong> under the name <code>hermes-editing-yt</code>. The default transport is stdio; a StreamableHTTP transport is available for browser-based clients.</p>
+<blockquote>
+<p>Visual grouping: see <a href="diagrams/mcp-tools.svg"><code>diagrams/mcp-tools.svg</code></a> and the ASCII version at <a href="diagrams/mcp-surface.txt"><code>diagrams/mcp-surface.txt</code></a>.</p>
+</blockquote>
+<h2 id="tool-surface">Tool surface<a class="headerlink" href="#tool-surface" title="Permanent link"></a></h2>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph &quot;Discovery&quot;
+        A[&quot;server_info&quot;]
+        B[&quot;list_videos&quot;]
+        C[&quot;list_subtitles&quot;]
+    end
+    subgraph &quot;Plan&quot;
+        D[&quot;parse_srt_text&quot;]
+        E[&quot;build_segments_from_srt&quot;]
+    end
+    subgraph &quot;Transcribe&quot;
+        F[&quot;gpu_transcribe&quot;]
+        G[&quot;whisper_transcribe&quot;]
+    end
+    subgraph &quot;Render / Export&quot;
+        H[&quot;render_segments&quot;]
+        I[&quot;automark&quot;]
+        J[&quot;autocut&quot;]
+        K[&quot;autoedit&quot;]
+    end
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Phase</th>
+<th>Pure?</th>
+<th>Status</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server_info</code></td>
+<td>Discovery</td>
+<td>yes</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Health/version snapshot, default paths, ffmpeg/Whisper health, env overrides.</td>
+</tr>
+<tr>
+<td><code>list_videos(root)</code></td>
+<td>Discovery</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Recursively list video files under <code>root</code>.</td>
+</tr>
+<tr>
+<td><code>list_subtitles(root)</code></td>
+<td>Discovery</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Recursively list <code>.srt/.vtt</code> files under <code>root</code>.</td>
+</tr>
+<tr>
+<td><code>parse_srt_text(text)</code></td>
+<td>Plan</td>
+<td>yes</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Parse SRT or WebVTT text into JSON cues.</td>
+</tr>
+<tr>
+<td><code>build_segments_from_srt(...)</code></td>
+<td>Plan</td>
+<td>yes</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Preview keep-segments + markers from SRT text + known duration.</td>
+</tr>
+<tr>
+<td><code>gpu_transcribe(...)</code></td>
+<td>Transcribe</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Transcribe a 16 kHz mono WAV to SRT using local faster-whisper.</td>
+</tr>
+<tr>
+<td><code>whisper_transcribe(...)</code></td>
+<td>Transcribe</td>
+<td>no</td>
+<td><span class="pill" style="background:#ffb34720;color:#ffb347;border:1px solid #ffb34740">Partial</span></td>
+<td>POST a WAV to a local Whisper HTTP server. Needs a separate server.</td>
+</tr>
+<tr>
+<td><code>render_segments(...)</code></td>
+<td>Render</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Render a JSON list of <code>{start,end}</code> segments into a single MP4.</td>
+</tr>
+<tr>
+<td><code>automark(...)</code></td>
+<td>Export</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Audio + SRT + plan + CSVs; no render.</td>
+</tr>
+<tr>
+<td><code>autocut(...)</code></td>
+<td>Export</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>automark</code> + render MP4.</td>
+</tr>
+<tr>
+<td><code>autoedit(...)</code></td>
+<td>Export</td>
+<td>no</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Same as <code>autocut</code> (full export bundle).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="transports">Transports<a class="headerlink" href="#transports" title="Permanent link"></a></h2>
+<h3 id="stdio-default">stdio (default)<a class="headerlink" href="#stdio-default" title="Permanent link"></a></h3>
+<p>Used by the Hermes gateway, Claude Desktop, Cursor, etc.</p>
+<pre><code class="language-bash">python plugin/mcp_server.py
+</code></pre>
+<h3 id="streamablehttp">StreamableHTTP<a class="headerlink" href="#streamablehttp" title="Permanent link"></a></h3>
+<p>Useful for browser-based MCP clients.</p>
+<pre><code class="language-bash">python plugin/mcp_server.py --http 8765
+</code></pre>
+<p>The server listens on <code>127.0.0.1:8765</code> and speaks the MCP StreamableHTTP protocol.</p>
+<h2 id="tool-details">Tool details<a class="headerlink" href="#tool-details" title="Permanent link"></a></h2>
+<h3 id="server_info"><code>server_info()</code><a class="headerlink" href="#server_info" title="Permanent link"></a></h3>
+<p>Returns a JSON snapshot including <code>server</code>, <code>version</code>, <code>fastmcp</code>, default output/raw dirs, Whisper URL, ffmpeg availability, video/subtitle extensions, highlight keywords, segmentation defaults, render defaults, and env overrides.</p>
+<h3 id="list_videosroot-str"><code>list_videos(root: str)</code><a class="headerlink" href="#list_videosroot-str" title="Permanent link"></a></h3>
+<p>Returns JSON: <code>{root, count, files:[{path, name, size_mb, mtime}]}</code>.</p>
+<h3 id="list_subtitlesroot-str"><code>list_subtitles(root: str)</code><a class="headerlink" href="#list_subtitlesroot-str" title="Permanent link"></a></h3>
+<p>Returns JSON: <code>{root, count, files:[{path, name, size_bytes}]}</code>.</p>
+<h3 id="parse_srt_texttext-str"><code>parse_srt_text(text: str)</code><a class="headerlink" href="#parse_srt_texttext-str" title="Permanent link"></a></h3>
+<p>Returns JSON: <code>{count, cues:[{index, start, end, text}]}</code>.</p>
+<h3 id="build_segments_from_srttext-duration_seconds-lead_in-tail_out-merge_gap-min_segment"><code>build_segments_from_srt(text, duration_seconds, lead_in, tail_out, merge_gap, min_segment)</code><a class="headerlink" href="#build_segments_from_srttext-duration_seconds-lead_in-tail_out-merge_gap-min_segment" title="Permanent link"></a></h3>
+<p>Returns JSON: <code>{duration_seconds, cue_count, segment_count, marker_count, kept_duration_seconds, segments[], markers[]}</code>.</p>
+<h3 id="gpu_transcribewav_path-output_srt_path-model-device-compute_type-language-beam_size"><code>gpu_transcribe(wav_path, output_srt_path, model, device, compute_type, language, beam_size)</code><a class="headerlink" href="#gpu_transcribewav_path-output_srt_path-model-device-compute_type-language-beam_size" title="Permanent link"></a></h3>
+<p>Transcribe a 16 kHz mono WAV to SRT using local faster-whisper. The model is cached per <code>(model, device, compute_type)</code> for the lifetime of the server.</p>
+<h3 id="whisper_transcribewav_path-output_srt_path-url"><code>whisper_transcribe(wav_path, output_srt_path, url)</code><a class="headerlink" href="#whisper_transcribewav_path-output_srt_path-url" title="Permanent link"></a></h3>
+<p>POST the WAV to a Whisper HTTP endpoint. <code>url</code> defaults to <code>HERMES_EDITING_YT_WHISPER_URL</code>. Returns <code>{srt_path, byte_count, server_url}</code> or an <code>error</code> object if the server is unreachable.</p>
+<h3 id="render_segmentsvideo_path-output_mp4_path-segments_json-video_codec-preset-crf-audio_codec-audio_bitrate"><code>render_segments(video_path, output_mp4_path, segments_json, video_codec, preset, crf, audio_codec, audio_bitrate)</code><a class="headerlink" href="#render_segmentsvideo_path-output_mp4_path-segments_json-video_codec-preset-crf-audio_codec-audio_bitrate" title="Permanent link"></a></h3>
+<p>Render a JSON array of <code>{start, end}</code> segments into a single MP4.</p>
+<h3 id="automark-autocut-autoedit"><code>automark / autocut / autoedit</code><a class="headerlink" href="#automark-autocut-autoedit" title="Permanent link"></a></h3>
+<p>These are the full pipeline tools. Shared arguments:</p>
+<ul>
+<li><code>video_path</code>, <code>output_dir</code></li>
+<li><code>srt_path</code> (optional)</li>
+<li><code>whisper_url</code>, <code>transcribe_backend</code> (<code>faster-whisper</code>, <code>http</code>, <code>none</code>)</li>
+<li><code>whisper_model</code>, <code>whisper_device</code>, <code>whisper_compute_type</code>, <code>whisper_language</code>, <code>whisper_beam_size</code></li>
+<li><code>lead_in</code>, <code>tail_out</code>, <code>merge_gap</code>, <code>min_segment</code></li>
+</ul>
+<p><code>automark</code> returns the plan + CSVs and does <strong>not</strong> render. <code>autocut</code> and <code>autoedit</code> render the cut MP4.</p>
+<h2 id="example-hermes-chat-session">Example Hermes chat session<a class="headerlink" href="#example-hermes-chat-session" title="Permanent link"></a></h2>
+<pre><code class="language-text">User: Use hermes-editing-yt to autocut
+       /home/caps/videos/Helgstr1.mp4
+       to /home/caps/output/my-first-cut
+       using large-v3 on cuda
+
+Agent: mcp_hermes-editing-yt_autocut(
+         video_path=&quot;/home/caps/videos/Helgstr1.mp4&quot;,
+         output_dir=&quot;/home/caps/output/my-first-cut&quot;,
+         whisper_model=&quot;large-v3&quot;,
+         whisper_device=&quot;cuda&quot;,
+         whisper_compute_type=&quot;float16&quot;)
+</code></pre>
+<h2 id="what-the-mcp-surface-is-not">What the MCP surface is not<a class="headerlink" href="#what-the-mcp-surface-is-not" title="Permanent link"></a></h2>
+<ul>
+<li>It is <strong>not a cloud transcription service</strong> — local GPU Whisper is the only bundled transcription engine.</li>
+<li>It is <strong>not a visual scene detector</strong> — cuts are driven by subtitles, not by analyzing video frames.</li>
+<li>It is <strong>not a YouTube uploader</strong> — rendering is local; publishing is out of scope.</li>
+</ul>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#mcp-tools-reference">MCP tools reference</a><ul>
+<li><a href="#tool-surface">Tool surface</a></li>
+<li><a href="#transports">Transports</a><ul>
+<li><a href="#stdio-default">stdio (default)</a></li>
+<li><a href="#streamablehttp">StreamableHTTP</a></li>
+</ul>
+</li>
+<li><a href="#tool-details">Tool details</a><ul>
+<li><a href="#server_info">server_info()</a></li>
+<li><a href="#list_videosroot-str">list_videos(root: str)</a></li>
+<li><a href="#list_subtitlesroot-str">list_subtitles(root: str)</a></li>
+<li><a href="#parse_srt_texttext-str">parse_srt_text(text: str)</a></li>
+<li><a href="#build_segments_from_srttext-duration_seconds-lead_in-tail_out-merge_gap-min_segment">build_segments_from_srt(text, duration_seconds, lead_in, tail_out, merge_gap, min_segment)</a></li>
+<li><a href="#gpu_transcribewav_path-output_srt_path-model-device-compute_type-language-beam_size">gpu_transcribe(wav_path, output_srt_path, model, device, compute_type, language, beam_size)</a></li>
+<li><a href="#whisper_transcribewav_path-output_srt_path-url">whisper_transcribe(wav_path, output_srt_path, url)</a></li>
+<li><a href="#render_segmentsvideo_path-output_mp4_path-segments_json-video_codec-preset-crf-audio_codec-audio_bitrate">render_segments(video_path, output_mp4_path, segments_json, video_codec, preset, crf, audio_codec, audio_bitrate)</a></li>
+<li><a href="#automark-autocut-autoedit">automark / autocut / autoedit</a></li>
+</ul>
+</li>
+<li><a href="#example-hermes-chat-session">Example Hermes chat session</a></li>
+<li><a href="#what-the-mcp-surface-is-not">What the MCP surface is not</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

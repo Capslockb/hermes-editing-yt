@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshooting — hermes-editing-yt</title>
+<meta name="description" content="Common failures and fixes for hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="active" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link"></a></h1>
+<h2 id="cublas64_12dll-is-not-found-or-cannot-be-loaded"><code>cublas64_12.dll is not found or cannot be loaded</code><a class="headerlink" href="#cublas64_12dll-is-not-found-or-cannot-be-loaded" title="Permanent link"></a></h2>
+<p>PyTorch 2.12+cu130 ships <code>cublas64_13.dll</code> only, but <code>ctranslate2</code> (the engine <code>faster-whisper</code> uses) is built against CUDA 12.x and wants <code>cublas64_12.dll</code>.</p>
+<p><strong>Fix:</strong> install the <code>nvidia-cublas-cu12</code> wheel:</p>
+<pre><code class="language-bash">pip install nvidia-cublas-cu12
+</code></pre>
+<p>The library's <code>_ensure_cublas12_on_path()</code> helper scans <code>site-packages/nvidia/cublas/bin/</code> for the DLL and registers it via <code>os.add_dll_directory()</code> before <code>ctranslate2</code> imports. So you do <strong>not</strong> need to add it to your system PATH.</p>
+<p>If the wheel isn't installable in your environment, drop a <code>cublas64_12.dll</code> from a CUDA 12.x toolkit into the directory where Python is running.</p>
+<h2 id="ffmpeg-not-found"><code>ffmpeg not found</code><a class="headerlink" href="#ffmpeg-not-found" title="Permanent link"></a></h2>
+<p>The plugin shells out to ffmpeg for audio extraction, cut, and concat. ffmpeg is <strong>not</strong> a pip dependency — it must be on PATH.</p>
+<ul>
+<li>Windows: <code>winget install Gyan.FFmpeg</code> or <code>choco install ffmpeg</code></li>
+<li>Debian/Ubuntu: <code>sudo apt install ffmpeg</code></li>
+<li>Fedora: <code>sudo dnf install ffmpeg</code></li>
+<li>macOS: <code>brew install ffmpeg</code></li>
+</ul>
+<p><code>require_ffmpeg()</code> raises <code>EditingYtError("Required binary not available: ...")</code> with a clear message.</p>
+<h2 id="whisper-server-is-not-reachable-http-backend"><code>Whisper server is not reachable</code> (HTTP backend)<a class="headerlink" href="#whisper-server-is-not-reachable-http-backend" title="Permanent link"></a></h2>
+<p><code>whisper_transcribe</code> posts to <code>HERMES_EDITING_YT_WHISPER_URL</code> (default: <code>http://127.0.0.1:51746/transcribe</code>). If that endpoint is down, the tool returns an <code>error</code> JSON envelope — not a crash.</p>
+<p><strong>Fix options:</strong></p>
+<ol>
+<li>Start your own Whisper server (e.g. <code>whisper-server</code> from whisper.cpp, or <code>faster-whisper-server</code>).</li>
+<li>Use <code>gpu_transcribe</code> or pass <code>transcribe_backend="faster-whisper"</code> to skip the HTTP hop.</li>
+<li>Pass an existing SRT and set <code>transcribe_backend="none"</code>.</li>
+</ol>
+<h2 id="hermes-cli-not-on-path"><code>hermes</code> CLI not on PATH<a class="headerlink" href="#hermes-cli-not-on-path" title="Permanent link"></a></h2>
+<p>The installer tries to call <code>hermes mcp add hermes-editing-yt</code> to register the plugin. If the CLI is missing, the install still completes but prints a warning. Register manually:</p>
+<pre><code class="language-bash">hermes mcp add hermes-editing-yt \
+    --command &quot;$(which python3)&quot; \
+    --args &quot;$(pwd)/plugin/mcp_server.py&quot;
+</code></pre>
+<h2 id="gpu_transcribe-hangs-the-smoke-test"><code>gpu_transcribe</code> hangs the smoke test<a class="headerlink" href="#gpu_transcribe-hangs-the-smoke-test" title="Permanent link"></a></h2>
+<p>The smoke test validates the <code>gpu_transcribe</code> tool schema rather than calling it live — a fake WAV would hang in CTranslate2's audio loader. The real GPU path is exercised by <code>scripts/run_gpu_demo.py</code> with a real video.</p>
+<h2 id="tests-pass-locally-but-fail-on-another-machine">Tests pass locally but fail on another machine<a class="headerlink" href="#tests-pass-locally-but-fail-on-another-machine" title="Permanent link"></a></h2>
+<p>The MCP smoke test sets <code>HERMES_EDITING_YT_OUTPUT_DIR</code> to a temporary directory. If you see path-related failures, check that <code>HERMES_EDITING_YT_OUTPUT_DIR</code> is not being inherited from your shell and pointing at a non-existent path.</p>
+<h2 id="render-is-much-slower-than-expected">Render is much slower than expected<a class="headerlink" href="#render-is-much-slower-than-expected" title="Permanent link"></a></h2>
+<p>Three knobs in order of impact:</p>
+<ol>
+<li><strong>CRF</strong> — <code>CRF 18</code> is visually lossless. <code>CRF 23</code> is the libx264 default and ~2× faster. <code>CRF 28</code> is fine for a YouTube upload.</li>
+<li><strong>Preset</strong> — <code>medium</code> is the default. <code>veryfast</code> is 5-8× faster but larger output. <code>slow</code> is 2-3× slower, slightly smaller.</li>
+<li><strong>Hardware encode</strong> — on NVIDIA, add <code>-c:v h264_nvenc</code> instead of <code>libx264</code> for ~10× speed (loss of CRF fine-tuning).</li>
+</ol>
+<h2 id="site-shows-a-grey-blank-page">Site shows a grey blank page<a class="headerlink" href="#site-shows-a-grey-blank-page" title="Permanent link"></a></h2>
+<p>If the React site crashes, the <code>PageErrorBoundary</code> displays a styled fallback. Check the browser console for a model/texture 404 — make sure the GLB assets are in <code>site/public/</code> and that the deploy base path matches <code>site/next.config.js</code>.</p>
+<h2 id="still-stuck">Still stuck?<a class="headerlink" href="#still-stuck" title="Permanent link"></a></h2>
+<p>Open an issue with:</p>
+<ul>
+<li><code>python3 --version</code></li>
+<li><code>ffmpeg -version</code> (first line)</li>
+<li><code>nvidia-smi</code> output (if using GPU)</li>
+<li>The exact tool call or command that failed</li>
+<li>The full error traceback or <code>error</code> JSON object</li>
+</ul>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#troubleshooting">Troubleshooting</a><ul>
+<li><a href="#cublas64_12dll-is-not-found-or-cannot-be-loaded">cublas64_12.dll is not found or cannot be loaded</a></li>
+<li><a href="#ffmpeg-not-found">ffmpeg not found</a></li>
+<li><a href="#whisper-server-is-not-reachable-http-backend">Whisper server is not reachable (HTTP backend)</a></li>
+<li><a href="#hermes-cli-not-on-path">hermes CLI not on PATH</a></li>
+<li><a href="#gpu_transcribe-hangs-the-smoke-test">gpu_transcribe hangs the smoke test</a></li>
+<li><a href="#tests-pass-locally-but-fail-on-another-machine">Tests pass locally but fail on another machine</a></li>
+<li><a href="#render-is-much-slower-than-expected">Render is much slower than expected</a></li>
+<li><a href="#site-shows-a-grey-blank-page">Site shows a grey blank page</a></li>
+<li><a href="#still-stuck">Still stuck?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

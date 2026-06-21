@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Environment variables — hermes-editing-yt</title>
+<meta name="description" content="Exhaustive environment variable reference for hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="active" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="environment-variables">Environment variables<a class="headerlink" href="#environment-variables" title="Permanent link"></a></h1>
+<p>hermes-editing-yt can be configured entirely through environment variables. Tool arguments take precedence over env vars; env vars take precedence over the baked-in defaults.</p>
+<h2 id="paths">Paths<a class="headerlink" href="#paths" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HERMES_EDITING_YT_OUTPUT_DIR</code></td>
+<td><code>~/hermes-editing-yt-output</code></td>
+<td>Default output root for <code>automark</code>, <code>autocut</code>, and <code>autoedit</code>.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_RAW_DIR</code></td>
+<td><code>G:\- hermes-editing-yt\Unedited (RAW)</code> (Windows) / same as output dir (elsewhere)</td>
+<td>Legacy raw-footage confirmation folder used by the interactive CLI.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-whisper-faster-whisper">Local Whisper (faster-whisper)<a class="headerlink" href="#local-whisper-faster-whisper" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_MODEL</code></td>
+<td><code>large-v3</code></td>
+<td>Model name passed to faster-whisper. Also accepts <code>tiny</code>, <code>base</code>, <code>small</code>, <code>medium</code>.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_DEVICE</code></td>
+<td><code>cuda</code></td>
+<td>Compute device: <code>cuda</code> or <code>cpu</code>.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_COMPUTE</code></td>
+<td><code>float16</code></td>
+<td>Compute type: <code>float16</code>, <code>float32</code>, <code>int8</code>, <code>int8_float16</code>.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_LANG</code></td>
+<td><em>(unset)</em></td>
+<td>Optional ISO language code (e.g. <code>en</code>, <code>sv</code>). Auto-detect if omitted.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_BEAM</code></td>
+<td><code>5</code></td>
+<td>Whisper beam size.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="http-whisper-endpoint">HTTP Whisper endpoint<a class="headerlink" href="#http-whisper-endpoint" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_URL</code></td>
+<td><code>http://127.0.0.1:51746/transcribe</code></td>
+<td>URL for the <code>whisper_transcribe</code> tool. Leave empty to force local GPU.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="segmentation">Segmentation<a class="headerlink" href="#segmentation" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HERMES_EDITING_YT_MERGE_GAP</code></td>
+<td><code>1.20</code></td>
+<td>Maximum seconds of silence between cues to merge into the same keep-segment. Increase for more aggressive cuts; decrease to preserve breath beats.</td>
+</tr>
+</tbody>
+</table>
+<p>There are no env vars for <code>lead_in</code>, <code>tail_out</code>, <code>min_segment</code>, <code>highlight_keywords</code>, or render knobs today — pass them as tool arguments.</p>
+<h2 id="render-defaults">Render defaults<a class="headerlink" href="#render-defaults" title="Permanent link"></a></h2>
+<p>Render defaults are constants in <code>plugin/hermes_editing_yt.py</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Default</th>
+<th>Override</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Video codec</td>
+<td><code>libx264</code></td>
+<td><code>video_codec</code> arg on <code>render_segments</code> / full pipeline tools.</td>
+</tr>
+<tr>
+<td>Preset</td>
+<td><code>medium</code></td>
+<td><code>preset</code> arg.</td>
+</tr>
+<tr>
+<td>CRF</td>
+<td><code>18</code></td>
+<td><code>crf</code> arg.</td>
+</tr>
+<tr>
+<td>Audio codec</td>
+<td><code>aac</code></td>
+<td><code>audio_codec</code> arg.</td>
+</tr>
+<tr>
+<td>Audio bitrate</td>
+<td><code>192k</code></td>
+<td><code>audio_bitrate</code> arg.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="installer-behavior">Installer behavior<a class="headerlink" href="#installer-behavior" title="Permanent link"></a></h2>
+<p>The installer reads the env vars above and writes them into the Hermes config prompt defaults. It does not modify shell profiles.</p>
+<h2 id="example-env-snippet">Example <code>.env</code> snippet<a class="headerlink" href="#example-env-snippet" title="Permanent link"></a></h2>
+<pre><code class="language-bash"># ~/.config/hermes/editing-yt.env
+HERMES_EDITING_YT_OUTPUT_DIR=&quot;$HOME/hermes-editing-yt-output&quot;
+HERMES_EDITING_YT_WHISPER_URL=&quot;&quot;
+HERMES_EDITING_YT_WHISPER_MODEL=&quot;large-v3&quot;
+HERMES_EDITING_YT_WHISPER_DEVICE=&quot;cuda&quot;
+HERMES_EDITING_YT_WHISPER_COMPUTE=&quot;float16&quot;
+HERMES_EDITING_YT_MERGE_GAP=&quot;1.20&quot;
+</code></pre>
+<p>Load it before running Hermes:</p>
+<pre><code class="language-bash">set -a; source ~/.config/hermes/editing-yt.env; set +a
+hermes gateway start
+</code></pre>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#environment-variables">Environment variables</a><ul>
+<li><a href="#paths">Paths</a></li>
+<li><a href="#local-whisper-faster-whisper">Local Whisper (faster-whisper)</a></li>
+<li><a href="#http-whisper-endpoint">HTTP Whisper endpoint</a></li>
+<li><a href="#segmentation">Segmentation</a></li>
+<li><a href="#render-defaults">Render defaults</a></li>
+<li><a href="#installer-behavior">Installer behavior</a></li>
+<li><a href="#example-env-snippet">Example .env snippet</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

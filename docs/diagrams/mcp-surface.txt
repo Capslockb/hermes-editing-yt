@@ -1,0 +1,35 @@
++--------------------------------------------------+
+| Hermes Agent chat                                |
+|  "Use hermes-editing-yt to autocut ..."          |
++--------------------------------------------------+
+                          | MCP JSON-RPC
+                          v
++--------------------------------------------------+
+| mcp_server.py (FastMCP 3.0.2)                  |
+|                                                  |
+|  Discovery     Plan        Transcribe   Render |
+|  ----------    ----        ---------    ------ |
+|  server_info   parse_srt_text   gpu_transcribe    render_segments |
+|  list_videos   build_segments   whisper_transcribe  automark       |
+|  list_subtitles                                 autocut        |
+|                                                 autoedit       |
++--------------------------------------------------+
+                          | in-process calls
+                          v
++--------------------------------------------------+
+| hermes_editing_yt.py (library)                  |
+|  parse_subtitles                                 |
+|  build_segments                                  |
+|  build_markers                                   |
+|  extract_audio                                   |
+|  render_autocut                                  |
+|  transcribe_with_faster_whisper                  |
+|  transcribe_to_srt                               |
+|  run_pipeline                                    |
++--------------------------------------------------+
+         |                       |
+         v                       v
+    ffmpeg / ffprobe      faster-whisper / CTranslate2
+         |                       |
+         v                       v
+    cut.mp4                 transcript.srt

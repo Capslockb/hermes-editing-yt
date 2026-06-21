@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Release readiness — hermes-editing-yt</title>
+<meta name="description" content="Status legend, truth table, and release checklist for hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="active" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="release-readiness">Release readiness<a class="headerlink" href="#release-readiness" title="Permanent link"></a></h1>
+<h2 id="status-legend">Status legend<a class="headerlink" href="#status-legend" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Working</strong></td>
+<td>Code exists in the repo and has an executable verification path.</td>
+</tr>
+<tr>
+<td><strong>Partial</strong></td>
+<td>Code exists but depends on a local service, credential, or binary that the user must provide.</td>
+</tr>
+<tr>
+<td><strong>Planned</strong></td>
+<td>Roadmapped design; implementation not yet in <code>main</code>.</td>
+</tr>
+<tr>
+<td><strong>Research</strong></td>
+<td>Mentioned only as a future integration target until code + tests land.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="current-repository-truth-table">Current repository truth table<a class="headerlink" href="#current-repository-truth-table" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Status</th>
+<th>Verification command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRT / WebVTT parsing</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>python3 -m pytest tests/test_hermes_editing_yt.py::TestParseSrt -q</code></td>
+</tr>
+<tr>
+<td>Segment + marker building</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>python3 -m pytest tests/test_hermes_editing_yt.py::TestBuildSegments -q</code></td>
+</tr>
+<tr>
+<td>ffmpeg render path</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>python3 -m pytest tests/test_hermes_editing_yt.py -q</code> (render uses ffmpeg indirectly in full E2E)</td>
+</tr>
+<tr>
+<td>Local GPU Whisper transcription</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>python3 scripts/run_gpu_demo.py</code> (needs real video + GPU)</td>
+</tr>
+<tr>
+<td>MCP server — 11 tools</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>python3 tests/test_mcp_server.py</code></td>
+</tr>
+<tr>
+<td>Oneshot installer</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>python3 installer/install.py --non-interactive --skip-deps</code></td>
+</tr>
+<tr>
+<td>Website (React + Three.js)</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td><code>npm --prefix site run build</code></td>
+</tr>
+<tr>
+<td>CI lint + unit test</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>See <code>.github/workflows/test.yml</code></td>
+</tr>
+<tr>
+<td>HTTP Whisper backend</td>
+<td><span class="pill" style="background:#ffb34720;color:#ffb347;border:1px solid #ffb34740">Partial</span></td>
+<td><code>whisper_transcribe</code> needs a running Whisper server at the configured URL.</td>
+</tr>
+<tr>
+<td>Standalone CLI beyond MCP</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td>CLI entry in <code>hermes_editing_yt.py</code> exists; <code>__main__</code> packaging planned.</td>
+</tr>
+<tr>
+<td>Batch / folder pipeline</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td><code>list_videos</code>/<code>list_subtitles</code> primitives only.</td>
+</tr>
+<tr>
+<td>GUI timeline editor</td>
+<td><span class="pill" style="background:#ff6e9c20;color:#ff6e9c;border:1px solid #ff6e9c40">Research</span></td>
+<td>No code.</td>
+</tr>
+<tr>
+<td>Cloud transcription</td>
+<td><span class="pill" style="background:#ff6e9c20;color:#ff6e9c;border:1px solid #ff6e9c40">Research</span></td>
+<td>HTTP hook only.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hard-release-rules">Hard release rules<a class="headerlink" href="#hard-release-rules" title="Permanent link"></a></h2>
+<ol>
+<li>Do not call a feature "supported" unless there is working code <strong>and</strong> a verification command in this repo.</li>
+<li>Do not claim automatic cloud transcription without a bundled cloud backend.</li>
+<li>Do not claim GPU transcription works without documenting the CUDA + cuBLAS 12 requirement.</li>
+<li>Do not leak secrets in prompts, transcripts, plans, messages, issues, or docs.</li>
+<li>README, raw docs, and docs-site must use the same status labels.</li>
+</ol>
+<h2 id="e2e-smoke-checklist">E2E smoke checklist<a class="headerlink" href="#e2e-smoke-checklist" title="Permanent link"></a></h2>
+<p>Run before tagging a release:</p>
+<pre><code class="language-bash"># 1. Static syntax
+python3 -m py_compile plugin/*.py scripts/*.py
+
+# 2. Unit tests
+python3 -m pytest tests/test_hermes_editing_yt.py -q
+
+# 3. MCP server smoke
+python3 tests/test_mcp_server.py
+
+# 4. Installer gate
+python3 installer/install.py --non-interactive --skip-deps
+
+# 5. Site builds
+npm --prefix site install --legacy-peer-deps
+npm --prefix site run build
+
+# 6. Docs site builds
+python3 scripts/build_docs_site.py
+</code></pre>
+<h2 id="release-blocking-gaps">Release-blocking gaps<a class="headerlink" href="#release-blocking-gaps" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Status</th>
+<th>Owner / next step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP Whisper backend needs a documented reference server.</td>
+<td><span class="pill" style="background:#ffb34720;color:#ffb347;border:1px solid #ffb34740">Partial</span></td>
+<td>Provide example server command or Docker image.</td>
+</tr>
+<tr>
+<td>Batch/folder runner is not implemented.</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td>Add <code>batch_autocut</code> tool or script.</td>
+</tr>
+<tr>
+<td>No standalone first-class CLI entry (<code>python -m hermes_editing_yt</code>).</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td>Add <code>__main__.py</code> and console script.</td>
+</tr>
+<tr>
+<td>Website and generated docs site are separate deploy targets.</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Document that <code>site/</code> is the canonical rich site; <code>docs-site/</code> is the generated docs mirror.</td>
+</tr>
+<tr>
+<td>GUI timeline editor does not exist.</td>
+<td><span class="pill" style="background:#ff6e9c20;color:#ff6e9c;border:1px solid #ff6e9c40">Research</span></td>
+<td>Keep out of release claims.</td>
+</tr>
+</tbody>
+</table>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#release-readiness">Release readiness</a><ul>
+<li><a href="#status-legend">Status legend</a></li>
+<li><a href="#current-repository-truth-table">Current repository truth table</a></li>
+<li><a href="#hard-release-rules">Hard release rules</a></li>
+<li><a href="#e2e-smoke-checklist">E2E smoke checklist</a></li>
+<li><a href="#release-blocking-gaps">Release-blocking gaps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

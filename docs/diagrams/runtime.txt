@@ -1,0 +1,24 @@
+raw.mp4
+├── extract_audio
+│   ├── whisper_input.wav (16 kHz mono)
+│   └── audio_only.mp3 (44.1 kHz stereo)
+│
+whisper_input.wav ──► faster-whisper (local GPU, large-v3, float16)
+                         └── transcript.srt
+
+transcript.srt ──► parse_subtitles
+                    └── List[Cue]
+
+List[Cue] ──► build_segments
+               └── List[Segment] (gaps ≤ 1.2s merged, lead/tail pads)
+
+List[Segment] ──► build_markers
+                  └── List[Marker]
+                    ├── cut markers (AUTO CUT START / END)
+                    └── suggestion markers (keywords / ! / ?)
+
+List[Segment] + List[Marker]
+   ├──► segments.csv
+   ├──► markers.csv
+   ├──► plan.json
+   └──► render_autocut ──► cut.mp4 (libx264 CRF 18, AAC 192k)

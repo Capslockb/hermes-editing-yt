@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hermes-editing-yt — docs</title>
+<meta name="description" content="Documentation index for hermes-editing-yt, the subtitle-driven auto video editor for Hermes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="active" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <div style="margin:2em 0 2.5em;padding:2em;background:linear-gradient(135deg,rgba(0,212,255,0.08),rgba(145,94,255,0.08));border:1px solid rgba(145,94,255,0.25);border-radius:1em;"><h1 style="margin-top:0;border:none;padding:0;">hermes-editing-yt</h1><p style="font-size:1.2em;color:var(--muted);margin:0.5em 0 0;">Subtitle-Driven Auto Video Editor — Your videos, editable by text.</p><p style="margin-top:1em;">One MCP call. Local GPU. Free forever. No API keys.</p></div><h1 id="hermes-editing-yt-raw-docs">hermes-editing-yt — raw docs<a class="headerlink" href="#hermes-editing-yt-raw-docs" title="Permanent link"></a></h1>
+<p>This directory is the <strong>single source of truth</strong> for the project's written documentation. Pages here are Markdown-first; the generated site in <a href="../docs-site/"><code>../docs-site/</code></a> is produced by <a href="../scripts/build_docs_site.py"><code>../scripts/build_docs_site.py</code></a>.</p>
+<p>The rich public website lives in <a href="../site/"><code>../site/</code></a> and deploys separately to https://capslockb.github.io/hermes-editing-yt/.</p>
+<h2 id="status-legend">Status legend<a class="headerlink" href="#status-legend" title="Permanent link"></a></h2>
+<p>Every capability in this tree is tagged with one of these labels:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Working</strong></td>
+<td>Code exists in the repo and has an executable verification path.</td>
+</tr>
+<tr>
+<td><strong>Partial</strong></td>
+<td>Code exists but depends on a local service, credential, or binary that the user must provide.</td>
+</tr>
+<tr>
+<td><strong>Planned</strong></td>
+<td>Roadmapped design; implementation not yet in <code>main</code>.</td>
+</tr>
+<tr>
+<td><strong>Research</strong></td>
+<td>Mentioned only as a future integration target until code + tests land.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-index">Doc index<a class="headerlink" href="#doc-index" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="quickstart.md"><code>quickstart.md</code></a></td>
+<td>Clone, install, first MCP call, verify, common pitfalls.</td>
+</tr>
+<tr>
+<td><a href="architecture.md"><code>architecture.md</code></a></td>
+<td>System map, pipeline stages, runtime/dataflow, threading model, lifecycle, key files, env vars, integration boundaries.</td>
+</tr>
+<tr>
+<td><a href="mcp-tools.md"><code>mcp-tools.md</code></a></td>
+<td>The 11 MCP tools, parameters, examples, and StreamableHTTP transport.</td>
+</tr>
+<tr>
+<td><a href="operator-helpers.md"><code>operator-helpers.md</code></a></td>
+<td>The operator-friendly tool surface and how to wire the skill doc into Hermes.</td>
+</tr>
+<tr>
+<td><a href="env-vars.md"><code>env-vars.md</code></a></td>
+<td>Exhaustive environment variable reference by category.</td>
+</tr>
+<tr>
+<td><a href="troubleshooting.md"><code>troubleshooting.md</code></a></td>
+<td>Common failures, fixes, and log locations.</td>
+</tr>
+<tr>
+<td><a href="release-readiness.md"><code>release-readiness.md</code></a></td>
+<td>Status legend, truth table, hard release rules, E2E smoke checklist, release-blocking gaps.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="high-level-status-table">High-level status table<a class="headerlink" href="#high-level-status-table" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRT / WebVTT parsing</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Pure Python; 35 unit tests.</td>
+</tr>
+<tr>
+<td>Segment + marker building</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Pure function; configurable.</td>
+</tr>
+<tr>
+<td>ffmpeg render path</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Needs ffmpeg on PATH.</td>
+</tr>
+<tr>
+<td>Local GPU Whisper transcription</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>RTX 5060 verified; cuBLAS 12 shim included.</td>
+</tr>
+<tr>
+<td>MCP server — 11 tools</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>FastMCP 3.0.2 stdio + StreamableHTTP.</td>
+</tr>
+<tr>
+<td>Oneshot installer</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>TUI + non-interactive + uninstall.</td>
+</tr>
+<tr>
+<td>React/Three.js website</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Auto-deployed from <code>site/</code>.</td>
+</tr>
+<tr>
+<td>HTTP Whisper backend</td>
+<td><span class="pill" style="background:#ffb34720;color:#ffb347;border:1px solid #ffb34740">Partial</span></td>
+<td>Needs a separate Whisper server.</td>
+</tr>
+<tr>
+<td>Standalone CLI beyond MCP</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td>Backwards-compat CLI exists; first-class module entry planned.</td>
+</tr>
+<tr>
+<td>Batch / folder pipeline</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td><code>list_videos</code> exists; multi-file runner not yet built.</td>
+</tr>
+<tr>
+<td>GUI timeline editor</td>
+<td><span class="pill" style="background:#ff6e9c20;color:#ff6e9c;border:1px solid #ff6e9c40">Research</span></td>
+<td>No code yet.</td>
+</tr>
+<tr>
+<td>Cloud transcription</td>
+<td><span class="pill" style="background:#ff6e9c20;color:#ff6e9c;border:1px solid #ff6e9c40">Research</span></td>
+<td>HTTP hook only.</td>
+</tr>
+</tbody>
+</table>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#hermes-editing-yt-raw-docs">hermes-editing-yt — raw docs</a><ul>
+<li><a href="#status-legend">Status legend</a></li>
+<li><a href="#doc-index">Doc index</a></li>
+<li><a href="#high-level-status-table">High-level status table</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operator helpers — hermes-editing-yt</title>
+<meta name="description" content="Operator-friendly helpers and skill doc wiring for hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="active" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="operator-helpers">Operator helpers<a class="headerlink" href="#operator-helpers" title="Permanent link"></a></h1>
+<p>The operator-friendly surface of hermes-editing-yt is the set of MCP tools and the skill doc that make the editing pipeline discoverable, safe, and easy to drive from any Hermes agent.</p>
+<h2 id="current-status">Current status<a class="headerlink" href="#current-status" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server_info</code></td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Health/version/config snapshot.</td>
+</tr>
+<tr>
+<td><code>list_videos</code> / <code>list_subtitles</code></td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Recursively discover inputs.</td>
+</tr>
+<tr>
+<td><code>parse_srt_text</code> / <code>build_segments_from_srt</code></td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Pure preview tools.</td>
+</tr>
+<tr>
+<td><code>automark</code> / <code>autocut</code> / <code>autoedit</code></td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Full pipeline modes.</td>
+</tr>
+<tr>
+<td>Skill doc (<code>skills/hermes-editing-yt/SKILL.md</code>)</td>
+<td><span class="pill" style="background:#4ade8020;color:#4ade80;border:1px solid #4ade8040">Working</span></td>
+<td>Copied to Hermes skills dir by the installer.</td>
+</tr>
+<tr>
+<td>Batch runner</td>
+<td><span class="pill" style="background:#00d4ff20;color:#00d4ff;border:1px solid #00d4ff40">Planned</span></td>
+<td>Not yet implemented.</td>
+</tr>
+<tr>
+<td>GUI timeline editor</td>
+<td><span class="pill" style="background:#ff6e9c20;color:#ff6e9c;border:1px solid #ff6e9c40">Research</span></td>
+<td>No code.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-it-adds">What it adds<a class="headerlink" href="#what-it-adds" title="Permanent link"></a></h2>
+<ol>
+<li><strong>Discovery tools</strong> — agents can list videos and subtitles on disk instead of guessing paths.</li>
+<li><strong>Pure preview tools</strong> — <code>parse_srt_text</code> and <code>build_segments_from_srt</code> let an agent preview cuts before committing to a long ffmpeg/Whisper run.</li>
+<li><strong>Three depth levels</strong> — <code>automark</code> (plan only), <code>autocut</code> (render), <code>autoedit</code> (full bundle).</li>
+<li><strong>Skill doc</strong> — a structured prompt block that Hermes loads automatically when the tools are discovered.</li>
+</ol>
+<h2 id="wire-into-the-plugin">Wire into the plugin<a class="headerlink" href="#wire-into-the-plugin" title="Permanent link"></a></h2>
+<p>The oneshot installer does this automatically. To do it manually:</p>
+<pre><code class="language-bash"># 1. Install the Python deps
+python3 -m pip install -r plugin/requirements.txt
+
+# 2. Copy the skill doc into Hermes
+mkdir -p ~/.local/share/hermes/skills/media/hermes-editing-yt
+cp skills/hermes-editing-yt/SKILL.md ~/.local/share/hermes/skills/media/hermes-editing-yt/
+
+# 3. Register the MCP server
+hermes mcp add hermes-editing-yt \
+    --command &quot;$(which python3)&quot; \
+    --args &quot;$(pwd)/plugin/mcp_server.py&quot;
+
+# 4. Restart the gateway
+hermes gateway restart
+</code></pre>
+<p>On Windows, adjust the paths and use the absolute Python executable.</p>
+<h2 id="safety-contract">Safety contract<a class="headerlink" href="#safety-contract" title="Permanent link"></a></h2>
+<ul>
+<li>All paths are resolved with <code>Path.expanduser().resolve()</code> before any I/O.</li>
+<li>The server never writes outside the configured output directory.</li>
+<li><code>render_segments</code> refuses empty segment lists.</li>
+<li>The HTTP Whisper tool returns a JSON <code>error</code> object instead of crashing if the server is unreachable.</li>
+<li>GPU transcription falls back to CPU float32 if CUDA init fails.</li>
+</ul>
+<h2 id="example-use">Example use<a class="headerlink" href="#example-use" title="Permanent link"></a></h2>
+<h3 id="preview-cuts-from-an-existing-srt">Preview cuts from an existing SRT<a class="headerlink" href="#preview-cuts-from-an-existing-srt" title="Permanent link"></a></h3>
+<pre><code class="language-text">User: Use hermes-editing-yt to preview a cut plan from
+       /home/caps/videos/Helgstr1.srt for a 600 second video
+
+Agent: mcp_hermes-editing-yt_build_segments_from_srt(
+         text=&lt;file contents&gt;,
+         duration_seconds=600)
+</code></pre>
+<h3 id="full-autocut-with-local-gpu">Full autocut with local GPU<a class="headerlink" href="#full-autocut-with-local-gpu" title="Permanent link"></a></h3>
+<pre><code class="language-text">User: Use hermes-editing-yt to autoedit
+       /home/caps/videos/Helgstr1.mp4
+       to /home/caps/output/gpu-cut
+
+Agent: mcp_hermes-editing-yt_autoedit(
+         video_path=&quot;/home/caps/videos/Helgstr1.mp4&quot;,
+         output_dir=&quot;/home/caps/output/gpu-cut&quot;,
+         whisper_model=&quot;large-v3&quot;,
+         whisper_device=&quot;cuda&quot;,
+         whisper_compute_type=&quot;float16&quot;)
+</code></pre>
+<h2 id="cross-exam-checks-before-release">Cross-exam checks before release<a class="headerlink" href="#cross-exam-checks-before-release" title="Permanent link"></a></h2>
+<ul>
+<li>[ ] <code>hermes mcp list</code> shows <code>hermes-editing-yt</code> with 11 tools.</li>
+<li>[ ] <code>hermes mcp test hermes-editing-yt</code> returns <code>ffmpeg_available: true</code>.</li>
+<li>[ ] <code>parse_srt_text</code> returns the expected cue count for a known SRT.</li>
+<li>[ ] <code>build_segments_from_srt</code> returns at least two cut markers per segment.</li>
+<li>[ ] <code>automark</code> on a test video writes <code>*_automark_plan.json</code>, <code>*_automark_segments.csv</code>, and <code>*_automark_markers.csv</code>.</li>
+<li>[ ] The skill doc is present in the Hermes skills directory.</li>
+</ul>
+<h2 id="what-this-is-not">What this is not<a class="headerlink" href="#what-this-is-not" title="Permanent link"></a></h2>
+<ul>
+<li>It is not a fully automated YouTube publishing pipeline.</li>
+<li>It is not a visual/video-frame editor — all decisions come from subtitles.</li>
+<li>It is not a multi-user SaaS — it runs locally on one GPU.</li>
+</ul>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#operator-helpers">Operator helpers</a><ul>
+<li><a href="#current-status">Current status</a></li>
+<li><a href="#what-it-adds">What it adds</a></li>
+<li><a href="#wire-into-the-plugin">Wire into the plugin</a></li>
+<li><a href="#safety-contract">Safety contract</a></li>
+<li><a href="#example-use">Example use</a><ul>
+<li><a href="#preview-cuts-from-an-existing-srt">Preview cuts from an existing SRT</a></li>
+<li><a href="#full-autocut-with-local-gpu">Full autocut with local GPU</a></li>
+</ul>
+</li>
+<li><a href="#cross-exam-checks-before-release">Cross-exam checks before release</a></li>
+<li><a href="#what-this-is-not">What this is not</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>

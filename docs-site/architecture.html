@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture — hermes-editing-yt</title>
+<meta name="description" content="System map, pipeline, runtime dataflow, and integration boundaries for hermes-editing-yt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html">hermes-editing-yt <span>docs</span></a>
+  <nav>
+    <a href="https://capslockb.github.io/hermes-editing-yt">Website</a>
+    <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+  </nav>
+</div>
+<div class="layout">
+  <aside class="sidebar"><div class="section"><div class="section-title">Get started</div><a class="" href="index.html">Docs index</a><a class="" href="quickstart.html">Quickstart</a></div>
+<div class="section"><div class="section-title">Reference</div><a class="active" href="architecture.html">Architecture</a><a class="" href="mcp-tools.html">MCP tools</a><a class="" href="operator-helpers.html">Operator helpers</a><a class="" href="env-vars.html">Env vars</a></div>
+<div class="section"><div class="section-title">Run</div><a class="" href="troubleshooting.html">Troubleshooting</a><a class="" href="release-readiness.html">Release readiness</a></div></aside>
+  <main class="content">
+    <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link"></a></h1>
+<p>hermes-editing-yt is a <strong>two-layer</strong> system:</p>
+<ol>
+<li><strong>Library</strong> (<code>plugin/hermes_editing_yt.py</code>) — pure-Python pipeline engine. No GUI, minimal I/O (files only). Can be imported from any Python script.</li>
+<li><strong>MCP server</strong> (<code>plugin/mcp_server.py</code>) — FastMCP 3.0.2 server that wraps the library and exposes 11 tools over stdio or StreamableHTTP.</li>
+</ol>
+<blockquote>
+<p>Visual reference: see <a href="diagrams/architecture.svg"><code>diagrams/architecture.svg</code></a>, <a href="diagrams/pipeline.svg"><code>diagrams/pipeline.svg</code></a>, and <a href="diagrams/mcp-tools.svg"><code>diagrams/mcp-tools.svg</code></a>.</p>
+</blockquote>
+<h2 id="system-map">System map<a class="headerlink" href="#system-map" title="Permanent link"></a></h2>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph &quot;Client&quot;
+        A[&quot;Hermes Agent chat&quot;]
+    end
+    subgraph &quot;hermes-editing-yt&quot;
+        B[&quot;mcp_server.py\nFastMCP 3.0.2&quot;]
+        C[&quot;hermes_editing_yt.py\nlibrary&quot;]
+        D[&quot;faster-whisper\nlocal GPU&quot;]
+        E[&quot;ffmpeg + ffprobe\nPATH binaries&quot;]
+    end
+    subgraph &quot;Output&quot;
+        F[&quot;cut.mp4&quot;]
+        G[&quot;segments.csv&quot;]
+        H[&quot;markers.csv&quot;]
+        I[&quot;plan.json&quot;]
+    end
+
+    A --&gt;|MCP JSON-RPC| B
+    B --&gt;|in-process calls| C
+    C --&gt;|load + cache| D
+    C --&gt;|subprocess| E
+    C --&gt; F
+    C --&gt; G
+    C --&gt; H
+    C --&gt; I
+</code></pre>
+<h2 id="audio-runtime-dataflow">Audio / runtime dataflow<a class="headerlink" href="#audio-runtime-dataflow" title="Permanent link"></a></h2>
+<pre><code>raw.mp4 ──┬──► extract_audio ──► whisper_input.wav ──► faster-whisper ──► transcript.srt
+          │                                                (local GPU)
+          └──► audio_only.mp3 ───────────────────────────────────────────► delivery audio
+
+transcript.srt ──► parse_subtitles ──► build_segments ──► build_markers
+                                                    │
+                                                    ├──► segments.csv
+                                                    ├──► markers.csv
+                                                    └──► render_autocut ──► cut.mp4
+</code></pre>
+<p>A machine-readable version of this diagram is at <a href="diagrams/runtime.txt"><code>diagrams/runtime.txt</code></a>.</p>
+<h2 id="pipeline-mode-autoedit">Pipeline (mode: <code>autoedit</code>)<a class="headerlink" href="#pipeline-mode-autoedit" title="Permanent link"></a></h2>
+<ol>
+<li><strong>Pick the SRT</strong> — user passes <code>srt_path</code>, auto-detect an existing SRT next to the video, or transcribe from scratch.</li>
+<li><strong>Transcribe (if needed)</strong> — either local GPU (<code>faster-whisper</code> large-v3 on CUDA float16) or the configured HTTP Whisper endpoint. Output is an SRT file.</li>
+<li><strong>Parse</strong> — <code>parse_subtitles</code> → list of <code>Cue</code> dataclasses.</li>
+<li><strong>Build segments</strong> — <code>build_segments</code> finds runs of cues whose gaps are ≤ 1.2 s, adds 300 ms lead-in and 450 ms tail, drops any segment shorter than 850 ms.</li>
+<li><strong>Build markers</strong> — <code>build_markers</code> produces:</li>
+<li><code>cut</code> markers at each segment boundary</li>
+<li><code>suggestion</code> markers for highlight keywords (<code>boss</code>, <code>spawn</code>, <code>rare</code>, <code>wait</code>, <code>wow</code>, <code>let's go</code>, etc.) or lines ending in <code>!</code> / <code>?</code></li>
+<li><strong>Render</strong> — <code>render_autocut</code> extracts audio, cuts each segment, concatenates with the concat demuxer, then re-encodes to libx264 CRF 18 / AAC 192k.</li>
+<li><strong>Write plan</strong> — <code>run_pipeline</code> writes a JSON plan with all of the above.</li>
+</ol>
+<h2 id="gpu-transcription">GPU transcription<a class="headerlink" href="#gpu-transcription" title="Permanent link"></a></h2>
+<p><code>faster-whisper</code> is a CTranslate2-based Whisper reimplementation that is much faster than the reference implementation on CUDA. The library adds a small shim, <code>_ensure_cublas12_on_path()</code>, that registers the <code>nvidia-cublas-cu12</code> site-packages directory before <code>ctranslate2</code> is imported. This works around the <code>cublas64_12.dll is not found or cannot be loaded</code> error that occurs when <code>torch 2.12+cu130</code> (which ships cublas v13) is the only CUDA runtime on the box.</p>
+<p>If CUDA init fails, the server falls back to CPU float32 and reports it in <code>server_info</code> and the tool result.</p>
+<h2 id="threading-model">Threading model<a class="headerlink" href="#threading-model" title="Permanent link"></a></h2>
+<ul>
+<li>The MCP server is <strong>single-threaded stdio</strong> by default. Each tool call is processed synchronously.</li>
+<li><code>ffmpeg</code> calls run as <strong>subprocesses</strong> and block the server for the duration of the command.</li>
+<li><code>faster-whisper</code> model objects are <strong>cached at module level</strong> by <code>(model, device, compute_type)</code>. Subsequent calls skip the multi-second model load.</li>
+<li>StreamableHTTP transport (<code>--http PORT</code>) uses FastMCP's built-in HTTP server and follows the same synchronous tool semantics.</li>
+</ul>
+<h2 id="lifecycle">Lifecycle<a class="headerlink" href="#lifecycle" title="Permanent link"></a></h2>
+<ol>
+<li><strong>Install</strong> — clone, install deps, run the unit-test gate.</li>
+<li><strong>Register</strong> — <code>python3 installer/install.py</code> writes the MCP server into the Hermes config.</li>
+<li><strong>Start</strong> — Hermes spawns the server as a child process over stdio.</li>
+<li><strong>Initialize</strong> — <code>server_info</code> returns health/version/config snapshot.</li>
+<li><strong>Run</strong> — agent calls tools; model cache warms up on first GPU transcription.</li>
+<li><strong>Stop</strong> — Hermes closes the stdio pipe; the process exits cleanly.</li>
+</ol>
+<h2 id="key-files">Key files<a class="headerlink" href="#key-files" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plugin/hermes_editing_yt.py</code></td>
+<td>Pure-Python library: parse, segment, marker, render, transcribe, pipeline.</td>
+</tr>
+<tr>
+<td><code>plugin/mcp_server.py</code></td>
+<td>FastMCP 3.0.2 server with 11 tools.</td>
+</tr>
+<tr>
+<td><code>plugin/plugin.yaml</code></td>
+<td>Hermes plugin manifest: name, version, tools, optional env vars.</td>
+</tr>
+<tr>
+<td><code>plugin/requirements.txt</code></td>
+<td>Runtime Python dependencies.</td>
+</tr>
+<tr>
+<td><code>installer/install.py</code></td>
+<td>Rich TUI installer with non-interactive and uninstall modes.</td>
+</tr>
+<tr>
+<td><code>tests/test_hermes_editing_yt.py</code></td>
+<td>35 pure unit tests.</td>
+</tr>
+<tr>
+<td><code>tests/test_mcp_server.py</code></td>
+<td>11-tool MCP stdio smoke test.</td>
+</tr>
+<tr>
+<td><code>site/</code></td>
+<td>React/Three.js public website (Next.js export).</td>
+</tr>
+<tr>
+<td><code>docs/</code></td>
+<td>Raw Markdown documentation (this tree).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-env-vars">Key env vars<a class="headerlink" href="#key-env-vars" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HERMES_EDITING_YT_OUTPUT_DIR</code></td>
+<td><code>~/hermes-editing-yt-output</code></td>
+<td>Default render output root.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_URL</code></td>
+<td><code>http://127.0.0.1:51746/transcribe</code></td>
+<td>External Whisper HTTP endpoint. Empty string forces local GPU.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_MODEL</code></td>
+<td><code>large-v3</code></td>
+<td>faster-whisper model name.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_DEVICE</code></td>
+<td><code>cuda</code></td>
+<td><code>cuda</code> or <code>cpu</code>.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_WHISPER_COMPUTE</code></td>
+<td><code>float16</code></td>
+<td><code>float16</code>, <code>float32</code>, <code>int8</code>, etc.</td>
+</tr>
+<tr>
+<td><code>HERMES_EDITING_YT_MERGE_GAP</code></td>
+<td><code>1.20</code></td>
+<td>Seconds — drop gaps longer than this between speech cues.</td>
+</tr>
+</tbody>
+</table>
+<p>See the full reference in <a href="env-vars.md"><code>env-vars.md</code></a>.</p>
+<h2 id="integration-boundaries">Integration boundaries<a class="headerlink" href="#integration-boundaries" title="Permanent link"></a></h2>
+<ul>
+<li><strong>Hermes Agent</strong> talks to the server over stdio via the MCP protocol. No Hermes-specific code lives in the library.</li>
+<li><strong>ffmpeg / ffprobe</strong> are external PATH binaries. The server shells out to them; they are not Python dependencies.</li>
+<li><strong>faster-whisper / CTranslate2</strong> are Python dependencies. The library ships a DLL-path shim for Windows cuBLAS v12 but does not bundle CUDA.</li>
+<li><strong>HTTP Whisper endpoint</strong> is optional and out of scope. The tool <code>whisper_transcribe</code> posts to a user-provided URL and expects a specific JSON shape.</li>
+<li><strong>React website</strong> is a separate Next.js app in <code>site/</code>. It deploys to GitHub Pages and does not depend on the Python runtime.</li>
+</ul>
+<h2 id="modes">Modes<a class="headerlink" href="#modes" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Markers</th>
+<th>Segments</th>
+<th>Render</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>automark</code></td>
+<td>yes</td>
+<td>yes</td>
+<td><strong>no</strong></td>
+</tr>
+<tr>
+<td><code>autocut</code></td>
+<td>no</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>autoedit</code></td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p><code>automark</code> is for previewing cuts (cheap, no ffmpeg render) and for importing markers into Premiere / DaVinci / OBS. The CSV output uses <code>HH:MM:SS.mmm</code> start/end, marker type, and cue text.</p>
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link"></a></h2>
+<p>Recorded on the developer's RTX 5060 (8 GB, sm_120) for a 10:08 1080p MP4:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Time</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Audio extract</td>
+<td>~1.2 s</td>
+<td>ffmpeg 44.1 kHz MP3 + 16 kHz WAV</td>
+</tr>
+<tr>
+<td>Whisper large-v3 float16</td>
+<td>~47 s</td>
+<td>~12.8× realtime</td>
+</tr>
+<tr>
+<td>Build segments + markers</td>
+<td>&lt;0.1 s</td>
+<td>pure Python</td>
+</tr>
+<tr>
+<td>Cut + concat + re-encode</td>
+<td>~3:18</td>
+<td>libx264 CRF 18</td>
+</tr>
+</tbody>
+</table>
+<p>The re-encode dominates. For faster renders, raise CRF (<code>23</code> or <code>28</code>) or use <code>-preset veryfast</code>. For NVIDIA hardware encode, swap <code>libx264</code> for <code>h264_nvenc</code> (loss of CRF fine-tuning).</p>
+    <div class="toc"><div class="toc"><span class="toctitle">On this page</span><ul>
+<li><a href="#architecture">Architecture</a><ul>
+<li><a href="#system-map">System map</a></li>
+<li><a href="#audio-runtime-dataflow">Audio / runtime dataflow</a></li>
+<li><a href="#pipeline-mode-autoedit">Pipeline (mode: autoedit)</a></li>
+<li><a href="#gpu-transcription">GPU transcription</a></li>
+<li><a href="#threading-model">Threading model</a></li>
+<li><a href="#lifecycle">Lifecycle</a></li>
+<li><a href="#key-files">Key files</a></li>
+<li><a href="#key-env-vars">Key env vars</a></li>
+<li><a href="#integration-boundaries">Integration boundaries</a></li>
+<li><a href="#modes">Modes</a></li>
+<li><a href="#performance">Performance</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+  </main>
+</div>
+<footer class="footer">
+  hermes-editing-yt · MIT license · <a href="https://github.com/Capslockb/hermes-editing-yt">GitHub</a>
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>
